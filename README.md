@@ -1,4 +1,5 @@
-Nome de arquivos -> LetraMaiuscula
+Nome de arquivos do view -> minusculo-com-dash
+Nome de arquivos dos outros -> LetraMaiuscula
 Nome de variaveis, funcoes,  -> primeiraLetraMinuscula
 
 ---
