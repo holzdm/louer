@@ -1,0 +1,19 @@
+
+.navbar{
+    background-color: #164564 !important;
+
+}
+.hamburger {
+  display: inline-block !important;
+  width: 24px !important;
+  height: 18px !important;
+  cursor: pointer !important;
+}
+.hamburger span {
+  display: block !important;
+  height: 3px !important;
+  width: 100% !important;
+  background: #333 !important;
+  margin: 3px 0 !important;
+  border-radius: 2px !important;
+}
