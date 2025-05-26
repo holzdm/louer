@@ -1,19 +1,153 @@
-
+body{
+    background-color: #f0f0f0 !important;
+}
 .navbar{
-    background-color: #164564 !important;
+    /* background-color: #164564 !important; */
+  background-color: #f0fbfe;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	  
+}
+
+.logo { /* navbar-esquerda */
+  height: 5.5rem !important;
+  max-height: unset !important;
+  margin: 0.2rem;
+}
+
+.navbar-meio{
+  display: grid;
+  place-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.navbar-direita{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+
+/* BOTAO DO PERFIL --------------------------------------------- */
+
+.perfil-button{
+  background-color: rgb(251, 253, 255);
+  border-radius: 2rem;
+  transition: transform 0.4s;
+  border: 0.01rem solid whitesmoke;
+}
+.perfil-button img {
+  width: 100%;
+  max-height: unset !important;
+  object-fit: cover;
+  border-radius: 50%;
+
+} 
+.perfil-button:hover {
+  transform: scale(1.05);
+  background-color: rgb(251, 253, 255);
+}
+.perfil-button:focus {
+  transform: scale(1.05);
+  background-color: whitesmoke;
+}
+/* -------------------------------------------------------------- */
+
+
+/* BARRA DE PESQUISA */
+
+.barra-pesquisa{
+  background-color: rgb(249, 252, 255);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	  
+  border-radius: 2rem;
+  padding: 0.5rem;
+  width: 40rem;
+  height: 4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+
+.divisor-vertical{
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 1px;
+  height: 80%;
+  margin: 0;
+}
+
+.categorias-dropdown{
+  display: inline-block;
+  /* width: 50%; */
+}
+.categorias-dropdown-trigger{
+  background-color: rgb(249, 252, 255);
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	   */
+  border-radius: 2rem;
+  height: 3rem;
+  display: inline-block;
+  /* width: 100%; */
+}
+.categorias-button{
+  height: 3rem;
+  width: 15rem;
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+   width 0.4s,
+   font-size 0.4s,
+   box-shadow 0.4s,
+   transform 0.4s;
+}
+
+.categorias-button:hover{
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1.2em;
+  font-weight: 450;
+  transition:
+   width 0.4s,
+   font-size 0.4s,
+   box-shadow 0.4s,
+   transform 0.4s;
+  
+}
+.categorias-button:focus{
+  width: 5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1.2em;
+  font-weight: 450;
+  transition:
+   width 0.4s,
+   font-size 0.4s,
+   box-shadow 0.4s,
+   transform 0.4s;
 
 }
-.hamburger {
-  display: inline-block !important;
-  width: 24px !important;
-  height: 18px !important;
-  cursor: pointer !important;
+
+.localizacao{
+  background-color: rgb(249, 252, 255);
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	   */
+  border-radius: 2rem;
+  padding: 0.5rem;
+  height: 3rem;
+  width: 20rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem; 
 }
-.hamburger span {
-  display: block !important;
-  height: 3px !important;
-  width: 100% !important;
-  background: #333 !important;
-  margin: 3px 0 !important;
-  border-radius: 2px !important;
+
+.circulo-pesquisar{
+  background-color: #aac2c9;
+  border-radius: 50%;
+  height: 2rem;
+  width: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+  /* display: inline-block;  SE EU QUISER Q ELE ACOMPANHE O CONTEUDO DENTRO */
