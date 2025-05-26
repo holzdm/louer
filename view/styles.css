@@ -31,31 +31,76 @@ body{
 
 /* BOTAO DO PERFIL --------------------------------------------- */
 
-.perfil-button{
+.perfil-dropdown{
+display: inline-block;
+position: relative;
+}
+
+.icon, .image{
+  margin: 0.6rem;
+}
+
+.perfil-dropdown-button{
   background-color: rgb(251, 253, 255);
+  height: 3rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	  
   border-radius: 2rem;
   transition: transform 0.4s;
   border: 0.01rem solid whitesmoke;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.perfil-button img {
+.perfil-dropdown-button img {
   width: 100%;
   max-height: unset !important;
   object-fit: cover;
   border-radius: 50%;
-
 } 
-.perfil-button:hover {
+.perfil-dropdown-button:hover {
   transform: scale(1.05);
   background-color: rgb(251, 253, 255);
 }
-.perfil-button:focus {
+.perfil-dropdown-button:focus {
   transform: scale(1.05);
   background-color: whitesmoke;
 }
-/* -------------------------------------------------------------- */
+.perfil-dropdown-conteudo{
+  display: none;
+  background-color: rgb(251, 253, 255) ;
+  border-radius: 1rem;
+  width: 10rem;
+  top: calc(100% + 0.8rem); /* abre logo abaixo do botão */
+  left: auto;
+  right: 0;  /* alinha a direita do botão */
+  position: absolute;
+  padding: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	  
+
+}
+.is-active .perfil-dropdown-conteudo{
+  display: block;
+}
+
+.divisor-horizontal{
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 90%;
+  height: 1px;
+  margin: auto;
+
+}
+
+.perfil-dropdown-conteudo .dropdown-item{
+  border-radius: 0.9rem;
+}
+
+.perfil-dropdown-conteudo .dropdown-item:hover{
+  background-color: whitesmoke;
+}
 
 
-/* BARRA DE PESQUISA */
+
+/* BARRA DE PESQUISA -------------------------------------------- */
 
 .barra-pesquisa{
   background-color: rgb(249, 252, 255);
@@ -77,9 +122,11 @@ body{
   margin: 0;
 }
 
+/* ------------ CATEGORIAS ----------------------------------------- */
+
 .categorias-dropdown{
-  display: inline-block;
-  /* width: 50%; */
+  display: flex;
+  position: relative;
 }
 .categorias-dropdown-trigger{
   background-color: rgb(249, 252, 255);
@@ -87,9 +134,8 @@ body{
   border-radius: 2rem;
   height: 3rem;
   display: inline-block;
-  /* width: 100%; */
 }
-.categorias-button{
+.categorias-dropdown-button{
   height: 3rem;
   width: 15rem;
   border-radius: 2rem;
@@ -103,7 +149,7 @@ body{
    transform 0.4s;
 }
 
-.categorias-button:hover{
+.categorias-dropdown-button:hover{
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-size: 1.2em;
   font-weight: 450;
@@ -114,7 +160,7 @@ body{
    transform 0.4s;
   
 }
-.categorias-button:focus{
+.categorias-dropdown-button:focus{
   width: 5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-size: 1.2em;
@@ -126,6 +172,25 @@ body{
    transform 0.4s;
 
 }
+
+.categorias-dropdown-conteudo{
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.8rem); /* Joga o dropdown abaixo do botão */
+  left: 0; /* Alinha pela esquerda */
+  background-color: rgb(0, 58, 116);
+  width: 39rem;
+  height: 3rem;
+  border-radius: 2rem;
+  z-index: 1000; /* Garante que fique sobreposto aos outros */
+}
+
+.is-active .categorias-dropdown-conteudo{
+  display: block;
+}
+
+
+/* ------------ LOCALIZACAO ----------------------------------------- */
 
 .localizacao{
   background-color: rgb(249, 252, 255);
@@ -151,3 +216,6 @@ body{
 }
 
   /* display: inline-block;  SE EU QUISER Q ELE ACOMPANHE O CONTEUDO DENTRO */
+
+
+  /* -------------------------------------------------------------- */

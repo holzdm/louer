@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="styles.css?v=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script src="https://kit.fontawesome.com/414a446042.js" crossorigin="anonymous"></script>
+  <script src="script.js" defer></script>
+
   <title>Louer - Pagina Inicial</title>
 </head>
 
@@ -23,9 +25,14 @@
 
     <div class="navbar-meio">
       <div class="barra-pesquisa">
-        <div class="categorias-dropdown" id="dropdown-categorias">
+        <div class="categorias-dropdown">
+          <!-- botão -->
           <div class="categorias-dropdown-trigger">
-            <button class="categorias-button">O que?</button>
+            <button class="categorias-dropdown-button">O que?</button>
+          </div>
+          <!-- Conteteúdo -->
+          <div class="categorias-dropdown-conteudo">
+
           </div>
         </div>
         
@@ -39,10 +46,10 @@
 
     <div class="navbar-direita">
       <div class="navbar-item">
-        <div class="dropdown is-right" id="dropdown-perfil">
-          <div class="dropdown-trigger">
-            <button class="button perfil-button" aria-haspopup="true" aria-controls="dropdown-menu">
-              <span class="icon is-small">
+        <div class="perfil-dropdown">
+          <div class="perfil-dropdown-trigger">
+            <button class="perfil-dropdown-button" aria-haspopup="true" aria-controls="perfil-dropdown-conteudo">
+              <span class="icon">
                 <i class="fa-solid fa-bars"></i>
               </span>
               <figure class="image is-32x32">
@@ -52,18 +59,18 @@
             </button>
           </div>
 
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+          <div class="perfil-dropdown-conteudo" id="perfil-dropdown-conteudo" role="menu">
             <div class="dropdown-content">
               <a href="#" class="dropdown-item">
-                Meu Perfil
+                Cadastrar-se
               </a>
               <a href="#" class="dropdown-item">
-                Configurações
+                Entrar
               </a>
-              <hr class="dropdown-divider">
+              <!-- <hr class="divisor-horizontal">
               <a href="#" class="dropdown-item">
                 Sair
-              </a>
+              </a> -->
             </div>
           </div>
         </div>
@@ -72,35 +79,6 @@
     </div>
   </nav>
 
-  <script>
-    const dropdownPerfil = document.getElementById('dropdown-perfil');
-    const dropdownTrigger = dropdownPerfil.querySelector('.dropdown-trigger');
-    const perfilButton = document.querySelector('.perfil-button');
-
-    const dropdownCategorias = document.getElementById('dropdown-categorias')
-
-    dropdownTrigger.addEventListener('click', function(event) {
-      event.stopPropagation(); // Impede que o clique suba para o document
-      if (dropdownPerfil.classList.contains('is-active')) {
-        dropdownPerfil.classList.remove('is-active');
-        perfilButton.blur();
-      } else {
-        dropdownPerfil.classList.add('is-active');
-        perfilButton.focus();
-      }
-    });
-
-    // Fechar se clicar fora
-    document.addEventListener('click', function(event) {
-      if (!dropdownPerfil.contains(event.target)) {
-        dropdownPerfil.classList.remove('is-active');
-        perfilButton.blur();
-      }
-    });
-
-
-
-  </script>
 </body>
 
 </html>
