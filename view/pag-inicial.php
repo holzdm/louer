@@ -24,7 +24,7 @@
     </div>
 
     <div class="navbar-meio">
-      <div class="barra-pesquisa">
+      <div class="barra-pesquisa-dropdown">
         <div class="categorias-dropdown">
           <!-- botão -->
           <div class="categorias-dropdown-trigger">
@@ -35,12 +35,23 @@
 
           </div>
         </div>
-        
+
         <hr class="divisor-vertical">
-        <div class="localizacao">
-          Tem na minha cidade?
-          <div class="circulo-pesquisar"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="lugar-dropdown">
+          <!-- botão -->
+          <div class="lugar-dropdown-trigger">
+            <button class="lugar-dropdown-button">Tem na minha cidade?</button>
+            <!-- buscar -->
+            <button class="circulo-pesquisar"><i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <!-- Conteteúdo -->
+          <div class="lugar-dropdown-conteudo">
+
+          </div>
         </div>
+
+
+
       </div>
     </div>
 
@@ -78,6 +89,7 @@
 
     </div>
   </nav>
+
 
 </body>
 
