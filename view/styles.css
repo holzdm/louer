@@ -101,7 +101,7 @@ position: relative;
 
 /* BARRA DE PESQUISA -------------------------------------------- */
 
-.barra-pesquisa{
+.barra-pesquisa-dropdown{
   background-color: rgb(249, 252, 255);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	  
   border-radius: 2rem;
@@ -126,7 +126,7 @@ position: relative;
 .categorias-dropdown{
   display: flex;
   position: relative;
-  width: 19.5rem;
+  width: 20rem;
   height: 4rem;
   display: flex;
   transition:
@@ -158,7 +158,7 @@ position: relative;
 }
 
 .categorias-dropdown-button:hover{
-  box-shadow: -0.3rem 0 3rem -1.2rem #0e2f445c;
+  box-shadow: -0.3rem 0 3rem -1.2rem #072b41a2;
   transition: box-shadow 0.4s;
   
 }
@@ -184,29 +184,40 @@ position: relative;
 }
 
 
-/* ------------ LOCALIZACAO ----------------------------------------- */
+/* ------------ LUGAR ----------------------------------------- */
 
-.localizacao{
-  background-color: rgb(249, 252, 255);
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	   */
-  border-radius: 2rem;
-  /* padding: 0.5rem; */
-  height: 3rem;
+.lugar-dropdown{
+
+  display: flex;
+  position: relative;
+  width: 20rem;
+  height: 4rem;
+  display: flex;
+  transition:
+    width 0.4s,
+    transform 0.4s;
+
+}
+
+.lugar-dropdown-trigger{
+  border-radius: 0 2rem 2rem 0;
+  height: 4rem;
   width: 100%;
-  max-width: 19.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.lugar-dropdown-button{
+  height: inherit;
+  border-radius: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4rem; 
-  transition: 
-    width 0.4s
-    transform 0.4s;
+  transition: box-shadow 0.4s;
 }
 
-.is-active .localizacao{
-  width: 24.5rem;
-
-}
 
 .circulo-pesquisar{
   background-color: #aac2c9;
@@ -216,6 +227,10 @@ position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.barra-pesquisa-dropdown.is-active .circulo-pesquisar {
+  background-color: red;
 }
 
   /* display: inline-block;  SE EU QUISER Q ELE ACOMPANHE O CONTEUDO DENTRO */
