@@ -190,6 +190,7 @@ position: relative;
 
   display: flex;
   position: relative;
+  max-width: 32rem;
   width: 20rem;
   height: 4rem;
   display: flex;
@@ -227,10 +228,46 @@ position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  transition:
+    width 0.4s,
+    height 0.4s,
+    border-radius 0.4s,
+    transform 0.4s;
+}
+
+.circulo-pesquisar-icone{
+  margin: 1rem;
+}
+.barra-pesquisa-dropdown.is-active .circulo-pesquisar {
+margin-right: 0;
+transition: 
+    margin-right 0.4s,;
+
+}
+
+.circulo-pesquisar-txt{
+  width: 70%;
+  height: 100%;
+  overflow: hidden;
+  padding-top: 0.8rem;
 }
 
 .barra-pesquisa-dropdown.is-active .circulo-pesquisar {
   background-color: red;
+  width: 8rem;
+  height: 3rem;
+  border-radius: 2rem;
+  transition:
+    width 0.4s,
+    height 0.4s,
+    border-radius 0.4s,
+    transform 0.4s;
+
+}
+
+.barra-pesquisa-dropdown.is-active .lugar-dropdown{
+  width: 100%;
 }
 
   /* display: inline-block;  SE EU QUISER Q ELE ACOMPANHE O CONTEUDO DENTRO */

@@ -5,8 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-  <link rel="stylesheet" href="styles.css?v=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="styles.css?v=<?= time() ?>"> <!-- se estiver em PHP -->
   <script src="https://kit.fontawesome.com/414a446042.js" crossorigin="anonymous"></script>
   <script src="script.js" defer></script>
 
@@ -42,7 +41,10 @@
           <div class="lugar-dropdown-trigger">
             <button class="lugar-dropdown-button">Tem na minha cidade?</button>
             <!-- buscar -->
-            <button class="circulo-pesquisar"><i class="fa-solid fa-magnifying-glass"></i>
+            <button class="circulo-pesquisar">
+              <i class="fa-solid fa-magnifying-glass circulo-pesquisar-icone"></i>
+              <div class="circulo-pesquisar-txt">Buscar</div>
+            </button>
           </div>
           <!-- Conteteúdo -->
           <div class="lugar-dropdown-conteudo">
