@@ -1,10 +1,19 @@
+ -- PADRAO DOS DIRETORIOS
+
+Nome dos diretorios?
+
+
+ -- PADRAO DOS ARQUIVOS
+
 Nome dos arquivos dentro de "view" -> minusculo-com-dash
 Nome dos outros arquivos -> LetraMaiuscula
+
+ -- PADRAO DENTRO DOS ARQUIVOS
+
 Nome de variaveis, funcoes,  -> primeiraLetraMinuscula
 
----
 
-ORGANIZACAO:
+ -- ESTRUTURA:
 
 view: paginas html
 control: POST, validacoes, e funcoes
