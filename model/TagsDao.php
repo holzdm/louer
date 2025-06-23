@@ -5,7 +5,7 @@ require_once "conexaobd.php";
 function listarTags() {
     $conexao = conectarBD();
 
-    $sql = "SELECT * FROM produto";
+    $sql = "SELECT * FROM tags";
 
     // Executa no banco de dados
     $res = mysqli_query( $conexao, $sql ) or die(  mysqli_error($conexao)   )  ;
@@ -14,7 +14,7 @@ function listarTags() {
     $listTags = "";
 
     while ($registro = mysqli_fetch_assoc($res)) {
-        $tag = $registro["tags"];
+        $tag = htmlspecialchars($registro["nome"]);
         $listTags .= "<option value=\"$tag\">$tag</option>\n";
     }
 
