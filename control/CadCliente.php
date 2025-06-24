@@ -26,7 +26,7 @@ if ( empty($msgErro) ) {
     header("Location:../view/pag-login.php?msg=Tudo pronto $nome! Faça seu login e aproveite nosso site. ★");
 
 } else {
-    header("Location:../view/pag-cad-fornecedor.php?msg=$msgErro");
+    header("Location:../view/pag-cad-cliente.php?msg=$msgErro");
 }
 
 
