@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina do cadastro do Fornecedor</title>
+    <title>Cadastro do Fornecedor</title>
 </head>
 <body>
      
     <h1>CADASTRO DE FORNECEDOR</h1>
 
 
-    <form action="../control/CadFornecedor.php" method="post">
+    <form action="../../control/CadFornecedor.php" method="post">
 
         <table>
             <tr>

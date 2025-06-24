@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pag-cadastro</title>
+    <title>Cadastro do Cliente</title>
 </head>
 
 <body>
     <h1>CADASTRO DE CLIENTE</h1>
 
-    <form action="../control/CadCliente.php" method="post">
+    <form action="../../control/CadCliente.php" method="post">
 
         <table>
             <tr>
                 <td><label for="nome">Nome:</label></td>
-                <td><input type="text" id="nome" name="nome" required></td>
+                <td><input type="text" id="nome" name="nome" ></td>
             </tr>
 
             <tr>
@@ -36,11 +36,11 @@
             </tr>
             <tr>
                 <td><label for="email">Email:</label></td>
-                <td><input type="email" id="email" name="email" required></td>
+                <td><input type="email" id="email" name="email"></td>
             </tr>
             <tr>
                 <td><label for="senha">Senha:</label></td>
-                <td><input type="password" id="senha" name="senha" required></td>
+                <td><input type="password" id="senha" name="senha"></td>
             </tr>
         </table>
 
@@ -51,7 +51,7 @@
 
     <br><br>
 
-    <p>Já Possui uma conta? <a href="pag-login.php">Login</a></p>
+    <p>Já possui uma conta? <a href="../pag-login.php">Login</a></p>
    
 
     <?php

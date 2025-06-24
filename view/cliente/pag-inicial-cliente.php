@@ -8,7 +8,7 @@
 <body>
     <h1> Pagina do Cliente logado </h1>
 
-    <h3><a href="pag-cad-fornecedor.php"> Quero ser um fornecedor! </a></h3>
+    <h3><a href="../fornecedor/pag-cad-fornecedor.php"> Quero ser um fornecedor! </a></h3>
 
 </body>
 </html>

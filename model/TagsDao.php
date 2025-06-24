@@ -8,7 +8,7 @@ function listarTags() {
     $sql = "SELECT * FROM tags";
 
     // Executa no banco de dados
-    $res = mysqli_query( $conexao, $sql ) or die(  mysqli_error($conexao)   )  ;
+    $res = mysqli_query( $conexao, $sql ) or die (  mysqli_error($conexao)   )  ;
 
     // Cria um array vazio
     $listTags = "";

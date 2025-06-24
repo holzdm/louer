@@ -37,9 +37,15 @@
 
     <br><br>
 
-    <p>Não possui uma conta? <a href="pag-cadastro.php">Cadastre-se</a></p>
+    <p>Não possui uma conta? <a href="cliente/pag-cad-cliente.php">Cadastre-se</a></p>
 
-    
+    <?php
+    // Mostrar a mensagem de retorno
+    if (isset($_GET["msgErro"])) {
+        $msgErro = $_GET["msgErro"];
+        echo "<FONT color=red>$msgErro</FONT>";
+    }
+    ?>
 
 </body>
 </html>

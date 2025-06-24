@@ -8,9 +8,9 @@
 </head>
 
 <body>
-    <h1>CADASTRO DE CLIENTE</h1>
+    <h1>ADICIONANDO NOVO PRODUTO</h1>
 
-    <form action="../control/CadProduto.php" method="post">
+    <form action="../../control/CadProduto.php" method="post">
 
         <table>
             <tr>

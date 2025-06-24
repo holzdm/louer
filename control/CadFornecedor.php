@@ -21,9 +21,9 @@ if ( empty($msgErro) ) {
         
         // Devolver a mensagem de sucesso
 
-    header("Location:../view/pag-fornecedor.php?msg=Tudo pronto! Comece adicionando um produto ★");
+    header("Location:../view/fornecedor/pag-inicial-fornecedor.php?msg=Tudo pronto! Comece adicionando um produto ★");
 
 } else {
-    header("Location:../view/pag-cad-fornecedor.php?msg=$msgErro");
+    header("Location:../view/fornecedor/pag-cad-fornecedor.php?msg=$msgErro");
 }
 ?>
