@@ -1,3 +1,9 @@
+<?php
+session_start();
+session_destroy(); // remove todos os dados da sessão
+?> 
+<!-- nao sei exatamente se essa eh a melhor forma de apagar os dados da sessao -->
+
 <!DOCTYPE html>
 <html lang="en">
 

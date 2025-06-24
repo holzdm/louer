@@ -16,3 +16,5 @@
     <h3>Crie seu produto <a href="pag-novo-produto.php"> AQUI! </a></h3>
 </body>
 </html>
+
+<!-- Essa pag prov deixara de existir ou mudara de nome. Porque vai ser parte da pag do perfil -->
