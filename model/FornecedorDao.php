@@ -1,13 +1,11 @@
 <?php
-session_start();
-$email = $_SESSION['email'];
-$senha = $_SESSION['senha'];
+
 
 
 
 require_once "ConexaoBD.php";
 
-function inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento) {    
+function inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha) {    
 
     $conexao = conectarBD();
 

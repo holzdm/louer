@@ -1,24 +1,21 @@
 <?php
 require_once "ConexaoBD.php";
 
-// function inserirCliente($nome, $cpf, $cnpj, $cidade, $telefone, $email, $senha) {    
+function inserirProduto($nomeProduto, $tag, $idUsuario) {    
 
-//     $conexao = conectarBD();
+     $conexao = conectarBD();
 
 
-//     // Montar SQL
-//     $sql = "INSERT INTO Produto (nome, tag) 
-//             VALUES ('$nome' , 'Cliente', '$cpf', '$cnpj', '$cidade', 
-//                     '$telefone', '$email','$senha')"; 
+     // Montar SQL
+     $sql = "INSERT INTO Produto (nome, tag, usuario_id) 
+             VALUES ('$nomeProduto','$tag','$idUsuario')"; 
     
-//     mysqli_query($conexao, $sql);
+     mysqli_query($conexao, $sql);
 
-//     // Pega o código inserido
-//     $id = mysqli_insert_id($conexao);  
-//     return $id;
+     return $nomeProduto;
     
-// }
-
+}
+//trocar para o stmt e prepare??
 
 
 

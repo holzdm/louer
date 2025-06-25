@@ -2,7 +2,7 @@
 
 static $conexao;
 
-function conectarbd(){
+function conectarBD(){
     $conexao = mysqli_connect('127.0.0.1','root','','louerbd');
 
     //Se falhar:

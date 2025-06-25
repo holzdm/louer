@@ -1,4 +1,7 @@
 <?php
+session_start();
+$email = $_SESSION['email'];
+$senha = $_SESSION['senha'];
 // RECEBIMENTO DOS DADOS DA pag-cad-fornecedor
 
 $cep = $_POST['cep'];
@@ -18,11 +21,11 @@ if ( empty($msgErro) ) {
 
     require_once "../model/FornecedorDao.php";
 
-    if (inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento)){
-        inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento);
+    if (inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha)) {
+        inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha);
 
     // Devolver a mensagem de sucesso
-    header("Location:../view/fornecedor/pag-inicial-fornecedor.php?msg=Tudo pronto! Comece adicionando um produto ★");
+        header("Location:../view/fornecedor/pag-inicial-fornecedor.php?msg=Tudo pronto! Comece adicionando um produto ★");
 
     }else{
         header("Location:../view/fornecedor/pag-cad-fornecedor.php?msg=$msgErro");

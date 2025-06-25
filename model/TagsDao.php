@@ -1,6 +1,6 @@
 <?php
 
-require_once "conexaobd.php";
+require_once "ConexaoBD.php";
 
 function listarTags() {
     $conexao = conectarBD();
@@ -15,6 +15,7 @@ function listarTags() {
 
     while ($registro = mysqli_fetch_assoc($res)) {
         $tag = htmlspecialchars($registro["nome"]);
+
         $listTags .= "<option value=\"$tag\">$tag</option>\n";
     }
 

@@ -39,8 +39,7 @@ function pesquisarCliente($email, $senha){
     
 }
 
-// colocar o if se o perfil existe aqui??
-
+// USAR O STMT?
 
 
 ?>
