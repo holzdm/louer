@@ -1,0 +1,229 @@
+body{
+    background-color: #f0f0f0 !important;
+}
+.navbar{
+    /* background-color: #164564 !important; */
+  background-color: #f0fbfe;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	  
+}
+
+.logo { /* navbar-esquerda */
+  height: 5.5rem !important;
+  max-height: unset !important;
+  margin: 0.2rem;
+}
+
+.navbar-meio{
+  display: grid;
+  place-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.navbar-direita{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+
+/* BOTAO DO PERFIL --------------------------------------------- */
+
+.perfil-dropdown{
+display: inline-block;
+position: relative;
+}
+
+.icon, .image{
+  margin: 0.6rem;
+}
+
+.perfil-dropdown-button{
+  background-color: rgb(251, 253, 255);
+  height: 3rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	  
+  border-radius: 2rem;
+  transition: transform 0.4s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.perfil-dropdown-button img {
+  width: 100%;
+  max-height: unset !important;
+  object-fit: cover;
+  border-radius: 50%;
+} 
+.perfil-dropdown-button:hover {
+  transform: scale(1.05);
+  background-color: rgb(251, 253, 255);
+}
+.perfil-dropdown-button:focus {
+  transform: scale(1.05);
+  background-color: whitesmoke;
+}
+.perfil-dropdown-conteudo{
+  display: none;
+  background-color: rgb(251, 253, 255) ;
+  border-radius: 1rem;
+  width: 10rem;
+  top: calc(100% + 0.8rem); /* abre logo abaixo do botão */
+  left: auto;
+  right: 0;  /* alinha a direita do botão */
+  position: absolute;
+  padding: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	  
+
+}
+.is-active .perfil-dropdown-conteudo{
+  display: block;
+}
+
+.divisor-horizontal{
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 90%;
+  height: 1px;
+  margin: auto;
+
+}
+
+.perfil-dropdown-conteudo .dropdown-item{
+  border-radius: 0.9rem;
+}
+
+.perfil-dropdown-conteudo .dropdown-item:hover{
+  background-color: whitesmoke;
+}
+
+
+
+/* BARRA DE PESQUISA -------------------------------------------- */
+
+.barra-pesquisa{
+  background-color: rgb(249, 252, 255);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	  
+  border-radius: 2rem;
+  /* padding: 0.5rem; */
+  width: 40rem;
+  height: 4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+.divisor-vertical{
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 1px;
+  height: 80%;
+  margin: 0;
+}
+
+/* ------------ CATEGORIAS ----------------------------------------- */
+
+.categorias-dropdown{
+  display: flex;
+  position: relative;
+  width: 19.5rem;
+  height: 4rem;
+  display: flex;
+  transition:
+    width 0.4s,
+    transform 0.4s;
+
+}
+.categorias-dropdown-trigger{
+  background-color: rgb(249, 252, 255);
+  border-radius: 2rem 0 0 2rem;
+  height: 4rem;
+  width: 100%;
+  display: inline-block;
+}
+
+.categorias-dropdown.is-active{
+  width: 5rem;
+
+}
+
+.categorias-dropdown-button{
+  height: inherit;
+  width: 100%;
+  border-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.4s;
+}
+
+.categorias-dropdown-button:hover{
+  box-shadow: -0.3rem 0 3rem -1.2rem #0e2f445c;
+  transition: box-shadow 0.4s;
+  
+}
+.is-active .categorias-dropdown-button{
+  box-shadow: 0.5rem 0 3rem -1rem #0e2f447a;
+
+}
+
+.categorias-dropdown-conteudo{
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.8rem); /* Joga o dropdown abaixo do botão */
+  left: 0; /* Alinha pela esquerda */
+  background-color: rgb(0, 58, 116);
+  width: 39rem;
+  height: 3rem;
+  border-radius: 2rem;
+  z-index: 1000; /* Garante que fique sobreposto aos outros */
+}
+
+.is-active .categorias-dropdown-conteudo{
+  display: block;
+}
+
+
+/* ------------ LOCALIZACAO ----------------------------------------- */
+
+.localizacao{
+  background-color: rgb(249, 252, 255);
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	   */
+  border-radius: 2rem;
+  /* padding: 0.5rem; */
+  height: 3rem;
+  width: 100%;
+  max-width: 19.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem; 
+  transition: 
+    width 0.4s
+    transform 0.4s;
+}
+
+.is-active .localizacao{
+  width: 24.5rem;
+
+}
+
+.circulo-pesquisar{
+  background-color: #aac2c9;
+  border-radius: 50%;
+  height: 2rem;
+  width: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+  /* display: inline-block;  SE EU QUISER Q ELE ACOMPANHE O CONTEUDO DENTRO */
+
+
+  /* -------------------------------------------------------------- */
+.formCadastro {
+  margin-top: 4%;
+  margin-left: 30%;
+  margin-right: 30%;
+}
