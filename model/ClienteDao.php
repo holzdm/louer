@@ -40,6 +40,4 @@ function pesquisarCliente($email, $senha){
 }
 
 // USAR O STMT?
-
-
 ?>

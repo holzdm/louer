@@ -2,13 +2,16 @@
 session_start();
 
 $nomeProduto = $_POST['nomeProduto'];
-$tag = $_POST['tag'];
 $idUsuario = $_SESSION['id'];
+if (isset($_POST['arrayTags'])) {
+    $tagsIds = array_map('intval', $_POST['arrayTags']);  // Garante que são números inteiros
+    $tagsIds = array_unique($tagsIds);               // Remove duplicatas (por segurança)
+}
 
 require_once "../model/ProdutoDao.php";
+$np = inserirProduto($nomeProduto, $tagsIds, $idUsuario);
 
-if (null !== inserirProduto($nomeProduto, $tag, $idCliente)){
-    $np = inserirProduto($nomeProduto, $tag, $idCliente);
+if ($np != null) {
     header("Location:../view/fornecedor/pag-inicial-fornecedor.php?msg=Produto $np adicionado com sucesso!");
 }else{
     header("Location:../view/fornecedor/pag-novo-produto.php?msgErro=Erro ao adicionar produto. Tente novamente.");

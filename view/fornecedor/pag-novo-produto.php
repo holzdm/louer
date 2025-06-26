@@ -18,15 +18,28 @@
                 <td><input type="text" id="nomeProduto" name="nomeProduto" required></td>
             </tr>
             <tr>
-                <td><label for="tag">Tag:</label></td>
+                <td><label for="arrayTags[]">Tag:</label></td>
                 <td>
-                    <select name="tag">
-                        <option value="">Selecione uma Tag</option>
+                    <select name="arrayTags[]" multiple size="6">
+                        <option disabled> -- Selecione uma Tag -- </option>
                         <?php
                         require_once "../../model/TagsDao.php";
-                            echo listarTags();
-                        ?>
+                        $arrayTags = listarTags($conexao); //chamo a funcao la do model
 
+                        foreach ($arrayTags as $idTag => $nomeTag) {
+                            echo "<OPTION value='$idTag'>$nomeTag</OPTION>";
+                        }
+                        /*
+                        require_once '../../model/TagsDao.php';
+                        $arrayTags = listarTags($conexao);  // retorna [idTag => nomeTag]
+
+                        foreach ($arrayTags as $idTag => $nomeTag) {
+                            echo "<label>";
+                            echo "<input type='checkbox' name='arrayTags[]' value='$idTag'> $nomeTag";
+                            echo "</label><br>";
+                        }
+                        */
+                        ?>
                     </select>
                 </td>
 
@@ -35,7 +48,7 @@
 
         <br><br>
 
-        <button type="submit">Criar</button>
+        <button type=" submit">Criar</button>
     </form>
 
     <br><br>

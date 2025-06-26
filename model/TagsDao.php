@@ -2,25 +2,24 @@
 
 require_once "ConexaoBD.php";
 
-function listarTags() {
-    $conexao = conectarBD();
+function listarTags($conexao){
+    $conexao = conectarBD(); // conecta ao banco
 
-    $sql = "SELECT * FROM tags";
+    $sql = "SELECT * FROM tags"; // realiza comandos na database
 
-    // Executa no banco de dados
-    $res = mysqli_query( $conexao, $sql ) or die (  mysqli_error($conexao)   )  ;
+    $res = mysqli_query($conexao, $sql); // armazena os dados se o comando $query resultar em dados
 
-    // Cria um array vazio
-    $listTags = "";
+    $arrayTags = [];
 
-    while ($registro = mysqli_fetch_assoc($res)) {
-        $tag = htmlspecialchars($registro["nome"]);
+    if ($res) {
+        while ($row = mysqli_fetch_array($res)) {
+            $idTag = $row['id'];
+            $nomeTag = $row['nome'];
+            $arrayTags[$idTag] = $nomeTag;
 
-        $listTags .= "<option value=\"$tag\">$tag</option>\n";
+        }
     }
-
-    return $listTags;
-
+    return $arrayTags;
 }
 
 
