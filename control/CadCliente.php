@@ -23,7 +23,7 @@ if ( empty($msgErro) ) {
         
         // Devolver a mensagem de sucesso
 
-    header("Location:../view/pag-login.php?msg=Tudo pronto $nome! Faça seu login e aproveite nosso site. ★");
+    header("Location:../view-bonitinha/pagCadastroLogin/login-cliente.php?msg=Tudo pronto, $nome! Faça seu login e aproveite nossos serviços.");
 
 } else {
     header("Location:../view/cliente/pag-cad-cliente.php?msg=$msgErro");

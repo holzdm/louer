@@ -32,7 +32,7 @@ if ($cliente){
     
     header("Location:../view/cliente/pag-inicial-cliente.php");
 }else{
-    header("Location:../view/pag-login.php?msgErro=Login Inválido!");
+    header("Location:../view-bonitinha/pagCadastroLogin/login-cliente.php?msgErro=Login Inválido!");
 }
 
 

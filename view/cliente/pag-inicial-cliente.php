@@ -16,11 +16,11 @@ $nome = $_SESSION['nome'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina Inicial do Cliente</title>
+    <title>Página Inicial do Cliente</title>
 </head>
 <body>
-    <h1> Pagina do Cliente logado </h1>
-    <h3> PERFIL: <?php echo $nome ?> <a href="../pag-login.php"> Sair </a></h2>
+    <h1> Página do Cliente logado </h1>
+    <h3> PERFIL: <?php echo $nome ?> <a href="../../view-bonitinha/pagCadastroLogin/login-cliente.php"> Sair </a></h2>
     <br>
     <h3><a href="../fornecedor/pag-cad-fornecedor.php"> Quero ser um fornecedor! </a></h3>
     <h3><a href="../fornecedor/pag-inicial-fornecedor.php"> Já sou um fornecedor </a></h3>
