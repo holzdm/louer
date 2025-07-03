@@ -14,6 +14,14 @@ $senha = $_POST['senha'];
 require_once "FuncoesUteis.php";
 $msgErro = validarCampos($nome, $cpf, $cnpj, $cidade, $telefone, $email, $senha);
 
+require_once "../model/ClienteDao.php";
+
+// verificar se o e-mail já existe
+if (existeEmail($_POST['email'])) {
+    header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msg=Este e-mail já está cadastrado.");
+    exit;
+}
+
 if ( empty($msgErro) ) {
         
         // Operação
@@ -26,7 +34,7 @@ if ( empty($msgErro) ) {
     header("Location:../view-bonitinha/pagCadastroLogin/login-cliente.php?msg=Tudo pronto, $nome! Faça seu login e aproveite nossos serviços.");
 
 } else {
-    header("Location:../view/cliente/pag-cad-cliente.php?msg=$msgErro");
+    header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msg=$msgErro");
 }
 
 

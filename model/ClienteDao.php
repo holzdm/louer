@@ -39,5 +39,23 @@ function pesquisarCliente($email, $senha){
     
 }
 
+// ver se o email já existe
+function existeEmail($email) {
+    require_once "ConexaoBD.php";
+    $conn = conectarBD();
+
+    $sql = "SELECT COUNT(*) FROM usuario WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($total);
+    $stmt->fetch();
+    $stmt->close();
+    $conn->close();
+
+    return $total > 0;
+}
+
+
 // USAR O STMT?
 ?>

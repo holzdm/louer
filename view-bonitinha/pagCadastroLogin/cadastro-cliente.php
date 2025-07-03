@@ -67,17 +67,57 @@
       </div>
     </nav>
 
+    <!-- notificacao de erro -->
+    <?php if (isset($_GET['msg'])): ?>
+  <div id="notificacao" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 fade-in">
+    <div class="bg-white border border-orange-300 text-orange-600 rounded-lg p-4 shadow-lg flex items-start max-w-md w-full">
+      <svg class="w-6 h-6 text-orange-600 mt-1 mr-2" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 14a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm1-8h-2v6h2V8z"/>
+      </svg>
+      <div>
+        <p class="font-medium text-sm">Erro no cadastro</p>
+        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msg']) ?></p>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translate(-50%, 0); }
+      to { opacity: 0; transform: translate(-50%, -10px); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+    .fade-out {
+      animation: fadeOut 0.4s ease-in forwards;
+    }
+  </style>
+
+  <script>
+    setTimeout(() => {
+      const notif = document.getElementById('notificacao');
+      if (notif) {
+        notif.classList.remove('fade-in');
+        notif.classList.add('fade-out');
+        setTimeout(() => notif.remove(), 500);
+      }
+    }, 4000);
+  </script>
+<?php endif; ?>
+
+
     <!-- Formulário -->
     <div class="flex-grow container mx-auto px-4 py-10 md:py-16 flex justify-center">
       <div class="w-full max-w-2xl">
         <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10">
           <h1 class="text-2xl md:text-3xl font-bold text-primary mb-3">Crie sua conta</h1>
           <p class="text-gray-600 mb-8">Junte-se ao LOUER e comece a alugar ou disponibilizar espaços e itens.</p>
-
-          <!-- Mensagem de erro -->
-          <?php if (isset($_GET['msg'])): ?>
-            <p class="text-red-600 text-sm mb-4"><?= htmlspecialchars($_GET['msg']) ?></p>
-          <?php endif; ?>
 
           <form action="../../control/CadCliente.php" method="post" onsubmit="return enviarDocumento()">
             <div class="space-y-5">
@@ -159,7 +199,7 @@
     </footer>
   </div>
 
-  <!-- Scripts -->
+  <!-- Scripts (toggle cpf/cnpj) -->
   <script>
     const cpfToggle = document.getElementById('cpfToggle');
     const cnpjToggle = document.getElementById('cnpjToggle');
@@ -179,7 +219,7 @@
       documentInput.setAttribute('data-type', 'cnpj');
     });
 
-    function enviarDocumento() {
+     function enviarDocumento() {
       const tipo = documentInput.getAttribute('data-type');
       const valor = documentInput.value;
       if (tipo === 'cpf') {

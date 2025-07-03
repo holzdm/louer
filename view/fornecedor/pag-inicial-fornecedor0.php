@@ -13,7 +13,8 @@
         echo "<FONT color=pink>$msg</FONT>";
     }
     ?>
-    <h3>Crie seu produto <a href="pag-novo-produto.php"> AQUI! </a></h3>
+    <h3>Crie seu produto <a href="../../view-bonitinha/fornecedor/pag-novo-produto.php"> AQUI! </a></h3>
+    <h3> <a href="../../view-bonitinha/pagCadastroLogin/login-cliente.php"> Sair </a></h3>
 </body>
 </html>
 

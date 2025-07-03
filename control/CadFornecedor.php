@@ -1,37 +1,34 @@
 <?php
 session_start();
+
+// Verifica se o usuário está logado (precisa do email e senha da sessão)
+if (!isset($_SESSION['email']) || !isset($_SESSION['senha'])) {
+    header("Location:../pagCadastroLogin/login-cliente.php?msgErro=É necessário estar logado para se cadastrar como fornecedor.");
+    exit;
+}
+
 $email = $_SESSION['email'];
 $senha = $_SESSION['senha'];
-// RECEBIMENTO DOS DADOS DA pag-cad-fornecedor
 
-$cep = $_POST['cep'];
-$rua = $_POST['rua'];
-$bairro = $_POST['bairro'];
-$nEnd = $_POST['nEnd'];
-$complemento = $_POST['complemento'];
+// Recebimento dos dados do formulário
+$cep = $_POST['cep'] ?? '';
+$rua = $_POST['rua'] ?? '';
+$bairro = $_POST['bairro'] ?? '';
+$nEnd = $_POST['nEnd'] ?? '';
+$complemento = $_POST['complemento'] ?? '';
 
-// VERIFICACAO 
-
+// Validação dos dados
 require_once "FuncoesUteis.php";
 $msgErro = validarCamposFornecedor($cep, $rua, $bairro, $nEnd);
 
-if ( empty($msgErro) ) {
-        
-        // Operação
+if (empty($msgErro)) {
 
     require_once "../model/FornecedorDao.php";
+    inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha);
+    header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=" . urlencode("Tudo pronto! Comece adicionando um produto ★"));
 
-    if (inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha)) {
-        inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha);
-
-    // Devolver a mensagem de sucesso
-        header("Location:../view/fornecedor/pag-inicial-fornecedor.php?msg=Tudo pronto! Comece adicionando um produto ★");
-
-    }else{
-        header("Location:../view/fornecedor/pag-cad-fornecedor.php?msg=$msgErro");
-    }
-        // ta bem baguncado, com mais tempo eu organizo da melhor forma pra n ter q ter esses dois elses
 } else {
-    header("Location:../view/fornecedor/pag-cad-fornecedor.php?msg=$msgErro");
+    header("Location:../view-bonitinha/fornecedor/pag-cad-fornecedor.php?msg=" . urlencode($msgErro)); //urlencore é para evitar problemas com caracteres especiais na mensagem
 }
+
 ?>

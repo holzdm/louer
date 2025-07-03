@@ -12,9 +12,9 @@ require_once "../model/ProdutoDao.php";
 $np = inserirProduto($nomeProduto, $tagsIds, $idUsuario);
 
 if ($np != null) {
-    header("Location:../view/fornecedor/pag-inicial-fornecedor.php?msg=Produto $np adicionado com sucesso!");
+    header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=Produto $np adicionado com sucesso!");
 }else{
-    header("Location:../view/fornecedor/pag-novo-produto.php?msgErro=Erro ao adicionar produto. Tente novamente.");
+    header("Location:../view-bonitinha/fornecedor/pag-novo-produto.php?msgErro=Erro ao adicionar produto. Tente novamente.");
 }
 
 

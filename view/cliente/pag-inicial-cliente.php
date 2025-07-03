@@ -22,8 +22,8 @@ $nome = $_SESSION['nome'];
     <h1> Página do Cliente logado </h1>
     <h3> PERFIL: <?php echo $nome ?> <a href="../../view-bonitinha/pagCadastroLogin/login-cliente.php"> Sair </a></h2>
     <br>
-    <h3><a href="../fornecedor/pag-cad-fornecedor.php"> Quero ser um fornecedor! </a></h3>
-    <h3><a href="../fornecedor/pag-inicial-fornecedor.php"> Já sou um fornecedor </a></h3>
+    <h3><a href="../../view-bonitinha/fornecedor/pag-cad-fornecedor.php"> Quero ser um fornecedor! </a></h3>
+    <h3><a href="../fornecedor/pag-inicial-fornecedor0.php"> Já sou um fornecedor </a></h3>
 
 
 </body>
