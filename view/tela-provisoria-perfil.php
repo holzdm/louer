@@ -7,7 +7,6 @@ if (!isset($_SESSION['id'])) {
     exit;
 }
 
-// Recupera os dados da sessão
 $nome = $_SESSION['nome'];
 $tipo = $_SESSION['tipo'];
 ?>
@@ -18,7 +17,7 @@ $tipo = $_SESSION['tipo'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial do Cliente</title>
+    <title>Tela provisoria perfil</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <script>
@@ -69,7 +68,6 @@ $tipo = $_SESSION['tipo'];
             color: white;
         }
     </style>
-
 </head>
 
 <body>
@@ -77,23 +75,24 @@ $tipo = $_SESSION['tipo'];
 
         <nav class="bg-white shadow-sm py-4">
             <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
-                <a href="../../view/cliente/pag-inicial-cliente.php" class="text-primary font-bold text-3xl">LOUER</a>
-                <div class="hidden md:flex space-x-6">
-                    <a href="#" class="text-gray-600 hover:text-primary">Espaços</a>
-                    <a href="#" class="text-gray-600 hover:text-primary">Itens</a>
-                    <a href="#" class="text-gray-600 hover:text-primary">Ajuda</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="../../view/tela-provisoria-perfil.php" class="text-gray-600 hover:text-primary">Perfil</a>
-                </div>
+                <a href="cliente/pag-inicial-cliente.php" class="text-primary font-bold text-3xl">LOUER</a>
+
             </div>
         </nav>
-
         <br>
-        <h4> SESSAO DE: <?php echo $nome; ?></h4>
+        <h4> SESSAO DE: <?php echo ("$nome e tipo: $tipo"); ?></h4>
+        <h3><a href="#">Informações da Conta</a></h3>
+        <h3><a href="#">Meus Aluguéis</a></h3>
+        <h3><a href="#">Favoritos</a></h3>
+        <h3><a href="#">Notificações</a></h3>
+        <?php if ($tipo == 'Fornecedor'): ?>
+            <h3><a href="../fornecedor/pag-inicial-fornecedor0.php"> Página do Fornecedor </a></h3>
 
-        <h1> Página do Cliente logado </h1>
+        <?php else: ?>
+            <h3><a href="../view-bonitinha/fornecedor/pag-cad-fornecedor.php"> Quero ser um fornecedor! </a></h3>
 
+        <?php endif; ?>
+        <h3><a href="#">Sair</a></h3>
     </div>
 </body>
 

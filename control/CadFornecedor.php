@@ -25,6 +25,7 @@ if (empty($msgErro)) {
 
     require_once "../model/FornecedorDao.php";
     inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha);
+    $_SESSION['tipo'] = 'Fornecedor';
     header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=" . urlencode("Tudo pronto! Comece adicionando um produto ★"));
 
 } else {

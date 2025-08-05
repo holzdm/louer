@@ -1,16 +1,16 @@
  -- PADRAO DOS DIRETORIOS
 
-Nome dos diretorios?
+Nome de todos os diretorios = 
 
 
  -- PADRAO DOS ARQUIVOS
 
-Nome dos arquivos dentro de "view" -> minusculo-com-dash
-Nome dos outros arquivos -> LetraMaiuscula
+Nome dos arquivos dentro de "view" = minusculo-com-dash
+Nome dos outros arquivos = LetraMaiuscula
 
  -- PADRAO DENTRO DOS ARQUIVOS
 
-Nome de variaveis, funcoes,  -> primeiraLetraMinuscula
+Nome de variaveis, funcoes,  = primeiraLetraMinuscula
 
 
  -- ESTRUTURA:

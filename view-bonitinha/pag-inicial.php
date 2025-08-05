@@ -62,13 +62,12 @@
       <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
         <a href="#" class="text-primary font-bold text-3xl">LOUER</a>
         <div class="hidden md:flex space-x-6">
-          <a href="#" class="text-gray-600 hover:text-primary">Início</a>
           <a href="#" class="text-gray-600 hover:text-primary">Espaços</a>
           <a href="#" class="text-gray-600 hover:text-primary">Itens</a>
           <a href="#" class="text-gray-600 hover:text-primary">Ajuda</a>
         </div>
         <div class="flex items-center space-x-4">
-          <a href="../view-bonitinha/pagCadastroLogin/login-cliente.php" class="text-gray-600 hover:text-primary">Perfil</a>
+          <a href="../view-bonitinha/pagCadastroLogin/login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
         </div>
       </div>
     </nav>
