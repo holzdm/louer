@@ -39,6 +39,30 @@ function inserirTagsHasProduto($tagsIds, $idProduto) {
     return true;
 }
 
+// function listarProdutos(){
 
+//     $conexao = conectarBD();
+
+//     $sql = "SELECT * FROM produto";
+//     $stmt = $conexao->prepare($sql);
+//     $stmt->execute();
+//     $res = $stmt->get_result();
+
+//     $arrayProdutos = [];
+//     $arrayCadaProduto = [];
+
+//     if ($res) {
+//         while ($row = mysqli_fetch_array($res)) {
+//             $idProduto = $row['id'];
+//             $nomeProduto = $row['nome'];
+//             $descricao = $res["descricao"];
+//             $valor_hora = $res["valor_hora"];
+//             $arrayProdutos[$idProduto] = $nomeProduto;
+
+//         }
+//     }
+//     return $arrayProdutos;
+    
+// }
 
 ?>

@@ -93,6 +93,8 @@ $tipo = $_SESSION['tipo'];
         <h4> SESSAO DE: <?php echo $nome; ?></h4>
 
         <h1> Página do Cliente logado </h1>
+        <br>
+        
 
     </div>
 </body>
