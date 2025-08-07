@@ -16,5 +16,49 @@ if (!isset($_SESSION['id'])) {
 </head>
 <body>
     
+<?php 
+if (!isset($_GET['idProduto'])){
+    header("Location: ../view-bonitinha/pag-inicial-cliente.php");
+}else{
+    header("Location: ../control/ClienteControler");
+    // criar o clientecontroler no lugar do cadcliente e colocar as funcoes do cliente la
+//     require_once '../model/UsuarioModel.php';
+
+// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//     $acao = $_POST['acao'] ?? '';
+
+//     switch ($acao) {
+//         case 'cadastrar':
+//             cadastrarUsuario($_POST);
+//             break;
+
+//         case 'editar':
+//             editarUsuario($_POST);
+//             break;
+
+//         case 'excluir':
+//             excluirUsuario($_POST['id']);
+//             break;
+
+//         default:
+//             echo "Ação inválida.";
+//             break;
+//     }
+// }
+
+// // Funções do controller
+// function cadastrarUsuario($dados) {
+//     // Aqui você chama a função do model, por exemplo:
+//     criarUsuario($dados['nome'], $dados['email']);
+//     echo "Usuário cadastrado!";
+// }
+
+// function editarUsuario($dados) {
+//     // lógica de edição
+// }
+
+}
+
+?>
 </body>
 </html>

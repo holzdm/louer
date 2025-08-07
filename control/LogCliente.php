@@ -30,7 +30,7 @@ if ($cliente){
     $_SESSION['complemento'] = $cliente['complemento'];
     $_SESSION['conta_ativa'] = $cliente['conta_ativa'];
     
-    header("Location:../view/cliente/pag-inicial-cliente.php");
+    header("Location:../view-bonitinha/pag-inicial-cliente.php");
 }else{
     header("Location:../view-bonitinha/pagCadastroLogin/login-cliente.php?msgErro=Login Inválido!");
 }

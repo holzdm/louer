@@ -3,7 +3,7 @@ session_start(); // necessário para acessar $_SESSION
 
 // Verifica se a pessoa está logada
 if (!isset($_SESSION['id'])) {
-    header("Location: ../pag-login.php");
+    header("Location: ../../view-bonitinha/pag-inicial.php");
     exit;
 }
 
