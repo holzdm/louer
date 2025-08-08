@@ -158,7 +158,7 @@ $tipo = $_SESSION['tipo'];
 
         echo "
         <div class='column is-one-quarter'>
-            <div class='card'><a href='../view/pag-produto.php?idProduto=$idProduto'>
+            <div class='card'><a href='../view/pag-produto.php'>
                 <div class='card-image'>
                     <figure class='image is-4by3'>
                         <img src='https://bulma.io/assets/images/placeholders/1280x960.png' alt='Imagem do produto' />

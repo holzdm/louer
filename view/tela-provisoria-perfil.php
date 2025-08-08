@@ -86,7 +86,7 @@ $tipo = $_SESSION['tipo'];
         <h3><a href="#">Favoritos</a></h3>
         <h3><a href="#">Notificações</a></h3>
         <?php if ($tipo == 'Fornecedor'): ?>
-            <h3><a href="../fornecedor/pag-inicial-fornecedor0.php"> Página do Fornecedor </a></h3>
+            <h3><a href="fornecedor/pag-inicial-fornecedor0.php"> Página do Fornecedor </a></h3>
 
         <?php else: ?>
             <h3><a href="../view-bonitinha/fornecedor/pag-cad-fornecedor.php"> Quero ser um fornecedor! </a></h3>

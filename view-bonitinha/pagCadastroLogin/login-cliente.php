@@ -134,7 +134,7 @@
       </div>
       <div>
         <div class="text-sm pb-2 font-semibold text-orange-600">
-          Erro ao fazer login
+          Erro ao fazer login. 
         </div>
         <div class="text-sm text-gray-600 tracking-tight">
           <?php echo htmlspecialchars($_GET['msgErro']); ?>
@@ -186,7 +186,9 @@
           <p class="text-gray-600 mb-8">Bem-vindo de volta! Acesse sua conta no LOUER.</p>
 
           <!-- FORMULARIO LOGIN -->
-          <form action="../../control/LogCliente.php" method="post">
+          <form action="../../control/ClienteController.php" method="post">
+            <input type="hidden" name="acao" value="logar">
+
             <div class="space-y-5">
               <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>

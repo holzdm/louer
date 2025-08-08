@@ -118,7 +118,7 @@
     <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
       <h1 class="text-2xl md:text-3xl font-bold text-primary mb-6">O que deseja anunciar primeiro?</h1>
 
-      <form action="../../control/CadProduto.php" method="post" class="space-y-6">
+      <form action="../../control/ProdutoController.php?acao='cadastrar'" method="post" class="space-y-6">
         <div>
           <label for="nomeProduto" class="block text-sm font-medium text-gray-700 mb-1">Nome do produto</label>
           <input type="text" id="nomeProduto" name="nomeProduto" placeholder="Digite o nome do seu produto" required

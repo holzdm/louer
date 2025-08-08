@@ -19,7 +19,7 @@ function inserirCliente($nome, $cpf, $cnpj, $cidade, $telefone, $email, $senha) 
     
 }
 
-function pesquisarCliente($email, $senha){
+function pesquisarCliente($senha, $email){
 
     $conexao = conectarBD();
 

@@ -1,3 +1,13 @@
+<?php
+session_start(); // necessário para acessar $_SESSION
+
+// Verifica se a pessoa está logada
+if (isset($_SESSION['id'])) {
+    header("Location: pag-inicial-cliente.php");
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>

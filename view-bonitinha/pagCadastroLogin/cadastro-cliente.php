@@ -119,7 +119,9 @@
           <h1 class="text-2xl md:text-3xl font-bold text-primary mb-3">Crie sua conta</h1>
           <p class="text-gray-600 mb-8">Junte-se ao LOUER e comece a alugar ou disponibilizar espaços e itens.</p>
 
-          <form action="../../control/CadCliente.php" method="post" onsubmit="return enviarDocumento()">
+          <form action="../../control/ClienteController.php" method="post" onsubmit="return enviarDocumento()">
+            <input type="hidden" name="acao" value="cadastrar">
+
             <div class="space-y-5">
               <div>
                 <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome completo</label>

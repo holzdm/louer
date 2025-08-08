@@ -65,4 +65,30 @@ function inserirTagsHasProduto($tagsIds, $idProduto) {
     
 // }
 
+function consultarProduto($id){
+
+    $conexao = conectarBD();
+
+    $sql = "SELECT * FROM Produto WHERE id = ?";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+
+    if ($row = $res->fetch_assoc()) {
+        return [
+            "nome" => $row['nome'],
+            "descricao" => $row['descricao'],
+            "tipo" => $row['tipo'],
+            "valor" => $row['valor_hora'],
+
+        ];
+    }
+    }
+
+
+
+
 ?>

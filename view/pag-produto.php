@@ -17,10 +17,10 @@ if (!isset($_SESSION['id'])) {
 <body>
     
 <?php 
-if (!isset($_GET['idProduto'])){
-    header("Location: ../view-bonitinha/pag-inicial-cliente.php");
-}else{
-    header("Location: ../control/ClienteControler");
+// if (!isset($_GET['idProduto'])){
+//     header("Location: ../view-bonitinha/pag-inicial-cliente.php");
+// }else{
+//     header("Location: ../control/ProdutoController.php?acao='acessar'");
     // criar o clientecontroler no lugar do cadcliente e colocar as funcoes do cliente la
 //     require_once '../model/UsuarioModel.php';
 
@@ -57,7 +57,7 @@ if (!isset($_GET['idProduto'])){
 //     // lógica de edição
 // }
 
-}
+// }
 
 ?>
 </body>
