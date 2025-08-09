@@ -24,6 +24,22 @@ function inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $se
     
 }
 
+function pesquisarFornecedor($idFornecedor){
+
+    $conexao = conectarBD();
+
+    $sql = "SELECT nome FROM usuario WHERE id = ?";
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $idFornecedor);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($row = $res->fetch_assoc()){
+        return $row['nome'];
+    }
+    return null;
+}
+
 
 
 

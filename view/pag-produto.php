@@ -10,6 +10,7 @@ $nomeProduto = $dadosProduto['nome'];
 $tipoProduto = $dadosProduto['tipo'];
 $descricaoProduto = $dadosProduto['descricao'];
 $valorProduto = $dadosProduto['valor'];
+$nomeFornecedor = $dadosProduto['nomeFornecedor'];
 
 ?>
 
@@ -27,6 +28,7 @@ $valorProduto = $dadosProduto['valor'];
 <br>
 <h3> <?php echo $descricaoProduto?> </h3>
 <h3> <?php echo $valorProduto?> </h3>
+<h3> Puplicado por: <?php echo $nomeFornecedor?> </h3>
 
 </body>
 </html>

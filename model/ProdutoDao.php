@@ -73,16 +73,23 @@ function consultarProduto($id){
 
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("i", $id);
-    $stmt->execute() or die("Erro na execução da query: " . $stmt->error);;
+    $stmt->execute();
     $res = $stmt->get_result();
 
 
     if ($row = $res->fetch_assoc()) {
+
+        require_once "FornecedorDao.php";
+
+        $idFornecedor = $row['usuario_id'];
+        $nomeFornecedor = pesquisarFornecedor($idFornecedor);
+
         return [
             "nome" => $row['nome'],
             "descricao" => $row['descricao'],
             "tipo" => $row['tipo'],
             "valor" => $row['valor_hora'],
+            "nomeFornecedor" => $nomeFornecedor
 
         ];
     }
