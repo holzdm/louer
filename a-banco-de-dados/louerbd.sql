@@ -213,12 +213,31 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
--- Data for table `louerbd`.`formapagamento`
+-- Data for tables 
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `louerbd`;
+-- ----------data: formapagamento
 INSERT INTO `louerbd`.`formapagamento` (`id`, `forma`) VALUES (1, 'DINHEIRO');
 INSERT INTO `louerbd`.`formapagamento` (`id`, `forma`) VALUES (2, 'CARTAO');
+
+-- ----------data: tags
+INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Quadra');
+INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Musical');
+INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Ao ar livre');
+INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Esporte');
+INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Roupa');
+INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Fotográfico');
+INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Escolar');
+
+
+
+
+-- ----------data: usuario
+INSERT INTO `louerbd`.`usuario` (`nome`, `tipo`,`cpf`, `cidade`, `telefone`, `email`, `senha`) VALUES ('Carol', 'Fornecedor', '19919919922', 'Colatina', '27996937991', 'carol@gmail.com', '1234567');
+
+-- ----------data: produto
+INSERT INTO `louerbd`.`produto` (`usuario_id`,`nome`, `descricao`, `tipo`, `valor_hora`) VALUES (1, 'Barraca de Acampamento', 'Super confortável, protege contra a chuva e comporta 4 pessoas.', 'Equipamento', '50');
 
 COMMIT;
 

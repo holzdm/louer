@@ -46,16 +46,22 @@ function cadastrarProduto($dadosPOST){
     }
 }
 
-function acessarProduto($dadosGET){
-    $idProduto = $dadosGET;
+function acessarProduto($idProduto){
+    if (!$idProduto){
+        header("Location: ../view-bonitinha/pag-inicial.php?msgErro=Produto inválido. (ProdutoController)");
+        exit;
+    }
 
-    $arrayProduto = consultarProduto($idProduto); 
+    $dadosProduto = consultarProduto($idProduto); 
+    $_SESSION['Produto'] = $dadosProduto;
 
-    if (isset($arrayProdutos)){
-        header("Location: ../view/pag-produto.php?arrayProduto = $arrayProduto");
+
+    if (isset($dadosProduto)){
+        header("Location: ../view/pag-produto.php");
         exit;
     }else{
         header("Location: ../view-bonitinha/pag-inicial.php");
+        exit;
     }
 
 }

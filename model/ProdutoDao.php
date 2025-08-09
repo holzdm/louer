@@ -73,7 +73,7 @@ function consultarProduto($id){
 
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("i", $id);
-    $stmt->execute();
+    $stmt->execute() or die("Erro na execução da query: " . $stmt->error);;
     $res = $stmt->get_result();
 
 
@@ -86,7 +86,9 @@ function consultarProduto($id){
 
         ];
     }
-    }
+    echo "erro no if row";
+    // return null;
+}
 
 
 

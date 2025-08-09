@@ -54,7 +54,7 @@
     <!-- Navbar -->
     <nav class="bg-white shadow-sm py-4">
       <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
-        <a href="#" class="text-primary font-bold text-3xl">LOUER</a>
+        <a href="../pag-inicial.php" class="text-primary font-bold text-3xl">LOUER</a>
         <div class="hidden md:flex space-x-6">
           <a href="#" class="text-gray-600 hover:text-primary">Início</a>
           <a href="#" class="text-gray-600 hover:text-primary">Espaços</a>
@@ -76,7 +76,7 @@
       </svg>
       <div>
         <p class="font-medium text-sm">Erro no cadastro</p>
-        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msg']) ?></p>
+        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msgErro']) ?></p>
       </div>
     </div>
   </div>

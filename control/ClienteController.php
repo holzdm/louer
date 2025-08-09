@@ -20,8 +20,8 @@ switch ($acao) {
     //     break;
 
     default:
-        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial.php'));
-        // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial-cliente.php') . "?msgErro=" . urlencode("Ação inválida!"));
+    // volta para a pagina anterior (se existir) e entrega a msg de Erro
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial-cliente.php') . "?msgErro=" . urlencode("Ação inválida!"));
         break;
 }
 
@@ -43,7 +43,7 @@ function cadastrarCliente($dadosPOST)
 
     // verificar se o e-mail já existe
     if (existeEmail($_POST['email'])) {
-        header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msg=Este e-mail já está cadastrado.");
+        header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msgErro=Erro no cadastro. Este e-mail já está cadastrado.");
         exit;
     }
 
@@ -58,7 +58,7 @@ function cadastrarCliente($dadosPOST)
         header("Location:../view-bonitinha/pagCadastroLogin/login-cliente.php?msg=Tudo pronto, $nome! Faça seu login e aproveite nossos serviços.");
         exit;
     } else {
-        header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msg=$msgErro");
+        header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msgErro=$msgErro");
         exit;
     }
 }

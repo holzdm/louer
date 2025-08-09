@@ -90,8 +90,8 @@ if (isset($_SESSION['id'])) {
         <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 14a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm1-8h-2v6h2V8z"/>
       </svg>
       <div>
-        <p class="font-medium text-sm">Erro no cadastro</p>
-        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msg']) ?></p>
+        <!-- <p class="font-medium text-sm">Erro no cadastro</p>  Tirei pra poder receber varias mensagens, n so as de erro de cadastro -->
+        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msgErro']) ?></p>
       </div>
     </div>
   </div>
@@ -150,13 +150,14 @@ if (isset($_SESSION['id'])) {
     $res = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
 
     while ($registro = mysqli_fetch_assoc($res)) {
+        $idProduto = $registro["id"];
         $nome = $registro["nome"];
         $descricao = $registro["descricao"];
         $valor_hora = $registro["valor_hora"];
 
         echo "
         <div class='column is-one-quarter'>
-            <div class='card'>
+            <div class='card'><a href='../control/ProdutoController.php?acao=acessar&id=$idProduto'>
                 <div class='card-image'>
                     <figure class='image is-4by3'>
                         <img src='https://bulma.io/assets/images/placeholders/1280x960.png' alt='Imagem do produto' />
@@ -178,7 +179,7 @@ if (isset($_SESSION['id'])) {
                         $descricao
                     </div>
                 </div>
-            </div>
+            </a></div>
         </div>
         ";
     }
