@@ -55,7 +55,7 @@
     <!-- Navbar -->
     <nav class="bg-white shadow-sm py-4">
       <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
-        <a href="../../view/cliente/pag-inicial-cliente.php" class="text-primary font-bold text-3xl">LOUER</a>
+        <a href="../pag-inicial-cliente.php" class="text-primary font-bold text-3xl">LOUER</a>
         <div class="hidden md:flex space-x-6">
           <a href="#" class="text-gray-600 hover:text-primary">Espaços</a>
           <a href="#" class="text-gray-600 hover:text-primary">Itens</a>
@@ -68,7 +68,7 @@
     </nav>
 
     <!-- notificacao de erro -->
-    <?php if (isset($_GET['msg'])): ?>
+    <?php if (isset($_GET['msgErro'])): ?>
   <div id="notificacao" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 fade-in">
     <div class="bg-white border border-orange-300 text-orange-600 rounded-lg p-4 shadow-lg flex items-start max-w-md w-full">
       <svg class="w-6 h-6 text-orange-600 mt-1 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -76,7 +76,7 @@
       </svg>
       <div>
         <p class="font-medium text-sm">Erro</p>
-        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msg']) ?></p>
+        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msgErro']) ?></p>
       </div>
     </div>
   </div>
@@ -118,12 +118,20 @@
     <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
       <h1 class="text-2xl md:text-3xl font-bold text-primary mb-6">O que deseja anunciar primeiro?</h1>
 
-      <form action="../../control/ProdutoController.php?acao='cadastrar'" method="post" class="space-y-6">
+      <form action="../../control/ProdutoController.php?acao=cadastrar" method="post" class="space-y-6">
         <div>
           <label for="nomeProduto" class="block text-sm font-medium text-gray-700 mb-1">Nome do produto</label>
-          <input type="text" id="nomeProduto" name="nomeProduto" placeholder="Digite o nome do seu produto" required
+          <input type="text" id="nomeProduto" name="nomeProduto" placeholder="Digite o nome do seu produto"
             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
-        </div>
+          <br><br>
+          <label for="valorProduto" class="block text-sm font-medium text-gray-700 mb-1">Valor do produto</label>
+          <input type="number" id="valorProduto" name="valorProduto" placeholder="R$00.00" step="0.01" min="0" required
+            class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+          <br><br>
+          <label for="descricaoProduto" class="block text-sm font-medium text-gray-700 mb-1">Descrição do produto</label>
+          <textarea id="descricaoProduto" name="descricaoProduto" placeholder="Um produto incrível.." rows="5" cols="30"
+            class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required></textarea>
+          </div>
         <!-- combombox -->
         <div>
           <label for="arrayTags[]" class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>

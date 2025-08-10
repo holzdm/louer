@@ -28,6 +28,9 @@ switch ($acao) {
 
 function cadastrarProduto($dadosPOST){
     $nomeProduto = $dadosPOST['nomeProduto'];
+    $valorProduto = $dadosPOST['valorProduto'];
+    $descricaoProduto = $dadosPOST['descricaoProduto'];
+
     $idUsuario = $_SESSION['id'];
 
     if (isset($dadosPOST['arrayTags'])) {
@@ -35,7 +38,7 @@ function cadastrarProduto($dadosPOST){
         $tagsIds = array_unique($tagsIds);               // Remove duplicatas (por segurança)
     }
 
-    $np = inserirProduto($nomeProduto, $tagsIds, $idUsuario);
+    $np = inserirProduto($nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto);
 
     if ($np != null) {
         header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=Produto $np adicionado com sucesso!");

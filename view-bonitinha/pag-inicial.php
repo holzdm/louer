@@ -133,21 +133,10 @@ if (isset($_SESSION['id'])) {
   <div class="columns is-multiline">
 
     <?php
-    function conectarBD() {
-        $conexao = mysqli_connect('127.0.0.1','root','','louerbd');
-        if (!$conexao) {
-            die("Falha na conexão: " . mysqli_connect_error());
-        }
-        mysqli_query($conexao, "SET NAMES 'utf8'");
-        mysqli_query($conexao, "SET character_set_connection=utf8");
-        mysqli_query($conexao, "SET character_set_client=utf8");
-        mysqli_query($conexao, "SET character_set_results=utf8");
-        return $conexao;
-    }
-
-    $conexao = conectarBD(); 
-    $sql = "SELECT * FROM produto WHERE ativo = 1";
-    $res = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+    
+    require_once "../model/ProdutoDao.php";
+    
+    $res = listarProdutos();
 
     while ($registro = mysqli_fetch_assoc($res)) {
         $idProduto = $registro["id"];

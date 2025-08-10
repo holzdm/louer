@@ -1,13 +1,13 @@
 <?php
 require_once "ConexaoBD.php";
 
-function inserirProduto($nomeProduto, $tagsIds, $idUsuario) {
+function inserirProduto($nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto) {
     $conexao = conectarBD();    
 
-    $sql = "INSERT INTO Produto (nome, usuario_id) VALUES (?, ?)"; 
+    $sql = "INSERT INTO Produto (nome, usuario_id, valor_hora, descricao) VALUES (?, ?, ?, ?)"; 
     
     $stmt = mysqli_prepare($conexao, $sql);
-    mysqli_stmt_bind_param($stmt, "si", $nomeProduto, $idUsuario);
+    mysqli_stmt_bind_param($stmt, "sids", $nomeProduto, $idUsuario, $valorProduto, $descricaoProduto);
     
     mysqli_stmt_execute($stmt) or die('Erro no INSERT do Produto: '.mysqli_stmt_error($stmt));
     
@@ -97,6 +97,11 @@ function consultarProduto($id){
     // return null;
 }
 
+function listarProdutos(){
+    $conexao = conectarBD(); 
+    $sql = "SELECT * FROM produto WHERE ativo = 1";
+    return mysqli_query($conexao, $sql);
+}
 
 
 
