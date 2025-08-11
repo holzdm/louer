@@ -186,7 +186,7 @@
           <p class="text-gray-600 mb-8">Bem-vindo de volta! Acesse sua conta no LOUER.</p>
 
           <!-- FORMULARIO LOGIN -->
-          <form action="../../control/ClienteController.php" method="post">
+          <form action="../../control/ClienteController.php?acao=logar" method="post">
             <input type="hidden" name="acao" value="logar">
 
             <div class="space-y-5">

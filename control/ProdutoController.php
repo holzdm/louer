@@ -68,8 +68,9 @@ function cadastrarEnderecoProduto(){
 
 }
 
-function cadastrarImgProduto(){
-
+function cadastrarImgProduto($dadosPOST){
+    header("Location: ../view/fornecedor/pag-inicial-fornecedor0.php");
+    exit;
 }
 
 function acessarProduto($idProduto)

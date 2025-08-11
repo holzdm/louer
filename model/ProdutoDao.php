@@ -81,7 +81,7 @@ function consultarProduto($id){
 
         require_once "FornecedorDao.php";
 
-        $idFornecedor = $row['usuario_id'];
+        $idFornecedor = $row['id_usuario'];
         $nomeFornecedor = pesquisarFornecedor($idFornecedor);
 
         return [

@@ -151,7 +151,7 @@
             <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-4xl">
                 <h1 class="text-2xl md:text-3xl font-bold text-primary mb-6">Adicione fotos</h1>
 
-                <form action="../../control/ProdutoController.php?acao=cadastrar" method="post" class="space-y-6">
+                <form action="../../control/ProdutoController.php?acao=cadastrarImg" method="post" class="space-y-6">
                     <button type="submit"
                         class="bg-primary text-white w-full py-3 rounded-md font-medium hover:bg-[#0d3854] transition">
                         Confirmar

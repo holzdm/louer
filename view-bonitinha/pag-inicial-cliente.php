@@ -10,8 +10,8 @@ if (!isset($_SESSION['id'])) {
 // Recupera os dados da sessão
 $nome = $_SESSION['nome'];
 $tipo = $_SESSION['tipo'];
-?>
 
+?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
