@@ -9,9 +9,17 @@ switch ($acao) {
     case 'cadastrar':
         cadastrarProduto($_POST);
         break;
+    
+    case 'cadastrarEnd':
+        cadastrarEnderecoProduto($_POST);
+        break;
+
+    case 'cadastrarImg':
+        cadastrarImgProduto($_POST);
+        break;
 
     case 'acessar':
-        acessarProduto($_GET['id'] ?? null );
+        acessarProduto($_GET['id'] ?? null);
         break;
 
     // case 'excluir':
@@ -26,7 +34,9 @@ switch ($acao) {
 
 
 
-function cadastrarProduto($dadosPOST){
+function cadastrarProduto($dadosPOST)
+{
+    $tipoProduto = $dadosPOST['tipoProduto'];
     $nomeProduto = $dadosPOST['nomeProduto'];
     $valorProduto = $dadosPOST['valorProduto'];
     $descricaoProduto = $dadosPOST['descricaoProduto'];
@@ -38,39 +48,46 @@ function cadastrarProduto($dadosPOST){
         $tagsIds = array_unique($tagsIds);               // Remove duplicatas (por segurança)
     }
 
-    $np = inserirProduto($nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto);
+    $np = inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto);
 
     if ($np != null) {
-        header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=Produto $np adicionado com sucesso!");
+        if ($tipoProduto == 'Equipamento') {
+            // header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=Produto $np adicionado com sucesso!"); adicionar essa depois de adicionar as fotos
+            header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-img.php");
+            exit;
+        } else {
+            header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-end.php");
+        }
+    } else {
+        header("Location:../view-bonitinha/fornecedor/pag-novo-produto.php?msgErro=Erro ao adicionar produto. Tente novamente.");
         exit;
-    }else{
-       header("Location:../view-bonitinha/fornecedor/pag-novo-produto.php?msgErro=Erro ao adicionar produto. Tente novamente.");
-       exit;
     }
 }
 
-function acessarProduto($idProduto){
-    if (!$idProduto){
+function cadastrarEnderecoProduto(){
+
+}
+
+function cadastrarImgProduto(){
+
+}
+
+function acessarProduto($idProduto)
+{
+    if (!$idProduto) {
         header("Location: ../view-bonitinha/pag-inicial.php?msgErro=Produto inválido. (ProdutoController)");
         exit;
     }
 
-    $dadosProduto = consultarProduto($idProduto); 
+    $dadosProduto = consultarProduto($idProduto);
     $_SESSION['Produto'] = $dadosProduto;
 
 
-    if (isset($dadosProduto)){
+    if (isset($dadosProduto)) {
         header("Location: ../view/pag-produto.php");
         exit;
-    }else{
+    } else {
         header("Location: ../view-bonitinha/pag-inicial.php");
         exit;
     }
-
 }
-
-
-
-
-
-?>

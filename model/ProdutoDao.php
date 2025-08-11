@@ -1,13 +1,13 @@
 <?php
 require_once "ConexaoBD.php";
 
-function inserirProduto($nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto) {
+function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto) {
     $conexao = conectarBD();    
 
-    $sql = "INSERT INTO Produto (nome, usuario_id, valor_hora, descricao) VALUES (?, ?, ?, ?)"; 
+    $sql = "INSERT INTO Produto (tipo, nome, id_usuario, valor_hora, descricao) VALUES (?, ?, ?, ?, ?)"; 
     
     $stmt = mysqli_prepare($conexao, $sql);
-    mysqli_stmt_bind_param($stmt, "sids", $nomeProduto, $idUsuario, $valorProduto, $descricaoProduto);
+    mysqli_stmt_bind_param($stmt, "ssids", $tipoProduto, $nomeProduto, $idUsuario, $valorProduto, $descricaoProduto);
     
     mysqli_stmt_execute($stmt) or die('Erro no INSERT do Produto: '.mysqli_stmt_error($stmt));
     

@@ -45,13 +45,13 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `louerbd`.`produto` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `usuario_id` INT(11) NOT NULL,
+  `id_usuario` INT(11) NOT NULL,
   `nome` VARCHAR(100) NOT NULL,
   `descricao` TEXT NULL DEFAULT NULL,
   `tipo` ENUM('Espaço', 'Equipamento') NOT NULL,
   `valor_hora` DECIMAL(10,2) NULL DEFAULT NULL,
+  `dias_disponiveis` SET('Dom','Seg','Ter','Qua','Qui','Sex','Sab'),
   `politica_cancelamento` TEXT NULL DEFAULT NULL,
-  `dias_disponiveis` SET('Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb') NULL DEFAULT NULL,
   `cidade` VARCHAR(100) NULL DEFAULT NULL,
   `cep` VARCHAR(9) NULL DEFAULT NULL,
   `bairro` VARCHAR(100) NULL DEFAULT NULL,
@@ -60,25 +60,34 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`produto` (
   `complemento` VARCHAR(100) NULL DEFAULT NULL,
   `ativo` TINYINT(1) NULL DEFAULT 1,
   PRIMARY KEY (`id`),
-  INDEX `usuario_id` (`usuario_id` ASC),
+  INDEX `id_usuario` (`id_usuario` ASC),
   CONSTRAINT `produto_ibfk_1`
-    FOREIGN KEY (`usuario_id`)
+    FOREIGN KEY (`id_usuario`)
     REFERENCES `louerbd`.`usuario` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
-
-
+-- -----------------------------------------------------
+-- Table `louerbd`.`disponibilidades`
+-- -----------------------------------------------------
+CREATE TABLE disponibilidades (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_produto INT NOT NULL,
+    data_disponivel DATE NOT NULL,
+    FOREIGN KEY (id_produto) REFERENCES produto(id) ON DELETE CASCADE,
+    INDEX idx_produto_data (id_produto, data_disponivel)
+);
 -- -----------------------------------------------------
 -- Table `louerbd`.`reserva`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `louerbd`.`reserva` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `cliente_id` INT(11) NULL DEFAULT NULL,
-  `produto_id` INT(11) NULL DEFAULT NULL,
+  `id_usuario` INT(11) NULL DEFAULT NULL,
+  `id_produto` INT(11) NULL DEFAULT NULL,
   `data_reserva` DATE NOT NULL,
   `hora_inicio` TIME NOT NULL,
-  `duracao_horas` INT(11) NOT NULL,
+  `data_fim` DATE NOT NULL,
+  `hora_fim` TIME NOT NULL,
   `valor_reserva` DECIMAL(10,2) NULL DEFAULT NULL,
   `status` ENUM('Solicitada', 'Aprovada', 'Recusada', 'Confirmada', 'Finalizada', 'Cancelada') NULL DEFAULT 'Solicitada',
   `cancelado_por` ENUM('Cliente', 'Fornecedor', 'Gerente') NULL DEFAULT NULL,
@@ -86,14 +95,14 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`reserva` (
   `data_solicitado` DATETIME NULL DEFAULT CURRENT_TIMESTAMP(),
   `data_aceito_negado` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `cliente_id` (`cliente_id` ASC),
-  INDEX `produto_id` (`produto_id` ASC),
+  INDEX `id_usuario` (`id_usuario` ASC),
+  INDEX `id_produto` (`id_produto` ASC),
   CONSTRAINT `reserva_ibfk_1`
-    FOREIGN KEY (`cliente_id`)
+    FOREIGN KEY (`id_usuario`)
     REFERENCES `louerbd`.`usuario` (`id`)
     ON DELETE CASCADE,
   CONSTRAINT `reserva_ibfk_2`
-    FOREIGN KEY (`produto_id`)
+    FOREIGN KEY (`id_produto`)
     REFERENCES `louerbd`.`produto` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
@@ -104,15 +113,15 @@ DEFAULT CHARACTER SET = latin1;
 -- Table `louerbd`.`avaliacao`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `louerbd`.`avaliacao` (
-  `reserva_id` INT(11) NOT NULL,
+  `id_reserva` INT(11) NOT NULL,
   `tipo` ENUM('Cliente_para_Produto', 'Fornecedor_para_Cliente') NULL DEFAULT NULL,
   `nota` INT(11) NULL DEFAULT NULL,
   `comentario` TEXT NULL DEFAULT NULL,
   `data_avaliacao` DATETIME NULL DEFAULT CURRENT_TIMESTAMP(),
-  PRIMARY KEY (`reserva_id`),
-  INDEX `fk_avaliacao_reserva1_idx` (`reserva_id` ASC),
+  PRIMARY KEY (`id_reserva`),
+  INDEX `fk_avaliacao_reserva1_idx` (`id_reserva` ASC),
   CONSTRAINT `fk_avaliacao_reserva1`
-    FOREIGN KEY (`reserva_id`)
+    FOREIGN KEY (`id_reserva`)
     REFERENCES `louerbd`.`reserva` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -237,7 +246,7 @@ INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Escolar');
 INSERT INTO `louerbd`.`usuario` (`nome`, `tipo`,`cpf`, `cidade`, `telefone`, `email`, `senha`) VALUES ('Carol', 'Fornecedor', '19919919922', 'Colatina', '27996937991', 'carol@gmail.com', '1234567');
 
 -- ----------data: produto
-INSERT INTO `louerbd`.`produto` (`usuario_id`,`nome`, `descricao`, `tipo`, `valor_hora`) VALUES (1, 'Barraca de Acampamento', 'Super confortável, protege contra a chuva e comporta 4 pessoas.', 'Equipamento', '50');
+INSERT INTO `louerbd`.`produto` (`id_usuario`,`nome`, `descricao`, `tipo`, `valor_hora`) VALUES (1, 'Barraca de Acampamento', 'Super confortável, protege contra a chuva e comporta 4 pessoas.', 'Equipamento', '50');
 
 COMMIT;
 
