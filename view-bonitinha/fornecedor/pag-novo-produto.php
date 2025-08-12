@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+if (empty($_SESSION['id'])){
+  header("Location: ../pag-inicial.php");
+  exit;
+}
+
+$formData = $_SESSION['formData'] ?? [];
+unset($_SESSION['formData']); // limpa depois de usar
+
+
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -93,7 +106,8 @@
           </svg>
           <div>
             <p class="font-medium text-sm">Erro</p>
-            <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msgErro']) ?></p>
+            <p class="text-sm text-gray-600"><?= ($_GET['msgErro']) ?></p>
+            <!-- htmlspecialchars tirei pq o <br> estava sendo escrito -->
           </div>
         </div>
       </div>
@@ -138,7 +152,7 @@
           if (notif) {
             notif.classList.remove('fade-in');
             notif.classList.add('fade-out');
-            setTimeout(() => notif.remove(), 500);
+            setTimeout(() => notif.remove(), 800);
           }
         }, 4000);
       </script>
@@ -166,22 +180,22 @@
               </label>
             </div>
             <label for="nomeProduto" class="block text-sm font-medium text-gray-700 mb-1">Nome do produto</label>
-            <input type="text" id="nomeProduto" name="nomeProduto" placeholder="Digite o nome do seu produto"
+            <input type="text" id="nomeProduto" name="nomeProduto" placeholder="Digite o nome do seu produto" value="<?= htmlspecialchars($formData['nomeProduto'] ?? '')?>"
               class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
             <br><br>
             <label for="valorProduto" class="block text-sm font-medium text-gray-700 mb-1">Valor do produto</label>
-            <input type="number" id="valorProduto" name="valorProduto" placeholder="R$00.00" step="0.01" min="0" required
+            <input type="number" id="valorProduto" name="valorProduto" placeholder="R$00.00" step="0.01" min="0" value="<?= htmlspecialchars($formData['valorProduto'] ?? '')?>"
               class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
             <br><br>
             <label for="descricaoProduto" class="block text-sm font-medium text-gray-700 mb-1">Descrição do produto</label>
             <textarea id="descricaoProduto" name="descricaoProduto" placeholder="Um produto incrível.." rows="5" cols="30"
-              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required></textarea>
+              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"><?= htmlspecialchars($formData['descricaoProduto'] ?? '')?></textarea>
           </div>
           <!-- combombox -->
           <div>
             <label for="arrayTags[]" class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
             <select name="arrayTags[]" id="arrayTags" multiple size="6"
-              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="" disabled selected>Selecione uma categoria</option>
               <?php
               require_once "../../model/TagsDao.php";
@@ -196,37 +210,37 @@
           <div class="flex gap-2 flex-wrap">
 
             <label class="cursor-pointer select-none px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-primary hover:text-white transition toggle-button">
-              <input type="checkbox" name="dias_disponiveis[]" value="Dom" class="hidden" />
+              <input type="checkbox" name="diasDisponiveis[]" value="Dom" class="hidden" />
               Dom
             </label>
 
             <label class="cursor-pointer select-none px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-primary hover:text-white transition toggle-button">
-              <input type="checkbox" name="dias_disponiveis[]" value="Seg" class="hidden" />
+              <input type="checkbox" name="diasDisponiveis[]" value="Seg" class="hidden" />
               Seg
             </label>
 
             <label class="cursor-pointer select-none px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-primary hover:text-white transition toggle-button">
-              <input type="checkbox" name="dias_disponiveis[]" value="Ter" class="hidden" />
+              <input type="checkbox" name="diasDisponiveis[]" value="Ter" class="hidden" />
               Ter
             </label>
 
             <label class="cursor-pointer select-none px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-primary hover:text-white transition toggle-button">
-              <input type="checkbox" name="dias_disponiveis[]" value="Qua" class="hidden" />
+              <input type="checkbox" name="diasDisponiveis[]" value="Qua" class="hidden" />
               Qua
             </label>
 
             <label class="cursor-pointer select-none px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-primary hover:text-white transition toggle-button">
-              <input type="checkbox" name="dias_disponiveis[]" value="Qui" class="hidden" />
+              <input type="checkbox" name="diasDisponiveis[]" value="Qui" class="hidden" />
               Qui
             </label>
 
             <label class="cursor-pointer select-none px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-primary hover:text-white transition toggle-button">
-              <input type="checkbox" name="dias_disponiveis[]" value="Sex" class="hidden" />
+              <input type="checkbox" name="diasDisponiveis[]" value="Sex" class="hidden" />
               Sex
             </label>
 
             <label class="cursor-pointer select-none px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-primary hover:text-white transition toggle-button">
-              <input type="checkbox" name="dias_disponiveis[]" value="Sab" class="hidden" />
+              <input type="checkbox" name="diasDisponiveis[]" value="Sab" class="hidden" />
               Sab
             </label>
 
@@ -293,6 +307,8 @@
       btnConfirmar.classList.add('bg-primary', 'text-white');
     });
   });
+
+  
 </script>
 
 </html>

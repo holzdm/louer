@@ -21,6 +21,11 @@ function validarCampos($nome, $cpf, $cnpj, $cidade, $telefone, $email, $senha) {
 
     if ( empty($email) ) {
 		$msgErro = $msgErro . "Email inválido.";
+		
+	}
+
+	if (existeEmail($email)) {
+		$msgErro .= "Este email já está cadastrado.";
 	}
 
 	if ( strlen($senha) < 6 ) {
@@ -76,4 +81,18 @@ function validarCamposFornecedor($cep, $rua, $bairro, $nEnd){
 	return $msgErro;
 }
 
+function validarCamposProduto($nomeProduto, $valorProduto, $diasDisponiveis){
+	$msgErro = "";
+
+	if (empty($nomeProduto)){
+		$msgErro .= "Preencha o nome do seu produto.<br>";
+	}
+	if (empty($valorProduto)){
+		$msgErro .= "Preencha o valor do seu produto.<br>";
+	}
+	if (empty($diasDisponiveis)){
+		$msgErro .= "Escolha pelo menos um dia de disponibilidade.<br>";
+	}
+	return $msgErro;
+}
 ?>

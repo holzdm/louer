@@ -1,7 +1,10 @@
 <?php
 session_start();
 
+
+
 require_once "../model/ProdutoDao.php";
+require_once "FuncoesUteis.php";
 
 $acao = $_GET['acao'] ?? $_POST['acao'] ?? '';
 
@@ -36,11 +39,21 @@ switch ($acao) {
 
 function cadastrarProduto($dadosPOST)
 {
-    $tipoProduto = $dadosPOST['tipoProduto'];
-    $nomeProduto = $dadosPOST['nomeProduto'];
-    $valorProduto = $dadosPOST['valorProduto'];
+    $tipoProduto = $dadosPOST['tipoProduto'] ?? [];
+    $nomeProduto = $dadosPOST['nomeProduto'] ?? [];
+    $valorProduto = $dadosPOST['valorProduto'] ?? [];
     $descricaoProduto = $dadosPOST['descricaoProduto'];
+    $diasDisponiveis = $dadosPOST['diasDisponiveis'] ?? [];
 
+    $msgErro = validarCamposProduto( $nomeProduto, $valorProduto, $diasDisponiveis);
+        
+    if ($msgErro) {
+        $_SESSION['formData'] = $_POST;
+        header("Location:../view-bonitinha/fornecedor/pag-novo-produto.php?msgErro=$msgErro&");
+        exit;
+    }
+        // Operação
+    
     $idUsuario = $_SESSION['id'];
 
     if (isset($dadosPOST['arrayTags'])) {
@@ -48,9 +61,9 @@ function cadastrarProduto($dadosPOST)
         $tagsIds = array_unique($tagsIds);               // Remove duplicatas (por segurança)
     }
 
-    $np = inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto);
+    $np = inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis);
 
-    if ($np != null) {
+    if ($np) {
         if ($tipoProduto == 'Equipamento') {
             // header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=Produto $np adicionado com sucesso!"); adicionar essa depois de adicionar as fotos
             header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-img.php");
@@ -69,6 +82,7 @@ function cadastrarEnderecoProduto(){
 }
 
 function cadastrarImgProduto($dadosPOST){
+
     header("Location: ../view/fornecedor/pag-inicial-fornecedor0.php");
     exit;
 }

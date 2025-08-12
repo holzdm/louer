@@ -20,7 +20,7 @@ switch ($acao) {
     //     break;
 
     default:
-    // volta para a pagina anterior (se existir) e entrega a msg de Erro
+        // volta para a pagina anterior (se existir) e entrega a msg de Erro
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial-cliente.php') . "?msgErro=" . urlencode("Ação inválida!"));
         break;
 }
@@ -41,34 +41,31 @@ function cadastrarCliente($dadosPOST)
 
     $msgErro = validarCampos($nome, $cpf, $cnpj, $cidade, $telefone, $email, $senha);
 
-    // verificar se o e-mail já existe
-    if (existeEmail($_POST['email'])) {
-        header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msgErro=Erro no cadastro. Este e-mail já está cadastrado.");
-        exit;
-    }
-
     if (empty($msgErro)) {
 
         // Operação
 
-        $id = inserirCliente($nome, $cpf, $cnpj, $cidade, $telefone, $email, $senha);
+        if (inserirCliente($nome, $cpf, $cnpj, $cidade, $telefone, $email, $senha)) {
+            // Devolver a mensagem de sucesso
 
-        // Devolver a mensagem de sucesso
-
-        header("Location:../view-bonitinha/pagCadastroLogin/login-cliente.php?msg=Tudo pronto, $nome! Faça seu login e aproveite nossos serviços.");
-        exit;
-    } else {
-        header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msgErro=$msgErro");
+            header("Location:../view-bonitinha/pagCadastroLogin/login-cliente.php?msg=Tudo pronto, $nome! Faça seu login e aproveite nossos serviços.");
+            exit;
+        }
+        header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msgErro=Não foi possível inserir.");
         exit;
     }
+    header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msgErro=$msgErro");
+    exit;
 }
 
-function LogarCliente($dadosPOST){
+
+function LogarCliente($dadosPOST)
+{
 
     $senha = $dadosPOST['senha'];
     $email = $dadosPOST['email'];
 
-    
+
     $cliente = pesquisarCliente($senha, $email);
 
     if ($cliente) {
