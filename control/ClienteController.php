@@ -15,6 +15,10 @@ switch ($acao) {
         logarCliente($_POST);
         break;
 
+    case 'sair':
+        sairCliente();
+        break;
+
     // case 'excluir':
     //     excluirCliente($_GET['id'] ?? null);
     //     break;
@@ -92,4 +96,14 @@ function LogarCliente($dadosPOST)
         header("Location:../view-bonitinha/pagCadastroLogin/login-cliente.php?msgErro=Login Inválido!");
         exit;
     }
+}
+
+function sairCliente(){
+    if (isset($_SESSION['id'])){
+        session_unset();
+        session_destroy();
+        header("Location: ../view-bonitinha/pag-inicial.php");
+        exit;
+    }
+    
 }
