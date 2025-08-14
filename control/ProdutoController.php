@@ -49,7 +49,7 @@ function cadastrarProduto($dadosPOST)
         
     if ($msgErro) {
         $_SESSION['formData'] = $_POST;
-        header("Location:../view-bonitinha/fornecedor/pag-novo-produto.php?msgErro=$msgErro&");
+        header("Location:../view-bonitinha/fornecedor/pag-novo-produto.php?msgErro=$msgErro");
         exit;
     }
         // Operação
@@ -90,7 +90,7 @@ function cadastrarImgProduto($dadosPOST){
 function acessarProduto($idProduto)
 {
     if (!$idProduto) {
-        header("Location: ../view-bonitinha/pag-inicial.php?msgErro=Produto inválido. (ProdutoController)");
+        header("Location: ../view-bonitinha/pag-inicial.php?msg=Produto inválido. (ProdutoController)");
         exit;
     }
 

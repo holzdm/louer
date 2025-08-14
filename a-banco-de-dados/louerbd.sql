@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`produto` (
   `nome` VARCHAR(100) NOT NULL,
   `descricao` TEXT NULL DEFAULT NULL,
   `tipo` ENUM('Espaço', 'Equipamento') NOT NULL,
-  `valor_hora` DECIMAL(10,2) NULL DEFAULT NULL,
+  `valor_dia` DECIMAL(10,2) NULL DEFAULT NULL,
   `dias_disponiveis` SET('Dom','Seg','Ter','Qua','Qui','Sex','Sab'),
   `politica_cancelamento` TEXT NULL DEFAULT NULL,
   `cidade` VARCHAR(100) NULL DEFAULT NULL,
@@ -85,15 +85,13 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`reserva` (
   `id_usuario` INT(11) NULL DEFAULT NULL,
   `id_produto` INT(11) NULL DEFAULT NULL,
   `data_reserva` DATE NOT NULL,
-  `hora_inicio` TIME NOT NULL,
-  `data_fim` DATE NOT NULL,
-  `hora_fim` TIME NOT NULL,
+  `data_final` DATE NOT NULL,
   `valor_reserva` DECIMAL(10,2) NULL DEFAULT NULL,
   `status` ENUM('Solicitada', 'Aprovada', 'Recusada', 'Confirmada', 'Finalizada', 'Cancelada') NULL DEFAULT 'Solicitada',
   `cancelado_por` ENUM('Cliente', 'Fornecedor', 'Gerente') NULL DEFAULT NULL,
   `motivo_cancelamento` TEXT NULL DEFAULT NULL,
-  `data_solicitado` DATETIME NULL DEFAULT CURRENT_TIMESTAMP(),
-  `data_aceito_negado` DATETIME NULL DEFAULT NULL,
+  `data_solicitado` DATE NULL DEFAULT CURRENT_TIMESTAMP(),
+  `data_aceito_negado` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `id_usuario` (`id_usuario` ASC),
   INDEX `id_produto` (`id_produto` ASC),
@@ -239,14 +237,55 @@ INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Roupa');
 INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Fotográfico');
 INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Escolar');
 
-
-
-
 -- ----------data: usuario
 INSERT INTO `louerbd`.`usuario` (`nome`, `tipo`,`cpf`, `cidade`, `telefone`, `email`, `senha`) VALUES ('Carol', 'Fornecedor', '19919919922', 'Colatina', '27996937991', 'carol@gmail.com', '1234567');
 
 -- ----------data: produto
-INSERT INTO `louerbd`.`produto` (`id_usuario`,`nome`, `descricao`, `tipo`, `valor_hora`) VALUES (1, 'Barraca de Acampamento', 'Super confortável, protege contra a chuva e comporta 4 pessoas.', 'Equipamento', '50');
+INSERT INTO `louerbd`.`produto` (`id_usuario`,`nome`, `descricao`, `tipo`, `valor_dia`, `dias_disponiveis`) VALUES (1, 'Barraca de Acampamento', 'Super confortável, protege contra a chuva e comporta 4 pessoas.', 'Equipamento', 50, 'Seg,Ter');
+
+-- ----------data: disponibilidades do produto 1:
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-12');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-13');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-19');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-20');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-26');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-27');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-02');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-03');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-09');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-10');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-16');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-17');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-23');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-24');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-30');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-01');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-07');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-08');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-14');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-15');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-21');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-22');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-28');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-29');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-04');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-05');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-11');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-12');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-18');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-19');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-25');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-26');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-02');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-03');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-09');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-10');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-16');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-17');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-23');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-24');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-30');
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-31');
 
 COMMIT;
 

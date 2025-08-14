@@ -89,33 +89,6 @@ function inserirDisponibilidades($diasSelecionados, $idProduto)
     return true;
 }
 
-
-// function listarProdutos(){
-
-//     $conexao = conectarBD();
-
-//     $sql = "SELECT * FROM produto";
-//     $stmt = $conexao->prepare($sql);
-//     $stmt->execute();
-//     $res = $stmt->get_result();
-
-//     $arrayProdutos = [];
-//     $arrayCadaProduto = [];
-
-//     if ($res) {
-//         while ($row = mysqli_fetch_array($res)) {
-//             $idProduto = $row['id'];
-//             $nomeProduto = $row['nome'];
-//             $descricao = $res["descricao"];
-//             $valor_hora = $res["valor_hora"];
-//             $arrayProdutos[$idProduto] = $nomeProduto;
-
-//         }
-//     }
-//     return $arrayProdutos;
-
-// }
-
 function consultarProduto($id)
 {
 
@@ -136,17 +109,20 @@ function consultarProduto($id)
         $idFornecedor = $row['id_usuario'];
         $nomeFornecedor = pesquisarFornecedor($idFornecedor);
 
+        // pegar datas disponiveis
+        $datasDisponiveis = buscarDatasDisponiveis($id);
+
         return [
+            "id" => $id,
             "nome" => $row['nome'],
             "descricao" => $row['descricao'],
             "tipo" => $row['tipo'],
-            "valor" => $row['valor_hora'],
-            "nomeFornecedor" => $nomeFornecedor
-
+            "valor" => $row['valor_dia'],
+            "nomeFornecedor" => $nomeFornecedor,
+            "datas" => $datasDisponiveis
         ];
     }
-    echo "erro no if row";
-    // return null;
+    return null;
 }
 
 function listarProdutos()
@@ -154,4 +130,26 @@ function listarProdutos()
     $conexao = conectarBD();
     $sql = "SELECT * FROM produto WHERE ativo = 1";
     return mysqli_query($conexao, $sql);
+}
+
+
+function buscarDatasDisponiveis($idProduto) {
+    $conexao = conectarBD();
+
+    $sql = "SELECT data_disponivel 
+            FROM disponibilidades 
+            WHERE id_produto = ? 
+            ORDER BY data_disponivel ASC";
+
+    $stmt = mysqli_prepare($conexao, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $idProduto);
+    mysqli_stmt_execute($stmt);
+    $resultado = mysqli_stmt_get_result($stmt);
+
+    $datas = [];
+    while ($row = mysqli_fetch_assoc($resultado)) {
+        $datas[] = $row['data_disponivel'];
+    }
+
+    return $datas;
 }

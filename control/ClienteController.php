@@ -25,7 +25,7 @@ switch ($acao) {
 
     default:
         // volta para a pagina anterior (se existir) e entrega a msg de Erro
-        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial-cliente.php') . "?msgErro=" . urlencode("Ação inválida!"));
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial-cliente.php') . "?msg=" . urlencode("Ação inválida!"));
         break;
 }
 
@@ -98,12 +98,29 @@ function LogarCliente($dadosPOST)
     }
 }
 
-function sairCliente(){
-    if (isset($_SESSION['id'])){
-        session_unset();
-        session_destroy();
-        header("Location: ../view-bonitinha/pag-inicial.php");
-        exit;
+function sairCliente()
+{
+    // Limpa todas as variáveis de sessão
+    $_SESSION = [];
+
+    // Destroi o cookie de sessão, se existir
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
     }
-    
+
+    // Destroi a sessão
+    session_destroy();
+
+    // Redireciona para a página inicial ou login
+    header("Location: ../view-bonitinha/pag-inicial.php");
+    exit;
 }
