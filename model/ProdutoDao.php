@@ -1,16 +1,24 @@
 <?php
 require_once "ConexaoBD.php";
 
-function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis)
+function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento)
 {
     $conexao = conectarBD();
 
     $diasString = implode(',', $diasDisponiveis);
 
-    $sql = "INSERT INTO Produto (tipo, nome, id_usuario, valor_hora, descricao, dias_disponiveis) VALUES (?, ?, ?, ?, ?, ?)";
+    if($tipoProduto == 'Equipamento'){
+        $sql = "INSERT INTO Produto (tipo, nome, id_usuario, valor_dia, descricao, dias_disponiveis) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conexao, $sql);
+        mysqli_stmt_bind_param($stmt, "ssidss", $tipoProduto, $nomeProduto, $idUsuario, $valorProduto, $descricaoProduto, $diasString);
+    }else{
+        $sql = "INSERT INTO Produto (tipo, nome, id_usuario, valor_dia, descricao, dias_disponiveis, cep, cidade, bairro, rua, numero, complemento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conexao, $sql);
+        mysqli_stmt_bind_param($stmt, "ssidssssssis", $tipoProduto, $nomeProduto, $idUsuario, $valorProduto, $descricaoProduto, $diasString, $cep, $cidade, $bairro, $rua, $numero, $complemento
+    );
+    }
 
-    $stmt = mysqli_prepare($conexao, $sql);
-    mysqli_stmt_bind_param($stmt, "ssidss", $tipoProduto, $nomeProduto, $idUsuario, $valorProduto, $descricaoProduto, $diasString);
+    
 
     mysqli_stmt_execute($stmt) or die('Erro no INSERT do Produto: ' . mysqli_stmt_error($stmt));
 

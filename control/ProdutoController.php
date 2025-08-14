@@ -39,52 +39,98 @@ switch ($acao) {
 
 function cadastrarProduto($dadosPOST)
 {
-    $tipoProduto = $dadosPOST['tipoProduto'] ?? [];
     $nomeProduto = $dadosPOST['nomeProduto'] ?? [];
     $valorProduto = $dadosPOST['valorProduto'] ?? [];
-    $descricaoProduto = $dadosPOST['descricaoProduto'];
     $diasDisponiveis = $dadosPOST['diasDisponiveis'] ?? [];
 
     $msgErro = validarCamposProduto( $nomeProduto, $valorProduto, $diasDisponiveis);
-        
-    if ($msgErro) {
-        $_SESSION['formData'] = $_POST;
-        header("Location:../view-bonitinha/fornecedor/pag-novo-produto.php?msgErro=$msgErro");
-        exit;
-    }
-        // Operação
-    
-    $idUsuario = $_SESSION['id'];
 
     if (isset($dadosPOST['arrayTags'])) {
         $tagsIds = array_map('intval', $dadosPOST['arrayTags']);  // Garante que são números inteiros
         $tagsIds = array_unique($tagsIds);               // Remove duplicatas (por segurança)
     }
 
-    $np = inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis);
-
-    if ($np) {
-        if ($tipoProduto == 'Equipamento') {
-            // header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=Produto $np adicionado com sucesso!"); adicionar essa depois de adicionar as fotos
-            header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-img.php");
-            exit;
-        } else {
-            header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-end.php");
-        }
-    } else {
-        header("Location:../view-bonitinha/fornecedor/pag-novo-produto.php?msgErro=Erro ao adicionar produto. Tente novamente.");
+    $_SESSION['formData'] = $dadosPOST;
+        
+    if (!empty($msgErro)) {
+        header("Location:../view-bonitinha/fornecedor/pag-novo-produto.php?msgErro=$msgErro");
         exit;
     }
-}
+            
+    if ($tipoProduto == 'Equipamento') {
+        // header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=Produto $np adicionado com sucesso!"); adicionar essa depois de adicionar as fotos
+        header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-img.php");
+        exit;
+    } 
+    header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-end.php");
+    exit;
+    
+    
 
-function cadastrarEnderecoProduto(){
+    }
+
+
+function cadastrarEnderecoProduto($dadosPOST){
+    $cepProduto = $dadosPOST['cep'] ?? [];
+    $cidadeProduto = $dadosPOST['cidade'] ?? [];
+    $bairroProduto = $dadosPOST['bairro'] ?? [];
+    $ruaProduto = $dadosPOST['rua'] ?? [];
+    $numeroProduto = $dadosPOST['numero'] ?? [];
+
+
+
+    $msgErro = validarCamposProduto($cepProduto, $cidadeProduto, $bairroProduto, $ruaProduto, $numeroProduto);
+
+    $_SESSION['formData'] = array_merge($_SESSION['formData'], $dadosPOST);
+        
+    if (!empty($msgErro)) {
+        header("Location:../view-bonitinha/fornecedor/pag-novo-produto-end.php?msgErro=$msgErro");
+        exit;
+    }
+            
+    header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-img.php");
+
 
 }
 
 function cadastrarImgProduto($dadosPOST){
 
-    header("Location: ../view/fornecedor/pag-inicial-fornecedor0.php");
+    // verificacao da imagem
+
+
+    // Operação
+    
+    $idUsuario = $_SESSION['id'];
+
+    $formData = $_SESSION['formData'] = array_merge($_SESSION['formData'], $dadosPOST);
+
+    if (!empty($formData)){
+        $tipoProduto = $formData['tipoProduto'];
+        $nomeProduto = $formData['nomeProduto'];
+        $valorProduto = $formData['valorProduto'];
+        $cep = $formData['cep'] ?? [];
+        $cidade = $formData['cidade'] ?? [];
+        $bairro = $formData['bairro'] ?? [];
+        $rua = $formData['rua'] ?? [];
+        $numero = $formData['numero'];
+        $complemento = $formData['complemento'] ?? [];
+
+        
+    
+        $np = inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
+        if ($np){
+            header("Location: ../view-bonitinha/fornecedor/pag-inicial-fornecedor.php");
+            exit;
+        }
+        header("Location: ../view-bonitinha/fornecedor/pag-inicial-fornecedor.php?msgErro=Erro ao inserir produto.");
     exit;
+       
+    }
+    header("Location: ../view-bonitinha/fornecedor/pag-inicial-fornecedor.php?msgErro=Erro ao adicionar produto.");
+    exit;
+
+
+    
 }
 
 function acessarProduto($idProduto)

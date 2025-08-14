@@ -7,7 +7,6 @@ if (empty($_SESSION['id'])){
 }
 
 $formData = $_SESSION['formData'] ?? [];
-unset($_SESSION['formData']); // limpa depois de usar
 
 
 ?>
@@ -165,7 +164,9 @@ unset($_SESSION['formData']); // limpa depois de usar
       <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-4xl">
         <h1 class="text-2xl md:text-3xl font-bold text-primary mb-6">O que deseja anunciar?</h1>
 
-        <form action="../../control/ProdutoController.php?acao=cadastrar" method="post" class="space-y-6">
+        <form action="../../control/ProdutoController.php" method="post" class="space-y-6">
+          <input type="hidden" name="acao" value="cadastrar">
+
           <div>
             <div class="flex justify-center max-w-xs mx-auto rounded-lg border border-gray-300 divide-x divide-gray-300 overflow-hidden">
               <label class="flex-1 cursor-pointer flex justify-center items-center relative py-3">
@@ -174,7 +175,7 @@ unset($_SESSION['formData']); // limpa depois de usar
                 <span class="relative z-10 font-semibold text-lg">Equipamento</span>
               </label>
               <label class="flex-1 cursor-pointer flex justify-center items-center relative py-3">
-                <input type="radio" name="tipoProduto" value="Espaço" class="hidden peer" />
+                <input type="radio" name="tipoProduto" value="Espaco" class="hidden peer" />
                 <div class="absolute inset-0 peer-checked:bg-gray-300 peer-checked:text-white transition-colors rounded-r-lg"></div>
                 <span class="relative z-10 font-semibold text-lg">Espaço</span>
               </label>

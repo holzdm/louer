@@ -10,6 +10,8 @@ $formData = $_SESSION['formData'] ?? [];
 
 
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -160,37 +162,72 @@ $formData = $_SESSION['formData'] ?? [];
         <!-- ////////////////////////////////////////////////////////////////////////////// -->
         <!-- FORMULARIO -->
         <div class="flex justify-center items-center py-16">
-            <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-4xl">
-                <h1 class="text-2xl md:text-3xl font-bold text-primary mb-6">Adicione fotos</h1>
+      <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-4xl">
+        <h1 class="text-2xl md:text-3xl font-bold text-primary mb-6">Qual o endereço do seu produto?</h1>
 
-                <form action="../../control/ProdutoController.php" method="post" class="space-y-6">
-                    <input type="hidden" name="acao" value="cadastrarImg">
+        <form action="../../control/ProdutoController.php" method="post" class="space-y-6">
+          <div>
+          <input type="hidden" name="acao" value="cadastrarEnd">
+            <label for="cep" class="block text-sm font-medium text-gray-700 mb-1">CEP: </label>
+            <input type="text" id="cep" name="cep" placeholder="" value="<?= htmlspecialchars($formData['cep'] ?? '')?>"
+              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <br><br>
+            <label for="cidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade:: </label>
+            <input type="text" id="cidade" name="cidade" placeholder="" value="<?= htmlspecialchars($formData['cidade'] ?? '')?>"
+              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <br><br>
+            <label for="rua" class="block text-sm font-medium text-gray-700 mb-1">Rua: </label>
+            <input type="text" id="rua" name="rua" placeholder="" value="<?= htmlspecialchars($formData['rua'] ?? '')?>"
+              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <br><br>
+            <label for="bairro" class="block text-sm font-medium text-gray-700 mb-1">Bairro: </label>
+            <input type="text" id="bairro" name="bairro" placeholder="" value="<?= htmlspecialchars($formData['bairro'] ?? '')?>"
+              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <br><br>
+            <label for="numero" class="block text-sm font-medium text-gray-700 mb-1">N°: </label>
+            <input type="number" id="numero" name="numero" placeholder="00" step="1" min="0" value="<?= htmlspecialchars($formData['numero'] ?? '')?>"
+              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <br><br>
+            <label for="complemento" class="block text-sm font-medium text-gray-700 mb-1">Complemento: </label>
+            <input type="text" id="complemento" name="complemento" placeholder="AP.. " value="<?= htmlspecialchars($formData['complemento'] ?? '')?>"
+              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+            <br><br>
+          <div class="flex justify-between mt-6">
+            <!-- Botão Cancelar -->
+            <button type="button" class="px-4 py-2 rounded-md text-gray-700 hover:underline">
+              Voltar
+            </button>
 
-                    <button type="submit"
-                        class="bg-primary text-white w-full py-3 rounded-md font-medium hover:bg-[#0d3854] transition">
-                        Confirmar
-                    </button>
-                    <p class="mt-6 text-center text-gray-600">
-                        <a href="../../view/fornecedor/pag-inicial-fornecedor0.php" class="text-primary font-medium hover:underline">Voltar</a>
-                    </p>
-                </form>
-            </div>
-        </div>
-        <!-- //////////////////////////////////////////////////////////////////////// -->
-
-        <!-- Footer -->
-        <footer class="bg-white py-6 border-t border-gray-200 mt-auto">
-            <div class="container mx-auto px-4 md:px-6">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div class="mb-4 md:mb-0">
-                        <a href="#" class="text-primary font-bold text-2xl">LOUER</a>
-                        <p class="mt-1 text-gray-600 text-sm">Alugue espaços e itens de forma simples.</p>
-                    </div>
-                    <p class="text-gray-500 text-sm">© 2023 LOUER. Todos os direitos reservados.</p>
-                </div>
-            </div>
-        </footer>
+            <!-- Botão Confirmar -->
+            <button id="btnConfirmar" type="submit" 
+              class="px-4 py-2 rounded-md bg-primary text-white">
+              Confirmar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+            </div>
+        <!-- //////////////////////////////////////////////////////////////////////// -->
+        <!-- Footer -->
+          
+        <footer class="bg-white py-6 border-t border-gray-200 mt-auto">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="mb-4 md:mb-0">
+            <a href="#" class="text-primary font-bold text-2xl">LOUER</a>
+            <p class="mt-1 text-gray-600 text-sm">Alugue espaços e itens de forma simples.</p>
+          </div>
+          <p class="text-gray-500 text-sm">© 2023 LOUER. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+
+
+
 
 </body>
 

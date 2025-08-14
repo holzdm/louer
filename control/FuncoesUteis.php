@@ -95,4 +95,10 @@ function validarCamposProduto($nomeProduto, $valorProduto, $diasDisponiveis){
 	}
 	return $msgErro;
 }
+
+function validarCamposProdutoEnd($cepProduto, $cidadeProduto, $bairroProduto, $ruaProduto, $numeroProduto){
+	return null;
+}
+
+
 ?>
