@@ -215,6 +215,7 @@ if (!empty($_SESSION['nome'])) {
                 <input type="hidden" name="idProduto" value="<?php echo $idProduto ?>">
                 <input type="hidden" name="valorProduto" value="<?php echo $valorProduto ?>">
 
+
                 <!-- Selecao de intervalo -->
 
                 <label for="intervalo" class="text-lg font-semibold">Selecione o intervalo</label>
@@ -223,9 +224,16 @@ if (!empty($_SESSION['nome'])) {
                     placeholder="Escolha as datas" readonly>
 
                 <!-- Botão para abrir o modal da solicitacao de Reserva -->
+                 <?php if(empty($_SESSION['id'])): ?>
+                    <button id="btnSolicitarSemLogin" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                    Solicitar
+                </button>
+                <?php else: ?>
                 <button id="btnSolicitar" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
                     Solicitar
                 </button>
+
+                <?php endif; ?>
 
                 <!-- Modal solicitacao de Reserva -->
                 <div id="modalSolicitar" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
@@ -257,53 +265,70 @@ if (!empty($_SESSION['nome'])) {
 
 
 
-        <script>
-            const btnPerfil = document.getElementById('btnPerfil');
-            const cardPerfil = document.getElementById('cardPerfil');
+         <script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Função utilitária para adicionar evento só se o elemento existir
+    const on = (selector, event, handler) => {
+        const el = document.querySelector(selector);
+        if (el) el.addEventListener(event, handler);
+    };
 
-            // Alterna o card ao clicar no botão
-            btnPerfil.addEventListener('click', () => {
-                cardPerfil.classList.toggle('hidden');
-            });
+    // Perfil
+    on("#btnPerfil", "click", () => {
+        const cardPerfil = document.querySelector("#cardPerfil");
+        cardPerfil?.classList.toggle("hidden");
+    });
 
-            // Fecha ao clicar fora
-            document.addEventListener('click', (e) => {
-                if (!btnPerfil.contains(e.target) && !cardPerfil.contains(e.target)) {
-                    cardPerfil.classList.add('hidden');
-                }
-            });
+    document.addEventListener("click", (e) => {
+        const btnPerfil = document.querySelector("#btnPerfil");
+        const cardPerfil = document.querySelector("#cardPerfil");
+        if (btnPerfil && cardPerfil && !btnPerfil.contains(e.target) && !cardPerfil.contains(e.target)) {
+            cardPerfil.classList.add("hidden");
+        }
+    });
 
-            flatpickr("#intervalo", {
-                mode: "range",
-                dateFormat: "Y-m-d", // formato compatível com o MySQL
-                minDate: "today",
-                disableMobile: true,
-                clickOpens: true,
-                allowInput: false
-            });
+    // Flatpickr
+    if (document.querySelector("#intervalo")) {
+        flatpickr("#intervalo", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            disableMobile: true,
+            clickOpens: true,
+            allowInput: false
+        });
+    }
 
-            const btn = document.getElementById('btnSolicitar');
-            const modal = document.getElementById('modalSolicitar');
-            const fechar = document.getElementById('fecharModal');
+    // Solicitar com login
+    on("#btnSolicitar", "click", () => {
+        const intervalo = document.querySelector("#intervalo")?.value;
+        if (!intervalo) {
+            alert("Por favor, selecione um intervalo de datas antes.");
+            return;
+        }
+        document.querySelector("#modalSolicitar")?.classList.remove("hidden");
+    });
 
-            // Abrir modal
-            btn.addEventListener('click', () => {
-                const intervalo = document.getElementById('intervalo').value;
-                if (!intervalo) {
-                    alert("Por favor, selecione um intervalo de datas antes.");
-                    return;
-                }
-                modal.classList.remove('hidden');
-            });
+    // Fechar modal
+    on("#fecharModal", "click", () => {
+        document.querySelector("#modalSolicitar")?.classList.add("hidden");
+    });
 
-            // Fechar modal
-            fechar.addEventListener('click', () => modal.classList.add('hidden'));
+    // Fechar modal clicando fora
+    window.addEventListener("click", (e) => {
+        const modal = document.querySelector("#modalSolicitar");
+        if (modal && e.target === modal) {
+            modal.classList.add("hidden");
+        }
+    });
 
-            // Fechar clicando fora
-            window.addEventListener('click', (e) => {
-                if (e.target === modal) modal.classList.add('hidden');
-            });
-        </script>
+    // Solicitar sem login
+    on("#btnSolicitarSemLogin", "click", () => {
+        window.location.assign(`../view-bonitinha/pagCadastroLogin/login-cliente.php`);
+    });
+});
+</script>
+
 
 
 

@@ -63,7 +63,7 @@ function cadastrarCliente($dadosPOST)
 }
 
 
-function LogarCliente($dadosPOST)
+function logarCliente($dadosPOST)
 {
 
     $senha = $dadosPOST['senha'];
@@ -90,6 +90,10 @@ function LogarCliente($dadosPOST)
         $_SESSION['complemento'] = $cliente['complemento'];
         $_SESSION['conta_ativa'] = $cliente['conta_ativa'];
 
+        if(!empty($_SESSION['Produto'])){
+            header("Location: ../view/pag-produto.php");
+            exit;
+        }
         header("Location:../view-bonitinha/pag-inicial-cliente.php");
         exit;
     } else {
