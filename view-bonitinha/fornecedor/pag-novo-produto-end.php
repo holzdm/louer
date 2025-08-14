@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-if (empty($_SESSION['id'])){
-  header("Location: ../pag-inicial.php");
-  exit;
+if (empty($_SESSION['id'])) {
+    header("Location: ../pag-inicial.php");
+    exit;
 }
 
 $formData = $_SESSION['formData'] ?? [];
@@ -162,71 +162,83 @@ $formData = $_SESSION['formData'] ?? [];
         <!-- ////////////////////////////////////////////////////////////////////////////// -->
         <!-- FORMULARIO -->
         <div class="flex justify-center items-center py-16">
-      <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-4xl">
-        <h1 class="text-2xl md:text-3xl font-bold text-primary mb-6">Qual o endereço do seu produto?</h1>
+            <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-4xl">
+                <h1 class="text-2xl md:text-3xl font-bold text-primary mb-6">Qual o endereço do seu produto?</h1>
 
-        <form action="../../control/ProdutoController.php" method="post" class="space-y-6">
-          <div>
-          <input type="hidden" name="acao" value="cadastrarEnd">
-            <label for="cep" class="block text-sm font-medium text-gray-700 mb-1">CEP: </label>
-            <input type="text" id="cep" name="cep" placeholder="" value="<?= htmlspecialchars($formData['cep'] ?? '')?>"
-              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
-            <br><br>
-            <label for="cidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade:: </label>
-            <input type="text" id="cidade" name="cidade" placeholder="" value="<?= htmlspecialchars($formData['cidade'] ?? '')?>"
-              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
-            <br><br>
-            <label for="rua" class="block text-sm font-medium text-gray-700 mb-1">Rua: </label>
-            <input type="text" id="rua" name="rua" placeholder="" value="<?= htmlspecialchars($formData['rua'] ?? '')?>"
-              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
-            <br><br>
-            <label for="bairro" class="block text-sm font-medium text-gray-700 mb-1">Bairro: </label>
-            <input type="text" id="bairro" name="bairro" placeholder="" value="<?= htmlspecialchars($formData['bairro'] ?? '')?>"
-              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
-            <br><br>
-            <label for="numero" class="block text-sm font-medium text-gray-700 mb-1">N°: </label>
-            <input type="number" id="numero" name="numero" placeholder="00" step="1" min="0" value="<?= htmlspecialchars($formData['numero'] ?? '')?>"
-              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
-            <br><br>
-            <label for="complemento" class="block text-sm font-medium text-gray-700 mb-1">Complemento: </label>
-            <input type="text" id="complemento" name="complemento" placeholder="AP.. " value="<?= htmlspecialchars($formData['complemento'] ?? '')?>"
-              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
-            <br><br>
-          <div class="flex justify-between mt-6">
-            <!-- Botão Cancelar -->
-            <button type="button" class="px-4 py-2 rounded-md text-gray-700 hover:underline">
-              Voltar
-            </button>
+                <form action="../../control/ProdutoController.php" method="post" class="space-y-6">
+                    <div>
+                        <input type="hidden" name="acao" value="cadastrarEnd">
+                        <label for="cep" class="block text-sm font-medium text-gray-700 mb-1">CEP: </label>
+                        <input type="text" id="cep" name="cep" placeholder="" value="<?= htmlspecialchars($formData['cep'] ?? '') ?>"
+                            class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+                        <br><br>
+                        <label for="cidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade:: </label>
+                        <input type="text" id="cidade" name="cidade" placeholder="" value="<?= htmlspecialchars($formData['cidade'] ?? '') ?>"
+                            class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+                        <br><br>
+                        <label for="rua" class="block text-sm font-medium text-gray-700 mb-1">Rua: </label>
+                        <input type="text" id="rua" name="rua" placeholder="" value="<?= htmlspecialchars($formData['rua'] ?? '') ?>"
+                            class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+                        <br><br>
+                        <label for="bairro" class="block text-sm font-medium text-gray-700 mb-1">Bairro: </label>
+                        <input type="text" id="bairro" name="bairro" placeholder="" value="<?= htmlspecialchars($formData['bairro'] ?? '') ?>"
+                            class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+                        <br><br>
+                        <label for="numero" class="block text-sm font-medium text-gray-700 mb-1">N°: </label>
+                        <input type="number" id="numero" name="numero" placeholder="00" step="1" min="0" value="<?= htmlspecialchars($formData['numero'] ?? '') ?>"
+                            class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
+                        <br><br>
+                        <label for="complemento" class="block text-sm font-medium text-gray-700 mb-1">Complemento: </label>
+                        <input type="text" id="complemento" name="complemento" placeholder="AP.. " value="<?= htmlspecialchars($formData['complemento'] ?? '') ?>"
+                            class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" >
+                        <br><br>
+                        <div class="flex justify-between mt-6">
+                            <!-- Botão Cancelar -->
+                            <button type="button" id="btnCancelar" class="px-4 py-2 rounded-md text-gray-700 hover:underline">
+                                Cancelar
+                            </button>
 
-            <!-- Botão Confirmar -->
-            <button id="btnConfirmar" type="submit" 
-              class="px-4 py-2 rounded-md bg-primary text-white">
-              Confirmar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+                            <div>
+                                <!-- Botão Voltar -->
+                                <button id="btnVoltar" type="button" onclick="history.back()"
+                                    class="px-4 py-2 rounded-md bg-primary text-white">
+                                    Voltar
+                                </button>
+                                <!-- Botão Confirmar -->
+                                <button id="btnConfirmar" type="submit"
+                                    class="px-4 py-2 rounded-md bg-primary text-white">
+                                    Confirmar
+                                </button>
+                            </div>
+
+                        </div>
+                </form>
             </div>
-        <!-- //////////////////////////////////////////////////////////////////////// -->
-        <!-- Footer -->
-          
-        <footer class="bg-white py-6 border-t border-gray-200 mt-auto">
-      <div class="container mx-auto px-4 md:px-6">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-          <div class="mb-4 md:mb-0">
-            <a href="#" class="text-primary font-bold text-2xl">LOUER</a>
-            <p class="mt-1 text-gray-600 text-sm">Alugue espaços e itens de forma simples.</p>
-          </div>
-          <p class="text-gray-500 text-sm">© 2023 LOUER. Todos os direitos reservados.</p>
         </div>
-      </div>
+    </div>
+    <!-- //////////////////////////////////////////////////////////////////////// -->
+    <!-- Footer -->
+
+    <footer class="bg-white py-6 border-t border-gray-200 mt-auto">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <a href="#" class="text-primary font-bold text-2xl">LOUER</a>
+                    <p class="mt-1 text-gray-600 text-sm">Alugue espaços e itens de forma simples.</p>
+                </div>
+                <p class="text-gray-500 text-sm">© 2023 LOUER. Todos os direitos reservados.</p>
+            </div>
+        </div>
     </footer>
-  </div>
+    </div>
 
 
 
-
+<script>
+    document.getElementById('btnCancelar').addEventListener('click', () => {
+    window.location.href = "../../control/ProdutoController.php?acao=cancelarCadastro";
+  });
+</script>
 
 
 </body>

@@ -5,20 +5,44 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
 {
     $conexao = conectarBD();
 
+
     $diasString = implode(',', $diasDisponiveis);
 
-    if($tipoProduto == 'Equipamento'){
+    if ($tipoProduto == 'Equipamento') {
         $sql = "INSERT INTO Produto (tipo, nome, id_usuario, valor_dia, descricao, dias_disponiveis) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conexao, $sql);
-        mysqli_stmt_bind_param($stmt, "ssidss", $tipoProduto, $nomeProduto, $idUsuario, $valorProduto, $descricaoProduto, $diasString);
-    }else{
+        mysqli_stmt_bind_param(
+            $stmt,
+            "ssidss",
+            $tipoProduto,
+            $nomeProduto,
+            $idUsuario,
+            $valorProduto,
+            $descricaoProduto,
+            $diasString
+        );
+    } else {
         $sql = "INSERT INTO Produto (tipo, nome, id_usuario, valor_dia, descricao, dias_disponiveis, cep, cidade, bairro, rua, numero, complemento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conexao, $sql);
-        mysqli_stmt_bind_param($stmt, "ssidssssssis", $tipoProduto, $nomeProduto, $idUsuario, $valorProduto, $descricaoProduto, $diasString, $cep, $cidade, $bairro, $rua, $numero, $complemento
-    );
+        mysqli_stmt_bind_param(
+            $stmt,
+            "ssidssssssis",
+            $tipoProduto,
+            $nomeProduto,
+            $idUsuario,
+            $valorProduto,
+            $descricaoProduto,
+            $diasString,
+            $cep,
+            $cidade,
+            $bairro,
+            $rua,
+            $numero,
+            $complemento
+        );
     }
 
-    
+
 
     mysqli_stmt_execute($stmt) or die('Erro no INSERT do Produto: ' . mysqli_stmt_error($stmt));
 
@@ -30,7 +54,7 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
         die('Erro ao inserir na tabela relacional: ' . mysqli_error($conexao));
     } // fazer essa forma ou com "or die"?
 
-    if (!inserirDisponibilidades($diasDisponiveis, $idProduto)){
+    if (!inserirDisponibilidades($diasDisponiveis, $idProduto)) {
         die('Erro ao inserir na tabela relacional: ' . mysqli_error($conexao));
     }
 
@@ -85,7 +109,7 @@ function inserirDisponibilidades($diasSelecionados, $idProduto)
                 $stmt = mysqli_prepare($conexao, $sql);
                 $dataStr = $dataAtual->format('Y-m-d');
                 mysqli_stmt_bind_param($stmt, "is", $idProduto, $dataStr);
-                if (!mysqli_stmt_execute($stmt)){
+                if (!mysqli_stmt_execute($stmt)) {
                     return false;
                 }
             }
@@ -141,7 +165,8 @@ function listarProdutos()
 }
 
 
-function buscarDatasDisponiveis($idProduto) {
+function buscarDatasDisponiveis($idProduto)
+{
     $conexao = conectarBD();
 
     $sql = "SELECT data_disponivel 

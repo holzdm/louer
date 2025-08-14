@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (empty($_SESSION['id'])){
+if (empty($_SESSION['id'])) {
   header("Location: ../pag-inicial.php");
   exit;
 }
@@ -181,16 +181,16 @@ $formData = $_SESSION['formData'] ?? [];
               </label>
             </div>
             <label for="nomeProduto" class="block text-sm font-medium text-gray-700 mb-1">Nome do produto</label>
-            <input type="text" id="nomeProduto" name="nomeProduto" placeholder="Digite o nome do seu produto" value="<?= htmlspecialchars($formData['nomeProduto'] ?? '')?>"
+            <input type="text" id="nomeProduto" name="nomeProduto" placeholder="Digite o nome do seu produto" value="<?= htmlspecialchars($formData['nomeProduto'] ?? '') ?>"
               class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
             <br><br>
             <label for="valorProduto" class="block text-sm font-medium text-gray-700 mb-1">Valor do produto</label>
-            <input type="number" id="valorProduto" name="valorProduto" placeholder="R$00.00" step="0.01" min="0" value="<?= htmlspecialchars($formData['valorProduto'] ?? '')?>"
+            <input type="number" id="valorProduto" name="valorProduto" placeholder="R$00.00" step="0.01" min="0" value="<?= htmlspecialchars($formData['valorProduto'] ?? '') ?>"
               class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
             <br><br>
             <label for="descricaoProduto" class="block text-sm font-medium text-gray-700 mb-1">Descrição do produto</label>
             <textarea id="descricaoProduto" name="descricaoProduto" placeholder="Um produto incrível.." rows="5" cols="30"
-              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"><?= htmlspecialchars($formData['descricaoProduto'] ?? '')?></textarea>
+              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"><?= htmlspecialchars($formData['descricaoProduto'] ?? '') ?></textarea>
           </div>
           <!-- combombox -->
           <div>
@@ -206,6 +206,7 @@ $formData = $_SESSION['formData'] ?? [];
               }
               ?>
             </select>
+            <!-- DIAS DISPONIVEIS -->
           </div>
           <label class="block mb-2 font-medium text-gray-700">Selecione os dias disponíveis:</label>
           <div class="flex gap-2 flex-wrap">
@@ -248,7 +249,7 @@ $formData = $_SESSION['formData'] ?? [];
           </div>
           <div class="flex justify-between mt-6">
             <!-- Botão Cancelar -->
-            <button type="button" class="px-4 py-2 rounded-md text-gray-700 hover:underline">
+            <button type="button" id="btnCancelar" class="px-4 py-2 rounded-md text-gray-700 hover:underline onclick=" history.back()"">
               Cancelar
             </button>
 
@@ -308,8 +309,9 @@ $formData = $_SESSION['formData'] ?? [];
       btnConfirmar.classList.add('bg-primary', 'text-white');
     });
   });
-
-  
+  document.getElementById('btnCancelar').addEventListener('click', () => {
+    window.location.href = "../../control/ProdutoController.php?acao=cancelarCadastro";
+  });
 </script>
 
 </html>

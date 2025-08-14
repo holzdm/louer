@@ -3,8 +3,13 @@ session_start(); // necessário para acessar $_SESSION
 
 // Verifica se a pessoa está logada
 if (!isset($_SESSION['id'])) {
-  header("Location: pag-inicial.php");
+  header("Location: ../pag-inicial.php");
   exit;
+}
+
+// Limpa a sessão se tiver alguma sessao de novo produto
+if (isset($_SESSION['formData'])) {
+  unset($_SESSION['formData']);
 }
 
 // Recupera os dados da sessão

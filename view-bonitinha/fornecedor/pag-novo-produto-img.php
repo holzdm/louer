@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-if (empty($_SESSION['id'])){
-  header("Location: ../pag-inicial.php");
-  exit;
+if (empty($_SESSION['id'])) {
+    header("Location: ../pag-inicial.php");
+    exit;
 }
 
 $formData = $_SESSION['formData'] ?? [];
@@ -166,13 +166,26 @@ $formData = $_SESSION['formData'] ?? [];
                 <form action="../../control/ProdutoController.php" method="post" class="space-y-6">
                     <input type="hidden" name="acao" value="cadastrarImg">
 
-                    <button type="submit"
-                        class="bg-primary text-white w-full py-3 rounded-md font-medium hover:bg-[#0d3854] transition">
-                        Confirmar
-                    </button>
-                    <p class="mt-6 text-center text-gray-600">
-                        <a href="../../view/fornecedor/pag-inicial-fornecedor0.php" class="text-primary font-medium hover:underline">Voltar</a>
-                    </p>
+                    <div class="flex justify-between mt-6">
+                        <!-- Botão Cancelar -->
+                        <button type="button" id="btnCancelar" class="px-4 py-2 rounded-md text-gray-700 hover:underline">
+                            Cancelar
+                        </button>
+
+                        <div>
+                            <!-- Botão Voltar -->
+                            <button id="btnVoltar" type="button" onclick="history.back()"
+                                class="px-4 py-2 rounded-md bg-primary text-white">
+                                Voltar
+                            </button>
+                            <!-- Botão Confirmar -->
+                            <button id="btnConfirmar" type="submit"
+                                class="px-4 py-2 rounded-md bg-primary text-white">
+                                Confirmar
+                            </button>
+                        </div>
+
+                    </div>
                 </form>
             </div>
         </div>
@@ -192,6 +205,12 @@ $formData = $_SESSION['formData'] ?? [];
         </footer>
     </div>
 
+
+    <script>
+        document.getElementById('btnCancelar').addEventListener('click', () => {
+            window.location.href = "../../control/ProdutoController.php?acao=cancelarCadastro";
+        });
+    </script>
 </body>
 
 </html>
