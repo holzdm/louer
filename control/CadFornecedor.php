@@ -3,7 +3,7 @@ session_start();
 
 // Verifica se o usuário está logado (precisa do email e senha da sessão)
 if (!isset($_SESSION['email']) || !isset($_SESSION['senha'])) {
-    header("Location:../pagCadastroLogin/login-cliente.php?msgErro=É necessário estar logado para se cadastrar como fornecedor.");
+    header("Location:../view/cliente/login-cliente.php?msgErro=É necessário estar logado para se cadastrar como fornecedor.");
     exit;
 }
 
@@ -26,10 +26,10 @@ if (empty($msgErro)) {
     require_once "../model/FornecedorDao.php";
     inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha);
     $_SESSION['tipo'] = 'Fornecedor';
-    header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=" . urlencode("Tudo pronto! Comece adicionando um produto ★"));
+    header("Location:../view/fornecedor/pag-inicial-fornecedor.php?msg=" . urlencode("Tudo pronto! Comece adicionando um produto ★"));
 
 } else {
-    header("Location:../view-bonitinha/fornecedor/pag-cad-fornecedor.php?msg=" . urlencode($msgErro)); //urlencore é para evitar problemas com caracteres especiais na mensagem
+    header("Location:../view/fornecedor/pag-cad-fornecedor.php?msg=" . urlencode($msgErro)); //urlencore é para evitar problemas com caracteres especiais na mensagem
 }
 
 ?>

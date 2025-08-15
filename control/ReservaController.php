@@ -30,8 +30,8 @@ switch ($acao) {
     //     break;
 
     default:
-        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial.php'));
-        // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial-cliente.php') . "?msgErro=" . urlencode("Ação inválida!"));
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
+        // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msgErro=" . urlencode("Ação inválida!"));
         break;
 }
 
@@ -75,10 +75,10 @@ function solicitarReserva($dadosPOST)
 
 
     if (inserirSolicitacaoReserva($idUsuario, $idProduto, $valorReserva, $dataInicio, $dataFinal, $dataSolicitacao)) {
-        header("Location: ../view/pag-produto.php?msg=Solicitação de reserva enviada!");
+        header("Location: ../view/produto/pag-produto.php?msg=Solicitação de reserva enviada!");
         exit;
     }
-    header("Location: ../view/pag-produto.php?msg=Não foi possivel realizar a solicitação.");
+    header("Location: ../view/produto/pag-produto.php?msg=Não foi possivel realizar a solicitação.");
 
 
     

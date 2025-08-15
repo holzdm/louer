@@ -34,8 +34,8 @@ switch ($acao) {
     //     break;
 
     default:
-        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial.php'));
-        // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial-cliente.php') . "?msgErro=" . urlencode("Ação inválida!"));
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
+        // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msgErro=" . urlencode("Ação inválida!"));
         break;
 }
 
@@ -59,16 +59,16 @@ function cadastrarProduto($dadosPOST)
 
 
     if (!empty($msgErro)) {
-        header("Location:../view-bonitinha/fornecedor/pag-novo-produto.php?msgErro=$msgErro");
+        header("Location:../view/produto/pag-novo-produto.php?msgErro=$msgErro");
         exit;
     }
 
     if ($tipoProduto == 'Equipamento') {
         // header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=Produto $np adicionado com sucesso!"); adicionar essa depois de adicionar as fotos
-        header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-img.php");
+        header("Location: ../view/produto/pag-novo-produto-img.php");
         exit;
     }
-    header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-end.php");
+    header("Location: ../view/produto/pag-novo-produto-end.php");
     exit;
 }
 
@@ -88,11 +88,11 @@ function cadastrarEnderecoProduto($dadosPOST)
     $_SESSION['formData'] = array_merge($_SESSION['formData'], $dadosPOST);
 
     if (!empty($msgErro)) {
-        header("Location:../view-bonitinha/fornecedor/pag-novo-produto-end.php?msgErro=$msgErro");
+        header("Location:../view/produto/pag-novo-produto-end.php?msgErro=$msgErro");
         exit;
     }
 
-    header("Location: ../view-bonitinha/fornecedor/pag-novo-produto-img.php");
+    header("Location: ../view/produto/pag-novo-produto-img.php");
 }
 
 function cadastrarImgProduto($dadosPOST)
@@ -125,20 +125,20 @@ function cadastrarImgProduto($dadosPOST)
 
         $np = inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
         if ($np) {
-            header("Location: ../view-bonitinha/fornecedor/pag-inicial-fornecedor.php");
+            header("Location: ../view/fornecedor/pag-inicial-fornecedor.php");
             exit;
         }
-        header("Location: ../view-bonitinha/fornecedor/pag-inicial-fornecedor.php?msgErro=Erro ao inserir produto.");
+        header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msgErro=Erro ao inserir produto.");
         exit;
     }
-    header("Location: ../view-bonitinha/fornecedor/pag-inicial-fornecedor.php?msgErro=Erro ao adicionar produto.");
+    header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msgErro=Erro ao adicionar produto.");
     exit;
 }
 
 function acessarProduto($idProduto)
 {
     if (!$idProduto) {
-        header("Location: ../view-bonitinha/pag-inicial.php?msg=Produto inválido. (ProdutoController)");
+        header("Location: ../view/pag-inicial.php?msg=Produto inválido. (ProdutoController)");
         exit;
     }
 
@@ -147,10 +147,10 @@ function acessarProduto($idProduto)
 
 
     if (isset($dadosProduto)) {
-        header("Location: ../view/pag-produto.php");
+        header("Location: ../view/produto/pag-produto.php");
         exit;
     } else {
-        header("Location: ../view-bonitinha/pag-inicial.php");
+        header("Location: ../view/pag-inicial.php");
         exit;
     }
 }
@@ -160,6 +160,6 @@ function cancelarCadastroProduto()
     if (isset($_SESSION['formData'])) {
         unset($_SESSION['formData']);
     }
-    header("Location: ../view-bonitinha/fornecedor/pag-inicial-fornecedor.php");
+    header("Location: ../view/fornecedor/pag-inicial-fornecedor.php");
     exit;
 }

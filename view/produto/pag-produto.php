@@ -13,14 +13,14 @@ if ($dadosProduto) {
     $nomeFornecedor = $dadosProduto['nomeFornecedor'];
 } else {
     // Redirecionar ou mostrar erro se não houver produto
-    header("Location: ../view-bonitinha/pag-inicial.php?msg=Produto não encontrado.");
+    header("Location: ../pag-inicial.php?msg=Produto não encontrado.");
     exit;
 }
 
-if (!empty($_SESSION['nome'])) {
-    $nome = $_SESSION['nome'];
-    $nomePrimeiraLetra = $nome['0'];
-}
+// if (!empty($_SESSION['nome'])) {
+//     $nome = $_SESSION['nome'];
+//     $nomePrimeiraLetra = $nome['0'];
+// }
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +33,8 @@ if (!empty($_SESSION['nome'])) {
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
 
 
     <script>
@@ -90,10 +91,9 @@ if (!empty($_SESSION['nome'])) {
 
     <div class="min-h-screen flex flex-col">
         <!-- Navbar -->
-
         <nav class="bg-white shadow-sm py-4">
-            <div class="container mx-auto px-4 md:px-6 flex justify-between items-center w-full">
-                <a href="../view-bonitinha/pag-inicial.php" class="text-primary font-bold text-3xl">LOUER</a>
+            <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
+                <a href="../pag-inicial.php" class="text-primary font-bold text-3xl">LOUER</a>
                 <div class="hidden md:flex space-x-6">
                     <a href="#" class="text-gray-600 hover:text-primary">Espaços</a>
                     <a href="#" class="text-gray-600 hover:text-primary">Itens</a>
@@ -101,12 +101,13 @@ if (!empty($_SESSION['nome'])) {
                 </div>
                 <div class="flex items-center space-x-4">
                     <!-- Navbar: CLIENTE LOGADO -->
-                    <?php if (!empty($_SESSION['nome'])): ?>
+                    <?php if (!empty($_SESSION['id'])):
+                        $tipo = $_SESSION['tipo']; ?>
                         <div class="relative">
                             <!-- Botão de perfil -->
                             <button id="btnPerfil" class="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow hover:bg-gray-100 transition">
                                 <img src="https://via.placeholder.com/40" alt="Foto de perfil" class="w-5 h-5 rounded-full">
-                                <span class="font-medium"><?php echo $nomePrimeiraLetra ?></span>
+                                <span class="font-medium"><?php echo $_SESSION['nome']['0'] ?></span>
                             </button>
                             <div id="cardPerfil" class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-[0_-1px_6px_-1px_rgba(0,0,0,0.10),0_1px_3px_rgba(0,0,0,0.06)] z-50 hidden">
                                 <style>
@@ -118,20 +119,19 @@ if (!empty($_SESSION['nome'])) {
                                 <a href="#" class="block px-5 py-1 hover:bg-gray-100">Meus Aluguéis</a>
                                 <a href="#" class="block px-5 py-1 hover:bg-gray-100">Favoritos</a>
                                 <a href="#" class="block px-5 py-1 hover:bg-gray-100">Notificacões</a>
-                                <a href="../control/ClienteController.php?acao=sair" class="block px-5 py-1 hover:bg-gray-100 text-red-600 ">Sair</a>
+                                <a href="../../control/ClienteController.php?acao=sair" class="block px-5 py-1 hover:bg-gray-100 text-red-600 ">Sair</a>
                                 <div class="border-t border-gray-200 my-2 mx-2"></div> <!-- Divisor sem hover -->
                                 <?php if ($tipo == 'Fornecedor'): ?>
-                                    <a href="fornecedor/pag-inicial-fornecedor.php" class="block px-5 py-1 mb-2  hover:bg-gray-100 ">Página do Fornecedor</a>
+                                    <a href="../fornecedor/pag-inicial-fornecedor.php" class="block px-5 py-1 mb-2  hover:bg-gray-100 ">Página do Fornecedor</a>
                                 <?php else: ?>
-                                    <a href="fornecedor/pag-cad-fornecedor.php" class="block px-5 py-1 mb-2 hover:bg-gray-100">Quero ser um fornecedor!</a>
+                                    <a href="../fornecedor/pag-cad-fornecedor.php" class="block px-5 py-1 mb-2 hover:bg-gray-100">Quero ser um fornecedor!</a>
                                 <?php endif; ?>
                             </div>
                         </div>
                     <?php else: ?>
-                        <a href="../view-bonitinha/pagCadastroLogin/login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
+                        <a href="../cliente/login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
                     <?php endif; ?>
                 </div>
-
             </div>
         </nav>
 
@@ -209,7 +209,7 @@ if (!empty($_SESSION['nome'])) {
 
         <!-- Formulario solicitacao de reserva -->
         <div class="flex flex-col gap-4 max-w-sm mx-auto mt-10">
-            <form action="../control/ReservaController.php" method="POST">
+            <form action="../../control/ReservaController.php" method="POST">
 
                 <input type="hidden" name="acao" value="solicitar">
                 <input type="hidden" name="idProduto" value="<?php echo $idProduto ?>">
@@ -224,14 +224,14 @@ if (!empty($_SESSION['nome'])) {
                     placeholder="Escolha as datas" readonly>
 
                 <!-- Botão para abrir o modal da solicitacao de Reserva -->
-                 <?php if(empty($_SESSION['id'])): ?>
+                <?php if (empty($_SESSION['id'])): ?>
                     <button id="btnSolicitarSemLogin" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                    Solicitar
-                </button>
+                        Solicitar
+                    </button>
                 <?php else: ?>
-                <button id="btnSolicitar" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                    Solicitar
-                </button>
+                    <button id="btnSolicitar" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                        Solicitar
+                    </button>
 
                 <?php endif; ?>
 
@@ -265,69 +265,69 @@ if (!empty($_SESSION['nome'])) {
 
 
 
-         <script>
-document.addEventListener("DOMContentLoaded", () => {
-    // Função utilitária para adicionar evento só se o elemento existir
-    const on = (selector, event, handler) => {
-        const el = document.querySelector(selector);
-        if (el) el.addEventListener(event, handler);
-    };
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                // Função utilitária para adicionar evento só se o elemento existir
+                const on = (selector, event, handler) => {
+                    const el = document.querySelector(selector);
+                    if (el) el.addEventListener(event, handler);
+                };
 
-    // Perfil
-    on("#btnPerfil", "click", () => {
-        const cardPerfil = document.querySelector("#cardPerfil");
-        cardPerfil?.classList.toggle("hidden");
-    });
+                // Perfil
+                on("#btnPerfil", "click", () => {
+                    const cardPerfil = document.querySelector("#cardPerfil");
+                    cardPerfil?.classList.toggle("hidden");
+                });
 
-    document.addEventListener("click", (e) => {
-        const btnPerfil = document.querySelector("#btnPerfil");
-        const cardPerfil = document.querySelector("#cardPerfil");
-        if (btnPerfil && cardPerfil && !btnPerfil.contains(e.target) && !cardPerfil.contains(e.target)) {
-            cardPerfil.classList.add("hidden");
-        }
-    });
+                document.addEventListener("click", (e) => {
+                    const btnPerfil = document.querySelector("#btnPerfil");
+                    const cardPerfil = document.querySelector("#cardPerfil");
+                    if (btnPerfil && cardPerfil && !btnPerfil.contains(e.target) && !cardPerfil.contains(e.target)) {
+                        cardPerfil.classList.add("hidden");
+                    }
+                });
 
-    // Flatpickr
-    if (document.querySelector("#intervalo")) {
-        flatpickr("#intervalo", {
-            mode: "range",
-            dateFormat: "Y-m-d",
-            minDate: "today",
-            disableMobile: true,
-            clickOpens: true,
-            allowInput: false
-        });
-    }
+                // Flatpickr
+                if (document.querySelector("#intervalo")) {
+                    flatpickr("#intervalo", {
+                        mode: "range",
+                        dateFormat: "Y-m-d",
+                        minDate: "today",
+                        disableMobile: true,
+                        clickOpens: true,
+                        allowInput: false
+                    });
+                }
 
-    // Solicitar com login
-    on("#btnSolicitar", "click", () => {
-        const intervalo = document.querySelector("#intervalo")?.value;
-        if (!intervalo) {
-            alert("Por favor, selecione um intervalo de datas antes.");
-            return;
-        }
-        document.querySelector("#modalSolicitar")?.classList.remove("hidden");
-    });
+                // Solicitar com login
+                on("#btnSolicitar", "click", () => {
+                    const intervalo = document.querySelector("#intervalo")?.value;
+                    if (!intervalo) {
+                        alert("Por favor, selecione um intervalo de datas antes.");
+                        return;
+                    }
+                    document.querySelector("#modalSolicitar")?.classList.remove("hidden");
+                });
 
-    // Fechar modal
-    on("#fecharModal", "click", () => {
-        document.querySelector("#modalSolicitar")?.classList.add("hidden");
-    });
+                // Fechar modal
+                on("#fecharModal", "click", () => {
+                    document.querySelector("#modalSolicitar")?.classList.add("hidden");
+                });
 
-    // Fechar modal clicando fora
-    window.addEventListener("click", (e) => {
-        const modal = document.querySelector("#modalSolicitar");
-        if (modal && e.target === modal) {
-            modal.classList.add("hidden");
-        }
-    });
+                // Fechar modal clicando fora
+                window.addEventListener("click", (e) => {
+                    const modal = document.querySelector("#modalSolicitar");
+                    if (modal && e.target === modal) {
+                        modal.classList.add("hidden");
+                    }
+                });
 
-    // Solicitar sem login
-    on("#btnSolicitarSemLogin", "click", () => {
-        window.location.assign(`../view-bonitinha/pagCadastroLogin/login-cliente.php`);
-    });
-});
-</script>
+                // Solicitar sem login
+                on("#btnSolicitarSemLogin", "click", () => {
+                    window.location.assign(`../cliente/login-cliente.php`);
+                });
+            });
+        </script>
 
 
 

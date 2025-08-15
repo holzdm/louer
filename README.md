@@ -21,4 +21,5 @@ model: conexao com o banco e comandos pro banco
 
 
 icon de coracao: <i class="fa-solid fa-heart"></i>
-
+   
+    

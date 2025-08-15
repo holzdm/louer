@@ -25,7 +25,7 @@ switch ($acao) {
 
     default:
         // volta para a pagina anterior (se existir) e entrega a msg de Erro
-        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view-bonitinha/pag-incial-cliente.php') . "?msg=" . urlencode("Ação inválida!"));
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msg=" . urlencode("Ação inválida!"));
         break;
 }
 
@@ -52,13 +52,13 @@ function cadastrarCliente($dadosPOST)
         if (inserirCliente($nome, $cpf, $cnpj, $cidade, $telefone, $email, $senha)) {
             // Devolver a mensagem de sucesso
 
-            header("Location:../view-bonitinha/pagCadastroLogin/login-cliente.php?msg=Tudo pronto, $nome! Faça seu login e aproveite nossos serviços.");
+            header("Location:../view/cliente/login-cliente.php?msg=Tudo pronto, $nome! Faça seu login e aproveite nossos serviços.");
             exit;
         }
-        header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msgErro=Não foi possível inserir.");
+        header("Location:../view/cliente/cadastro-cliente.php?msgErro=Não foi possível inserir.");
         exit;
     }
-    header("Location:../view-bonitinha/pagCadastroLogin/cadastro-cliente.php?msgErro=$msgErro");
+    header("Location:../view/cliente/cadastro-cliente.php?msgErro=$msgErro");
     exit;
 }
 
@@ -91,13 +91,13 @@ function logarCliente($dadosPOST)
         $_SESSION['conta_ativa'] = $cliente['conta_ativa'];
 
         if(!empty($_SESSION['Produto'])){
-            header("Location: ../view/pag-produto.php");
+            header("Location: ../view/produto/pag-produto.php");
             exit;
         }
-        header("Location:../view-bonitinha/pag-inicial-cliente.php");
+        header("Location:../view/pag-inicial.php");
         exit;
     } else {
-        header("Location:../view-bonitinha/pagCadastroLogin/login-cliente.php?msgErro=Login Inválido!");
+        header("Location:../view/cliente/login-cliente.php?msgErro=Login Inválido!");
         exit;
     }
 }
@@ -124,7 +124,7 @@ function sairCliente()
     // Destroi a sessão
     session_destroy();
 
-    // Redireciona para a página inicial ou login
-    header("Location: ../view-bonitinha/pag-inicial.php");
+    // Redireciona para a página inicial
+    header("Location: ../view/pag-inicial.php");
     exit;
 }
