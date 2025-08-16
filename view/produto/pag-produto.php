@@ -5,7 +5,7 @@ session_start();
 $dadosProduto = $_SESSION['Produto'] ?? null;
 
 if ($dadosProduto) {
-    $idProduto = $dadosProduto['id'];
+    $idProduto = $dadosProduto['idProduto'];
     $nomeProduto = $dadosProduto['nome'];
     $tipo = $dadosProduto['tipo'];
     $descricaoProduto = $dadosProduto['descricao'];
@@ -115,7 +115,7 @@ if ($dadosProduto) {
                                         margin: 0;
                                     }
                                 </style>
-                                <a href="#" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
+                                <a href="../cliente/pag-ic.php" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
                                 <a href="#" class="block px-5 py-1 hover:bg-gray-100">Meus Aluguéis</a>
                                 <a href="#" class="block px-5 py-1 hover:bg-gray-100">Favoritos</a>
                                 <a href="#" class="block px-5 py-1 hover:bg-gray-100">Notificacões</a>

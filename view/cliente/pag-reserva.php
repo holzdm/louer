@@ -1,30 +1,45 @@
 <?php
-session_start(); // necessário para acessar $_SESSION
+session_start();
 
-// Verifica se a pessoa está logada
-if (!isset($_SESSION['id'])) {
-    header("Location: ../pag-inicial.php");
+
+$dadosReserva = $_SESSION['Reserva'] ?? null;
+
+if ($dadosReserva) {
+    $idProduto = $dadosReserva['idProduto'];
+    $nomeProduto = $dadosReserva['nome'];
+    $tipo = $dadosReserva['tipo'];
+    $descricaoProduto = $dadosReserva['descricao'];
+    $nomeFornecedor = $dadosReserva['nomeFornecedor'];
+    $descricao = $dadosReserva['descricao'];
+
+
+    $dataInicial = $dadosReserva['dataInicial']; // sem uso 
+    $dataFinal = $dadosReserva['dataFinal'];  // sem uso 
+    $valorReserva = $dadosReserva['valorReserva'];
+    $status = $dadosReserva['status'];
+} else {
+    // Redirecionar ou mostrar erro se não houver produto
+    header("Location: pag-ic.php?msg=Reserva não encontrado.");
     exit;
 }
-
-// Limpa a sessão se tiver alguma sessao de novo produto
-if (isset($_SESSION['formData'])) {
-    unset($_SESSION['formData']);
-}
-
 
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LOUER | Aluguel Facilitado </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produto</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+
+
     <script>
         tailwind.config = {
             theme: {
@@ -117,14 +132,14 @@ if (isset($_SESSION['formData'])) {
                             </div>
                         </div>
                     <?php else: ?>
-                        <a href="../cliente/login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
+                        <a href="login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
                     <?php endif; ?>
                 </div>
             </div>
         </nav>
 
 
-        <!-- notificacao de erro -->
+        <!-- notificacao -->
         <?php if (isset($_GET['msg'])): ?>
             <div id="notificacao" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 fade-in">
                 <div class="bg-white border border-orange-300 text-orange-600 rounded-lg p-4 shadow-lg flex items-start max-w-md w-full">
@@ -132,8 +147,8 @@ if (isset($_SESSION['formData'])) {
                         <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 14a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm1-8h-2v6h2V8z" />
                     </svg>
                     <div>
-                        <!-- <p class="font-medium text-sm">Erro no cadastro</p> Tirei pra poder receber varias mensagens, n so as de erro de cadastro-->
-                        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msgErro']) ?></p>
+                        <!-- <p class="font-medium text-sm">Erro no cadastro</p>  Tirei pra poder receber varias mensagens, n so as de erro de cadastro -->
+                        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msg']) ?></p>
                     </div>
                 </div>
             </div>
@@ -184,106 +199,41 @@ if (isset($_SESSION['formData'])) {
             </script>
         <?php endif; ?>
 
-        <!-- //////////////////////////////////////////////////////////////////////// -->
-        <!-- Conteúdo -->
-        <div class="py-5 px-3">
-
-            <h3>Meus alugueis: </h3>
-
-            <!-- //////////////////////////////////////////////////////////////////////// -->
-
-            <div class="mx-[10%] mt-[5%]">
-                <div class="columns is-multiline pb-5">
-
-                    <?php
-
-                    require_once "../../model/ReservaDao.php";
-                    require_once "../../model/ProdutoDao.php";
-
-                    $res = listarReservas($_SESSION['id']);
-
-                    while ($registro = mysqli_fetch_assoc($res)) {
-                        $idReserva = $registro['id'];
-                        $idProduto = $registro["id_produto"];
-                        $dadosProduto = consultarProduto($idProduto);
-                        $nome = $dadosProduto["nome"];
-                        $dataInicial = $registro['data_reserva']; // sem uso 
-                        $dataFinal = $registro['data_final'];  // sem uso 
-                        $valorReserva = $registro['valor_reserva'];
-                        $status = $registro['status'];
-
-                        echo "
-        <div class='column is-one-quarter'>
-            <div class='card'><a href='../../control/ReservaController.php?acao=acessar&id=$idReserva'>
-                <div class='card-image'>
-                    <figure class='image is-4by3'>
-                        <img src='https://bulma.io/assets/images/placeholders/1280x960.png' alt='Imagem do produto' />
-                    </figure>
-                </div>
-                <div class='card-content'>
-                    <div class='media'>
-                        <div class='media-left'>
-                            <figure class='image is-48x48'>
-                                <img src='https://bulma.io/assets/images/placeholders/96x96.png' alt='Avatar do fornecedor' />
-                            </figure>
-                        </div>
-                        <div class='media-content'>
-                            <p class='title is-5'>$nome</p>
-                            <p class='subtitle is-6'>R$$valorReserva/h</p>
-                        </div>
-                    </div>
-                    <div class='content'>
-                        $status
-                    </div>
-                </div>
-            </a></div>
-        </div>
-        ";
-                    }
-                    ?>
-
-                </div>
-            </div>
-
-            <!-- //////////////////////////////////////////////////////////////////////// -->
-
-        </div>
-
-
 
         <!-- //////////////////////////////////////////////////////////////////////// -->
-        <!-- Footer -->
-        <footer class="bg-white py-6 border-t border-gray-200 mt-auto">
-            <div class="container mx-auto px-4 md:px-6">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div class="mb-4 md:mb-0">
-                        <a href="#" class="text-primary font-bold text-2xl">LOUER</a>
-                        <p class="mt-1 text-gray-600 text-sm">Alugue espaços e itens de forma simples.</p>
-                    </div>
-                    <p class="text-gray-500 text-sm">© 2023 LOUER. Todos os direitos reservados.</p>
-                </div>
-            </div>
-        </footer>
-    </div>
+        <!-- Informacoes da Reserva -->
 
-    <script>
-        // BOTAO DO PERFIL ESSENCIAIS ///////////////////////////////////////////////////////////
-        const btnPerfil = document.getElementById('btnPerfil');
-        const cardPerfil = document.getElementById('cardPerfil');
+        <h2> <?php echo $nomeProduto ?> </h2>
+        <br>
+        <h3> <?php echo $descricao ?> </h3>
+        <h3> <?php echo $valorReserva ?> </h3>
+        <h3> Puplicado por: <?php echo $nomeFornecedor ?> </h3>
+        <h3> <?php echo $dataInicial ?> </h3>
+        <h3> <?php echo $dataFinal ?> </h3>
+        <h3> <?php echo $status ?> </h3>
 
-        // Alterna o card ao clicar no botão
-        btnPerfil.addEventListener('click', () => {
-            cardPerfil.classList.toggle('hidden');
-        });
+        <script>
+            // BOTAO DO PERFIL ESSENCIAIS ///////////////////////////////////////////////////////////
+            const btnPerfil = document.getElementById('btnPerfil');
+            const cardPerfil = document.getElementById('cardPerfil');
 
-        // Fecha ao clicar fora
-        document.addEventListener('click', (e) => {
-            if (!btnPerfil.contains(e.target) && !cardPerfil.contains(e.target)) {
-                cardPerfil.classList.add('hidden');
-            }
-        });
-        // /////////////////////////////////////////////////////////////////////////////////////
-    </script>
+            // Alterna o card ao clicar no botão
+            btnPerfil.addEventListener('click', () => {
+                cardPerfil.classList.toggle('hidden');
+            });
+
+            // Fecha ao clicar fora
+            document.addEventListener('click', (e) => {
+                if (!btnPerfil.contains(e.target) && !cardPerfil.contains(e.target)) {
+                    cardPerfil.classList.add('hidden');
+                }
+            });
+            // /////////////////////////////////////////////////////////////////////////////////////
+        </script>
+
+
+
+
 </body>
 
 </html>

@@ -6,6 +6,7 @@ session_start();
 require_once "../model/ReservaDao.php";
 require_once "FuncoesUteis.php";
 
+
 $acao = $_GET['acao'] ?? $_POST['acao'] ?? '';
 
 switch ($acao) {
@@ -22,7 +23,7 @@ switch ($acao) {
         break;
 
     case 'acessar':
-        acessarProduto($_GET['id'] ?? null);
+        acessarReserva($_GET['id'] ?? null);
         break;
 
     // case 'excluir':
@@ -82,4 +83,29 @@ function solicitarReserva($dadosPOST)
 
 
     
+}
+function acessarReserva($idReserva)
+{
+
+    if (!$idReserva) {
+        header("Location: ../view/cliente/pag-ic.php?msg=Reserva inválida.");
+        exit;
+    }
+    require_once "../model/ProdutoDao.php";
+
+    $dadosReserva = consultarReserva($idReserva);
+    $IdProduto = $dadosReserva['idProduto'];
+    $dadosProduto = consultarProduto($IdProduto);
+    
+
+    $_SESSION['Reserva'] = array_merge($dadosProduto, $dadosReserva);
+
+
+    if (isset($dadosProduto)) {
+        header("Location: ../view/cliente/pag-reserva.php");
+        exit;
+    } else {
+        header("Location: ../view/cliente/pag-ic.php");
+        exit;
+    }
 }

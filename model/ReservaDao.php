@@ -13,8 +13,43 @@ function inserirSolicitacaoReserva($idUsuario, $idProduto, $valorReserva, $dataI
     $stmt = $conexao->prepare("INSERT INTO reserva (id_usuario, id_produto, data_reserva, data_final, valor_reserva, status, data_solicitado) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("iissdss", $idUsuario, $idProduto, $dataInicio, $dataFinal, $valorReserva, $status, $dataSolicitacao);
     if (!mysqli_stmt_execute($stmt)) {
-            return false;
-        }
+        return false;
+    }
 
     return true;
+}
+
+function listarReservas($idUsuario)
+{
+    $conexao = conectarBD();
+    $sql = "SELECT * FROM reserva WHERE id_usuario = $idUsuario";
+    return mysqli_query($conexao, $sql);
+}
+
+function consultarReserva($id)
+{
+    $conexao = conectarBD();
+
+    $sql = "SELECT * FROM Reserva WHERE id = ?";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+
+    if ($row = $res->fetch_assoc()) {
+
+        return [
+            "id" => $id,
+            "idUsuario" => $row['id_usuario'],
+            "idProduto" => $row['id_produto'],
+            "dataInicial" => $row['data_reserva'],
+            "dataFinal" => $row['data_final'],
+            "valorReserva" => $row['valor_reserva'],
+            "status" => $row['status'],
+            "valorReserva" => $row['valor_reserva'],
+        ];
+    }
+    return null;
 }

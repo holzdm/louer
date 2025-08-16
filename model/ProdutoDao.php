@@ -145,7 +145,7 @@ function consultarProduto($id)
         $datasDisponiveis = buscarDatasDisponiveis($id);
 
         return [
-            "id" => $id,
+            "idProduto" => $id,
             "nome" => $row['nome'],
             "descricao" => $row['descricao'],
             "tipo" => $row['tipo'],
