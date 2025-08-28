@@ -220,7 +220,7 @@ if (isset($_SESSION['formData'])) {
                         </div>
                         <div class='media-content'>
                             <p class='title is-5'>$nome</p>
-                            <p class='subtitle is-6'>R$$valorDia/h</p>
+                            <p class='subtitle is-6'>R$$valorDia/dia</p>
                         </div>
                     </div>
                     <div class='content'>

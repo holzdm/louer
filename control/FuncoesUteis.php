@@ -8,28 +8,28 @@ function validarCampos($nome, $cpf, $cnpj, $cidade, $telefone, $email, $senha) {
 	}
 	
 	if ( validarCPFCNPJ($cpf, $cnpj) == false  ) {
-		$msgErro = $msgErro . "Insira um documento válido.";
+		$msgErro = $msgErro . "Insira um documento válido. ";
 	}
 
 	if ( empty($cidade) ) {
-		$msgErro = $msgErro . "Cidade inválida.";
+		$msgErro = $msgErro . "Cidade inválida. ";
 	}
 
     if ( empty($telefone) ) {
-		$msgErro = $msgErro . "Telefone inválido.";
+		$msgErro = $msgErro . "Telefone inválido. ";
 	}
 
     if ( empty($email) ) {
-		$msgErro = $msgErro . "Email inválido.";
+		$msgErro = $msgErro . "Email inválido. ";
 		
 	}
 
 	if (existeEmail($email)) {
-		$msgErro .= "Este email já está cadastrado.";
+		$msgErro .= "Este email já está cadastrado. ";
 	}
 
 	if ( strlen($senha) < 6 ) {
-		$msgErro = $msgErro . "Sua senha deve conter 6 caracteres ou mais.";
+		$msgErro = $msgErro . "Sua senha deve conter 6 caracteres ou mais. ";
 	}
 
 
