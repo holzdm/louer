@@ -246,6 +246,54 @@ if (isset($_SESSION['formData'])) {
 
     </div>
 
+    <div class="mx-[10%] mt-[5%]">
+    <div class="columns is-multiline pb-5">
+
+      <?php
+
+      require_once "../../model/ProdutoDao.php";
+
+      $res = listarMeusProdutos();
+
+      while ($registro = mysqli_fetch_assoc($res)) {
+        $idProduto = $registro["id"];
+        $nome = $registro["nome"];
+        $descricao = $registro["descricao"];
+        $valorDia = $registro["valor_dia"];
+
+        echo "
+        <div class='column is-one-quarter'>
+            <div class='card'><a href='../../control/ProdutoController.php?acao=alterar&id=$idProduto'>
+                <div class='card-image'>
+                    <figure class='image is-4by3'>
+                        <img src='https://bulma.io/assets/images/placeholders/1280x960.png' alt='Imagem do produto' />
+                    </figure>
+                </div>
+                <div class='card-content'>
+                    <div class='media'>
+                        <div class='media-left'>
+                            <figure class='image is-48x48'>
+                                <img src='https://bulma.io/assets/images/placeholders/96x96.png' alt='Avatar do fornecedor' />
+                            </figure>
+                        </div>
+                        <div class='media-content'>
+                            <p class='title is-5'>$nome</p>
+                            <p class='subtitle is-6'>R$$valorDia/dia</p>
+                        </div>
+                    </div>
+                    <div class='content'>
+                        $descricao
+                    </div>
+                </div>
+            </a></div>
+        </div>
+        ";
+      }
+      ?>
+
+    </div>
+  </div>
+
 
 
     <!-- //////////////////////////////////////////////////////////////////////// -->

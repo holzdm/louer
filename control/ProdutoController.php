@@ -30,9 +30,12 @@ switch ($acao) {
         break;
 
     case 'pesquisar':
-        pesquisarProdutos($_POST);
+        pesquisarProdutos($_GET['id'] ?? null);
         break;
 
+    case 'alterar':
+        alterarProduto($_POST);
+        break;
     // case 'excluir':
     //     excluirCliente($_GET['id'] ?? null);
     //     break;
@@ -175,4 +178,9 @@ function pesquisarProdutos($dadosPesquisa){
     $_SESSION['conteudoPesquisa'] = $conteudoPesquisa;
     header("Location: ../view/pag-inicial.php");
     exit;
+}
+
+function alterarProduto($idProduto){
+
+    echo ("criar no controller o direcionamento para a pagina de alterar os produtos, assim como no acessarProduto");
 }
