@@ -157,12 +157,6 @@ function consultarProduto($id)
     return null;
 }
 
-function listarProdutos()
-{
-    $conexao = conectarBD();
-    $sql = "SELECT * FROM produto WHERE ativo = 1";
-    return mysqli_query($conexao, $sql);
-}
 
 
 function buscarDatasDisponiveis($idProduto)
@@ -185,4 +179,27 @@ function buscarDatasDisponiveis($idProduto)
     }
 
     return $datas;
+}
+
+
+function listarProdutos()
+{
+    $conexao = conectarBD();
+
+    $conteudoPesquisa = $_SESSION['conteudoPesquisa'] ?? '';
+
+    $sql = "SELECT * FROM produto 
+    WHERE ativo = 1
+    AND (nome LIKE ? OR descricao LIKE ?)";
+
+$pesquisa = "%" . $conteudoPesquisa . "%";
+
+$stmt = mysqli_prepare($conexao, $sql);
+mysqli_stmt_bind_param($stmt, "ss", $pesquisa, $pesquisa);
+mysqli_stmt_execute($stmt);
+
+
+return mysqli_stmt_get_result($stmt);
+
+    
 }

@@ -12,6 +12,7 @@ if (isset($_SESSION['formData'])) {
   unset($_SESSION['formData']);
 }
 
+
 ?>
 
 <!DOCTYPE html>
@@ -86,10 +87,16 @@ if (isset($_SESSION['formData'])) {
       <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
         <a href="#" class="text-primary font-bold text-3xl">LOUER</a>
         <div class="hidden md:flex space-x-6">
-          <a href="#" class="text-gray-600 hover:text-primary">Espaços</a>
-          <a href="#" class="text-gray-600 hover:text-primary">Itens</a>
-          <a href="#" class="text-gray-600 hover:text-primary">Ajuda</a>
-        </div>
+  <form action="../control/ProdutoController.php" method="POST" class="flex items-center space-x-2">
+  <input type="hidden" name="acao" value="pesquisar">
+
+    <label for="pesquisa" class="sr-only">Pesquisar</label>
+    
+    <input type="text" id="pesquisa" name="pesquisa" placeholder="Pesquisar..." class="w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-300"/>
+    <button type="submit" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-full font-medium transition-colors">🔎</button>
+  </form>
+</div>
+
         <div class="flex items-center space-x-4">
           <!-- Navbar: CLIENTE LOGADO -->
           <?php if (!empty($_SESSION['id'])):
