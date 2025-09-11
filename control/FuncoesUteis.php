@@ -100,5 +100,38 @@ function validarCamposProdutoEnd($cepProduto, $cidadeProduto, $bairroProduto, $r
 	return null;
 }
 
+function validarCamposAlteracao($nome, $cidade, $telefone, $email, $senha, $emailAntigo) {
 
+	$msgErro = "";
+	if ( empty($nome) ) {
+		$msgErro = $msgErro . "Digite um nome.";
+	}
+	
+
+	if ( empty($cidade) ) {
+		$msgErro = $msgErro . "Cidade inválida. ";
+	}
+
+    if ( empty($telefone) ) {
+		$msgErro = $msgErro . "Telefone inválido. ";
+	}
+
+    if ( empty($email) ) {
+		$msgErro = $msgErro . "Email inválido. ";
+		
+	}
+
+	if (existeEmail($email)) {
+		if ($email != $emailAntigo){
+			$msgErro .= "Este email já está cadastrado. ";
+		}
+	}
+
+	if ( strlen($senha) < 6 ) {
+		$msgErro = $msgErro . "Sua senha deve conter 6 caracteres ou mais. ";
+	}
+
+
+	return $msgErro;
+}
 ?>

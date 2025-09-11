@@ -56,6 +56,21 @@ function existeEmail($email) {
     return $total > 0;
 }
 
+function alterarDadosCliente($nome, $cidade, $telefone, $email, $senha, $id) {
+    $conexao = conectarBD();
 
+    // Montar SQL
+    $sql = "UPDATE usuario 
+            SET nome = ?, cidade = ?, telefone = ?, email = ?, senha = ?
+            WHERE id = ?";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("sssssi", $nome, $cidade, $telefone, $email, $senha, $id);
+    $resultado = $stmt->execute();
+    $stmt->close();
+    $conexao->close();
+
+    return $resultado;
+}
 // USAR O STMT?
 ?>

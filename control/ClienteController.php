@@ -18,7 +18,9 @@ switch ($acao) {
     case 'sair':
         sairCliente();
         break;
-
+    case 'alterar':
+        alterarCliente($_POST);
+        break;
     // case 'excluir':
     //     excluirCliente($_GET['id'] ?? null);
     //     break;
@@ -127,4 +129,33 @@ function sairCliente()
     // Redireciona para a página inicial
     header("Location: ../view/pag-inicial.php");
     exit;
+}
+
+function alterarCliente($dadosPOST){
+    // recebe os dados do formulario de alteracao 
+    $nome = $dadosPOST['nome'];
+    $cidade = $dadosPOST['cidade'];
+    $telefone = $dadosPOST['telefone'];
+    $email = $dadosPOST['email'];
+    $senha = $dadosPOST['senha'];
+    $id = $dadosPOST['id'];
+    $emailAntigo = $dadosPOST['emailAntigo'];
+    //validar sem o cpf e cnpj
+    $msgErro = validarCamposAlteracao($nome, $cidade, $telefone, $email, $senha, $emailAntigo);
+    //alterando
+    if (empty($msgErro)) {
+        if (alterarDadosCliente($nome, $cidade, $telefone, $email, $senha, $id)) {
+            //atualizando as variaveis de sessao
+            $_SESSION['nome'] = $nome;
+            $_SESSION['cidade'] = $cidade;
+            $_SESSION['telefone'] = $telefone;
+            $_SESSION['email'] = $email;
+            $_SESSION['senha'] = $senha;
+
+            header("Location:../view/cliente/pag-ic.php?msg=Dados alterados com sucesso!");
+            exit;
+        }
+        header("Location:../view/cliente/pag-ic.php?msgErro=Não foi possível alterar.");
+        exit;
+    }
 }
