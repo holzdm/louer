@@ -249,10 +249,10 @@ if (isset($_SESSION['formData'])) {
     <div class="mx-[10%] mt-[5%]">
     <div class="columns is-multiline pb-5">
 
-      <?php
+      <?php 
 
       require_once "../../model/ProdutoDao.php";
-
+      
       $res = listarMeusProdutos();
 
       while ($registro = mysqli_fetch_assoc($res)) {
@@ -289,7 +289,7 @@ if (isset($_SESSION['formData'])) {
         </div>
         ";
       }
-      ?>
+       ?>
 
     </div>
   </div>

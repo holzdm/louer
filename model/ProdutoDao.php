@@ -43,7 +43,9 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
     }
 
 
-
+    if ($stmt == false) {
+        echo mysqli_error($conexao);
+    }
     mysqli_stmt_execute($stmt) or die('Erro no INSERT do Produto: ' . mysqli_stmt_error($stmt));
 
     // Pega o código inserido
@@ -213,9 +215,9 @@ function listarMeusProdutos(){
     $sql = "SELECT * FROM produto 
     WHERE id_usuario = $idUsuario";
 
+    $stmt = mysqli_prepare($conexao, $sql);
 
-$stmt = mysqli_prepare($conexao, $sql);
-mysqli_stmt_execute($stmt);
+    mysqli_stmt_execute($stmt);
 
-return mysqli_stmt_get_result($stmt);
+    return mysqli_stmt_get_result($stmt);
 }
