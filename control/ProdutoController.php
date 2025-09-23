@@ -30,7 +30,7 @@ switch ($acao) {
         break;
 
     case 'pesquisar':
-        pesquisarProdutos($_GET['id'] ?? null);
+        pesquisarProdutos($_POST);
         break;
 
     case 'alterar':
