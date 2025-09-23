@@ -58,4 +58,40 @@ function existeEmail($email) {
 
 
 // USAR O STMT?
+
+function consultarCliente($idUsuario){
+    $conexao = conectarBD();
+
+    $sql = "SELECT * FROM Usuario WHERE id = ?";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $idUsuario);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+
+    if ($row = $res->fetch_assoc()) {
+
+        return [
+            "idUsuario" => $idUsuario,
+            "nomeUsuario" => $row['nome'],
+            "tipoUsuario" => $row['tipo'],
+            "cpf" => $row['cpf'],
+            "cnpj" => $row['cnpj'],
+            "cidade" => $row['cidade'],
+            "telefone" => $row['telefone'],
+            "email" => $row['email'],
+            "senha" => $row['senha'],
+            "cep" => $row['cep'],
+            "bairro" => $row['bairro'],
+            "rua" => $row['rua'],
+            "numero" => $row['numero'],
+            "complemento" => $row['complemento'],
+            "conta_ativa" => $row['conta_ativa'],
+
+            
+        ];
+    }
+    return null;
+}
 ?>

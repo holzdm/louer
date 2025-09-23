@@ -12,6 +12,29 @@ if (isset($_SESSION['formData'])) {
     unset($_SESSION['formData']);
 }
 
+if (!isset($_SESSION['Usuario'])) {
+    header("Location: ../../control/ClienteController.php");
+    exit;
+}
+
+$dadosUsuario = $_SESSION['Usuario'];
+
+$idUsuario = $dadosUsuario['idUsuario'];
+$nomeUsuario = $dadosUsuario['nomeUsuario'];
+$tipoUsuario = $dadosUsuario['tipoUsuario'];
+$cpf = $dadosUsuario['cpf'];
+$cnpj = $dadosUsuario['cnpj'];
+$cidade = $dadosUsuario['cidade'];
+$telefone = $dadosUsuario['telefone'];
+$email = $dadosUsuario['email'];
+$senha = $dadosUsuario['senha'];
+$cep = $dadosUsuario['cep'];
+$bairro = $dadosUsuario['bairro'];
+$rua = $dadosUsuario['rua'];
+$numero = $dadosUsuario['numero'];
+$complemento = $dadosUsuario['complemento'];
+$conta_ativa = $dadosUsuario['conta_ativa'];
+
 
 ?>
 
@@ -187,32 +210,55 @@ if (isset($_SESSION['formData'])) {
         <!-- //////////////////////////////////////////////////////////////////////// -->
         <!-- Conteúdo -->
         <div class="py-5 px-3">
+            <h2>Informacoes da conta: </h3>
 
-            <h3>Meus alugueis: </h3>
+                <h3>ID:<?php echo $idUsuario; ?></h3>
+                <h3>NOME:<?php echo $nomeUsuario; ?></h3>
+                <h3>TIPO:<?php echo $tipoUsuario; ?></h3>
+                <?php if (empty($cnpj)): ?>
+                    <h3>CPF:<?php echo $cpf; ?></h3>
+                <?php else: ?>
+                    <h3>CNPJ:<?php echo $cnpj; ?></h3>
+                <?php endif; ?>
+                <h3>CIDADE:<?php echo $cidade; ?></h3>
+                <h3>TELEFONE:<?php echo $telefone; ?></h3>
+                <h3>EMAIL:<?php echo $email; ?></h3>
+                <h3>SENHA:<?php echo $senha; ?></h3>
+                <h3>CEP:<?php echo $cep; ?></h3>
+                <h3>BAIRRO:<?php echo $bairro; ?></h3>
+                <h3>RUA:<?php echo $rua; ?></h3>
+                <h3>NUMERO:<?php echo $numero; ?></h3>
+                <h3>COMPLEMENTO:<?php echo $complemento; ?></h3>
+                <h3>CONTA-ATIVA:<?php echo $conta_ativa; ?></h3>
 
-            <!-- //////////////////////////////////////////////////////////////////////// -->
 
-            <div class="mx-[10%] mt-[5%]">
-                <div class="columns is-multiline pb-5">
+                <br>
 
-                    <?php
+                <h2>Meus alugueis: </h3>
 
-                    require_once "../../model/ReservaDao.php";
-                    require_once "../../model/ProdutoDao.php";
+                    <!-- //////////////////////////////////////////////////////////////////////// -->
 
-                    $res = listarReservas($_SESSION['id']);
+                    <div class="mx-[10%] mt-[5%]">
+                        <div class="columns is-multiline pb-5">
 
-                    while ($registro = mysqli_fetch_assoc($res)) {
-                        $idReserva = $registro['id'];
-                        $idProduto = $registro["id_produto"];
-                        $dadosProduto = consultarProduto($idProduto);
-                        $nome = $dadosProduto["nome"];
-                        $dataInicial = $registro['data_reserva']; // sem uso 
-                        $dataFinal = $registro['data_final'];  // sem uso 
-                        $valorReserva = $registro['valor_reserva'];
-                        $status = $registro['status'];
+                            <?php
 
-                        echo "
+                            require_once "../../model/ReservaDao.php";
+                            require_once "../../model/ProdutoDao.php";
+
+                            $res = listarReservas($_SESSION['id']);
+
+                            while ($registro = mysqli_fetch_assoc($res)) {
+                                $idReserva = $registro['id'];
+                                $idProduto = $registro["id_produto"];
+                                $dadosProduto = consultarProduto($idProduto);
+                                $nome = $dadosProduto["nome"];
+                                $dataInicial = $registro['data_reserva']; // sem uso 
+                                $dataFinal = $registro['data_final'];  // sem uso 
+                                $valorReserva = $registro['valor_reserva'];
+                                $status = $registro['status'];
+
+                                echo "
         <div class='column is-one-quarter'>
             <div class='card'><a href='../../control/ReservaController.php?acao=acessar&id=$idReserva'>
                 <div class='card-image'>
@@ -239,13 +285,13 @@ if (isset($_SESSION['formData'])) {
             </a></div>
         </div>
         ";
-                    }
-                    ?>
+                            }
+                            ?>
 
-                </div>
-            </div>
+                        </div>
+                    </div>
 
-            <!-- //////////////////////////////////////////////////////////////////////// -->
+                    <!-- //////////////////////////////////////////////////////////////////////// -->
 
         </div>
 

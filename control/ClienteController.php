@@ -19,6 +19,10 @@ switch ($acao) {
         sairCliente();
         break;
 
+    case 'acessar':
+        acessarCliente();
+        break;
+
     // case 'excluir':
     //     excluirCliente($_GET['id'] ?? null);
     //     break;
@@ -127,4 +131,19 @@ function sairCliente()
     // Redireciona para a página inicial
     header("Location: ../view/pag-inicial.php");
     exit;
+}
+
+function acessarCliente(){
+    if (!isset($_SESSION['id'])) {
+        header("Location: ../view/pag-inicial.php?msg=Cliente inválido.");
+        exit;
+    }
+    $idUsuario = $_SESSION['id'];
+
+    $dadosUsuario = consultarCliente($idUsuario);
+    $_SESSION['Usuario'] = $dadosUsuario;
+
+    header("Location: ../view/cliente/pag-ic.php");
+    exit;
+
 }
