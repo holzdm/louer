@@ -16,8 +16,6 @@ if (!isset($_SESSION['Usuario'])) {
     header("Location: ../../control/ClienteController.php");
     exit;
 }
-$pagina = $_GET['pagina'] ?? 'meus-dados';
-
 
 $dadosUsuario = $_SESSION['Usuario'];
 
@@ -210,56 +208,109 @@ $conta_ativa = $dadosUsuario['conta_ativa'];
         <?php endif; ?>
 
         <!-- //////////////////////////////////////////////////////////////////////// -->
-        <!-- Div pai que controla altura e espaçamento -->
-        <div class="min-h-screen flex justify-center items-start py-5 px-2">
+        <!-- Conteúdo -->
+        <div class="py-5 px-3 flex flex-col gap-8 mx-auto w-2/3 items-center">
 
-            <!-- Container branco (dashboard) -->
-            <div class="flex w-full max-w-6xl bg-white rounded-2xl shadow-lg overflow-hidden h-[calc(100vh-4rem)]">
+            <!--Formulário de alteração-->
+            <div class="md:w-1/2 w-full flex flex-col justify-center">
+                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-10 w-full h-full">
+                    <h1 class="text-2xl md:text-3xl font-bold text-primary mb-3">Alterar Meus Dados</h1>
+                    <br>
+                    <form action="../../control/ClienteController.php" method="post">
+                        <input type="hidden" name="acao" value="alterar">
+                        <input type="hidden" name="id" value="<?= htmlspecialchars($_SESSION['id']) ?>">
+                        <input type="hidden" name="emailAntigo" value="<?= htmlspecialchars($_SESSION['email']) ?>">
+                        <div class="space-y-5">
+                            <div>
+                                <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome completo</label>
+                                <input type="text" id="nome" name="nome" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['nome']) ?>" required />
+                            </div>
 
-                <!-- Sidebar -->
-                <aside class="w-64 bg-white shadow rounded-lg p-4">
-                    <ul class="space-y-2">
-                        <li>
-                            <a href="?pagina=meus-dados"
-                                class="block px-4 py-2 rounded
-               <?php echo ($pagina === 'meus-dados') ? 'bg-gray-100 text-primary font-semibold' : 'hover:bg-gray-100 text-gray-700'; ?>">
-                                Meus dados
-                            </a>
-                        </li>
-                        <li>
-                            <a href="?pagina=meus-alugueis"
-                                class="block px-4 py-2 rounded
-               <?php echo ($pagina === 'meus-alugueis') ? 'bg-gray-100 text-primary font-semibold' : 'hover:bg-gray-100 text-gray-700'; ?>">
-                                Meus alugueis
-                            </a>
-                        </li>
-                        <li>
-                            <a href="?pagina=favoritos"
-                                class="block px-4 py-2 rounded
-               <?php echo ($pagina === 'favoritos') ? 'bg-gray-100 text-primary font-semibold' : 'hover:bg-gray-100 text-gray-700'; ?>">
-                                Favoritos
-                            </a>
-                        </li>
-                    </ul>
-                </aside>
+                            <div>
+                                <label for="cidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade</label>
+                                <input type="text" id="cidade" name="cidade" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['cidade']) ?>" required />
+                            </div>
 
-                <!-- Conteúdo -->
-                <main class="flex-1 bg-white shadow rounded-lg p-6 ml-2 overflow-y-auto">
+                            <div>
+                                <label for="telefone" class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                                <input type="tel" id="telefone" name="telefone" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['telefone']) ?>" required />
+                            </div>
+
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" id="email" name="email" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['email']) ?>" required />
+                            </div>
+
+                            <div>
+                                <label for="senha" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                                <input type="password" id="senha" name="senha" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="******" required />
+                                <p class="mt-1 text-xs text-gray-500">Mínimo de 6 caracteres com letras ou números</p>
+                            </div>
+
+                            <div class="flex items-start">
+                                <input type="hidden" id="terms" name="terms" class="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" required />
+                            </div>
+
+                            <div>
+                                <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium">
+                                    Alterar Dados
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Aluguéis -->
+            <div class="md:w-1/2 w-full flex flex-col">
+                <h2 class="text-2xl md:text-3xl font-bold text-primary mb-5"><br>Meus aluguéis</h2>
+                <div class="columns is-multiline pb-5">
                     <?php
-                    if ($pagina === 'meus-dados') {
-                        include 'meus-dados.php';
-                    } elseif ($pagina === 'meus-alugueis') {
-                        include 'meus-alugueis.php';
-                    } elseif ($pagina === 'favoritos') {
-                        include 'favoritos.php';
-                    } else {
-                        echo "<p>Escolha uma opção no menu.</p>";
+                    require_once "../../model/ReservaDao.php";
+                    require_once "../../model/ProdutoDao.php";
+                    $res = listarReservas($_SESSION['id']);
+                    while ($registro = mysqli_fetch_assoc($res)) {
+                        $idReserva = $registro['id'];
+                        $idProduto = $registro["id_produto"];
+                        $dadosProduto = consultarProduto($idProduto);
+                        $nome = $dadosProduto["nome"];
+                        $dataInicial = $registro['data_reserva'];
+                        $dataFinal = $registro['data_final'];
+                        $valorReserva = $registro['valor_reserva'];
+                        $status = $registro['status'];
+                        echo "
+        <div class='column is-one-quarter'>
+            <div class='card'><a href='../../control/ReservaController.php?acao=acessar&id=$idReserva'>
+                <div class='card-image'>
+                    <figure class='image is-4by3'>
+                        <img src='https://bulma.io/assets/images/placeholders/1280x960.png' alt='Imagem do produto' />
+                    </figure>
+                </div>
+                <div class='card-content'>
+                    <div class='media'>
+                        <div class='media-left'>
+                            <figure class='image is-48x48'>
+                                <img src='https://bulma.io/assets/images/placeholders/96x96.png' alt='Avatar do fornecedor' />
+                            </figure>
+                        </div>
+                        <div class='media-content'>
+                            <p class='title is-5'>$nome</p>
+                            <p class='subtitle is-6'>R$$valorReserva/h</p>
+                        </div>
+                    </div>
+                    <div class='content'>
+                        $status
+                    </div>
+                </div>
+            </a></div>
+        </div>
+        ";
                     }
                     ?>
-                </main>
-
+                </div>
             </div>
         </div>
+        <!-- //////////////////////////////////////////////////////////////////////// -->
 
         <!-- Footer -->
         <footer class="bg-white py-6 border-t border-gray-200 mt-auto">
