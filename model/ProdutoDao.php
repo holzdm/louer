@@ -43,7 +43,9 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
     }
 
 
-
+    if ($stmt == false) {
+        echo mysqli_error($conexao);
+    }
     mysqli_stmt_execute($stmt) or die('Erro no INSERT do Produto: ' . mysqli_stmt_error($stmt));
 
     // Pega o código inserido
@@ -157,12 +159,6 @@ function consultarProduto($id)
     return null;
 }
 
-function listarProdutos()
-{
-    $conexao = conectarBD();
-    $sql = "SELECT * FROM produto WHERE ativo = 1";
-    return mysqli_query($conexao, $sql);
-}
 
 
 function buscarDatasDisponiveis($idProduto)
@@ -185,4 +181,43 @@ function buscarDatasDisponiveis($idProduto)
     }
 
     return $datas;
+}
+
+
+function listarProdutos()
+{
+    $conexao = conectarBD();
+
+    $conteudoPesquisa = $_SESSION['conteudoPesquisa'] ?? '';
+
+    $sql = "SELECT * FROM produto 
+    WHERE ativo = 1
+    AND (nome LIKE ? OR descricao LIKE ?)";
+    // como pesquisar pelas tags?? pensar nisso depois
+
+$pesquisa = "%" . $conteudoPesquisa . "%";
+
+$stmt = mysqli_prepare($conexao, $sql);
+mysqli_stmt_bind_param($stmt, "ss", $pesquisa, $pesquisa);
+mysqli_stmt_execute($stmt);
+
+
+return mysqli_stmt_get_result($stmt);
+
+    
+}
+
+function listarMeusProdutos(){
+    $conexao = conectarBD();
+
+    $idUsuario = $_SESSION['id'] ?? '';
+
+    $sql = "SELECT * FROM produto 
+    WHERE id_usuario = $idUsuario";
+
+    $stmt = mysqli_prepare($conexao, $sql);
+
+    mysqli_stmt_execute($stmt);
+
+    return mysqli_stmt_get_result($stmt);
 }
