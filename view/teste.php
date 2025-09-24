@@ -148,8 +148,8 @@ if (isset($_SESSION['formData'])) {
 
         <!-- //////////////////////////////////////////////////////////////////////// -->
 
-        <div class="mx-[5%] my-[2%]">
-            <div class="flex flex-wrap -mx-4">
+        <div class="mx-[3%] my-[2%]">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
                 <?php
                 require_once "../model/ProdutoDao.php";
                 require_once "../control/FuncoesUteis.php";
@@ -167,12 +167,12 @@ if (isset($_SESSION['formData'])) {
                     // $jaFavorito = verificarFavorito($_SESSION['id'], $idProduto);
 
                     echo "
-      <div class='w-1/4 p-2'>
-        <div class='bg-white rounded-lg overflow-hidden h-80 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300'>
+      <div >
+        <div class='bg-white rounded-lg overflow-hidden h-60 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300'>
             <a href='../control/ProdutoController.php?acao=acessar&id=$idProduto'>
-                <img src='$srcImg' class='w-full h-60 object-cover' alt='Imagem do produto'>
-                <div class='p-4'>
-                    <h3 class='text-gray-800 font-medium'>$nome</h3>
+                <img src='$srcImg' class='w-full h-40 object-cover' alt='Imagem do produto'>
+                <div class='p-2'>
+                    <h3 class='text-sm text-gray-800 font-medium truncate'>$nome</h3>
                     <p class='text-gray-600'>R$$valorDia/dia</p>
                 </div>
             </a> 
