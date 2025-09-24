@@ -6,6 +6,19 @@
             <a href="#" class="text-gray-600 hover:text-primary">Itens</a>
             <a href="#" class="text-gray-600 hover:text-primary">Ajuda</a>
         </div> -->
+        <?php if ($fonte == 'pag-inicial'): ?>
+            <div class="hidden md:flex space-x-6">
+
+                <form action="../control/ProdutoController.php" method="POST" class="flex items-center space-x-2">
+                    <input type="hidden" name="acao" value="pesquisar">
+
+                    <label for="pesquisa" class="sr-only">Pesquisar</label>
+
+                    <input type="text" id="pesquisa" name="pesquisa" placeholder="Pesquisar..." class="w-80 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-300" />
+                    <button type="submit" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-full font-medium transition-colors">🔎</button>
+                </form>
+            </div>
+        <?php endif; ?>
         <div class="flex items-center space-x-4">
             <!-- Navbar: CLIENTE LOGADO -->
             <?php if (!empty($_SESSION['id'])):
@@ -24,18 +37,36 @@
                         </style>
                         <?php if ($fonte == 'cliente'): ?>
                             <a href="pag-ic-md.php" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
-                        <?php else: ?>
+                        <?php elseif ($fonte == 'produto' || $fonte == 'pag-inicial-fornecedor'): ?>
                             <a href="../cliente/pag-ic.php" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
+                        <?php else: ?>
+                            <a href="cliente/pag-ic.php" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
+
                         <?php endif; ?>
 
                         <a href="#" class="block px-5 py-1 hover:bg-gray-100">Notificacões</a>
                         <a href="../../control/ClienteController.php?acao=sair" class="block px-5 py-1 hover:bg-gray-100 text-red-600 ">Sair</a>
                         <div class="border-t border-gray-200 my-2 mx-2"></div> <!-- Divisor sem hover -->
-                        <?php if ($tipo == 'Fornecedor'): ?>
-                            <a href="../fornecedor/pag-inicial-fornecedor.php" class="block px-5 py-1 mb-2  hover:bg-gray-100 ">Página do Fornecedor</a>
-                        <?php else: ?>
-                            <a href="../fornecedor/pag-cad-fornecedor.php" class="block px-5 py-1 mb-2 hover:bg-gray-100">Quero ser um fornecedor!</a>
-                        <?php endif; ?>
+                        <?php if ($tipo == 'Fornecedor') {
+                            if ($fonte == 'pag-fornecedor-inicial') {
+                                echo "
+                                <a href='#' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
+                            } elseif ($fonte == 'produto' || $fonte == 'cliente') {
+                                echo "
+                                <a href='../fornecedor/pag-inicial-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
+                            } else {
+                                echo "
+                                <a href='fornecedor/pag-inicial-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
+                            }
+                        } else {
+                            if ($fonte == 'produto' || $fonte == 'cliente') {
+                                echo "
+                                <a href='../fornecedor/pag-cad-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
+                            } else {
+                                echo "
+                                <a href='fornecedor/pag-cad-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
+                            }
+                        } ?>
                     </div>
                 </div>
             <?php else: ?>
