@@ -193,7 +193,7 @@ if (isset($_SESSION['formData'])) {
 
     <!-- //////////////////////////////////////////////////////////////////////// -->
 
-    <div class="mx-[10%] mt-[5%]">
+    <div class="mx-[5%] mt-[3%]">
       <div class="columns is-multiline pb-5">
 
         <?php
@@ -208,12 +208,15 @@ if (isset($_SESSION['formData'])) {
           $descricao = $registro["descricao"];
           $valorDia = $registro["valor_dia"];
 
+          $img = listarUmaImg($idProduto);
+          $srcImg = $img ? $img['url_img'] : '../a-uploads/New-piskel.png'; 
+
           echo "
         <div class='column is-one-quarter'>
             <div class='card'><a href='../control/ProdutoController.php?acao=acessar&id=$idProduto'>
                 <div class='card-image'>
                     <figure class='image is-4by3'>
-                        <img src='https://bulma.io/assets/images/placeholders/1280x960.png' alt='Imagem do produto' />
+                        <img src='$srcImg' class='w-full h-60 object-cover' alt='Imagem do produto' />
                     </figure>
                 </div>
                 <div class='card-content'>

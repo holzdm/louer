@@ -18,11 +18,11 @@ switch ($acao) {
         break;
 
     case 'cadastrarImg':
-        cadastrarImgProduto($_POST);
+        cadastrarImgProduto($_POST, $_FILES['imagens']);
         break;
 
     case 'cancelarCadastro':
-        cadastrarImgProduto($_POST);
+        cancelarCadastro();
         break;
 
     case 'acessar':
@@ -102,12 +102,37 @@ function cadastrarEnderecoProduto($dadosPOST)
     header("Location: ../view/produto/pag-novo-produto-img.php");
 }
 
-function cadastrarImgProduto($dadosPOST)
+function cadastrarImgProduto($dadosPOST, $arquivos)
 {
+    $arquivos = $_FILES['imagens'];
+    $mensagensErro = [];
+    $imagensValidadas = []; // aqui vamos armazenar apenas as válidas temporariamente
 
-    // verificacao da imagem
+    // Loop de validação
+    for ($i = 0; $i < count($arquivos['name']); $i++) {
+        $imagem = [
+            'name' => $arquivos['name'][$i],
+            'type' => $arquivos['type'][$i],
+            'tmp_name' => $arquivos['tmp_name'][$i],
+            'error' => $arquivos['error'][$i],
+            'size' => $arquivos['size'][$i]
+        ];
 
+        $msgErro = verificarImagem($imagem);
+        if ($msgErro) {
+            $mensagensErro[] = "Arquivo {$imagem['name']}: $msgErro";
+        } else {
+            // se válida, adiciona ao array temporário
+            $imagensValidadas[] = $imagem;
+        }
+    }
 
+    if (!empty($mensagensErro)) {
+        // Tem erro: não salva nada, envia mensagens de erro e mantém seleção
+        $_SESSION['imagensSelecionadas'] = $arquivos; // para manter as imagens selecionadas
+        header("Location: ../view/cadastrar-imagens.php?msgErro=$mensagensErro");
+        exit;
+    }
     // Operação
 
     $idUsuario = $_SESSION['id'];
@@ -125,12 +150,11 @@ function cadastrarImgProduto($dadosPOST)
         $cidade = $formData['cidade'] ?? [];
         $bairro = $formData['bairro'] ?? [];
         $rua = $formData['rua'] ?? [];
-        $numero = $formData['numero'];
+        $numero = $formData['numero'] ?? [];
         $complemento = $formData['complemento'] ?? [];
 
 
-
-        $np = inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
+        $np = inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
         if ($np) {
             header("Location: ../view/fornecedor/pag-inicial-fornecedor.php");
             exit;
@@ -141,6 +165,7 @@ function cadastrarImgProduto($dadosPOST)
     header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msgErro=Erro ao adicionar produto.");
     exit;
 }
+
 
 function acessarProduto($idProduto)
 {
@@ -162,7 +187,7 @@ function acessarProduto($idProduto)
     }
 }
 
-function cancelarCadastroProduto()
+function cancelarCadastro()
 {
     if (isset($_SESSION['formData'])) {
         unset($_SESSION['formData']);
@@ -171,7 +196,8 @@ function cancelarCadastroProduto()
     exit;
 }
 
-function pesquisarProdutos($dadosPesquisa){
+function pesquisarProdutos($dadosPesquisa)
+{
 
     $conteudoPesquisa = $dadosPesquisa['pesquisa'];
 
@@ -180,7 +206,8 @@ function pesquisarProdutos($dadosPesquisa){
     exit;
 }
 
-function alterarProduto($idProduto){
+function alterarProduto($idProduto)
+{
 
     echo ("criar no controller o direcionamento para a pagina de alterar os produtos, assim como no acessarProduto");
 }

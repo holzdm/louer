@@ -83,7 +83,8 @@ $formData = $_SESSION['formData'] ?? [];
 
     <div class="min-h-screen flex flex-col">
         <!-- Navbar -->
-    <?php $fonte = 'produto'; include '../navbar.php'; ?>
+        <?php $fonte = 'produto';
+        include '../navbar.php'; ?>
 
 
         <!-- notificacao de erro -->
@@ -153,9 +154,10 @@ $formData = $_SESSION['formData'] ?? [];
             <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-4xl">
                 <h1 class="text-2xl md:text-3xl font-bold text-primary mb-6">Adicione fotos</h1>
 
-                <form action="../../control/ProdutoController.php" method="post" class="space-y-6">
+                <form action="../../control/ProdutoController.php" method="post" class="space-y-6" enctype="multipart/form-data">
                     <input type="hidden" name="acao" value="cadastrarImg">
-
+                    <label for="imagens">Escolha as imagens (JPG, PNG, GIF, max 1MB cada):</label>
+                    <input type="file" name="imagens[]" id="imagens" multiple accept="image/jpeg,image/png,image/gif">
                     <div class="flex justify-between mt-6">
                         <!-- Botão Cancelar -->
                         <button type="button" id="btnCancelar" class="px-4 py-2 rounded-md text-gray-700 hover:underline">

@@ -1,10 +1,9 @@
 <?php
 require_once "ConexaoBD.php";
 
-function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento)
+function inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento)
 {
     $conexao = conectarBD();
-
 
     $diasString = implode(',', $diasDisponiveis);
 
@@ -22,7 +21,7 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
             $diasString
         );
     } else {
-        $sql = "INSERT INTO Produto (tipo, nome, id_usuario, valor_dia, descricao, dias_disponiveis, cep, cidade, bairro, rua, numero, complemento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO Produto (tipo, nome, id_usuario, valor_dia, descricao, dias_disponiveis, cep, cidade, bairro, rua, numero, complemento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conexao, $sql);
         mysqli_stmt_bind_param(
             $stmt,
@@ -46,10 +45,14 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
     if ($stmt == false) {
         echo mysqli_error($conexao);
     }
+
+
     mysqli_stmt_execute($stmt) or die('Erro no INSERT do Produto: ' . mysqli_stmt_error($stmt));
 
     // Pega o código inserido
     $idProduto = mysqli_insert_id($conexao);
+
+    inserirImgs($idProduto, $imagensValidadas);
 
     // Insere as tags relacionadas
     if (!inserirTagsHasProduto($tagsIds, $idProduto)) {
@@ -62,6 +65,30 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
 
 
     return $idProduto;
+}
+
+function inserirImgs($idProduto, $imagensValidadas)
+{
+
+    $conexao = conectarBD();
+
+
+    foreach ($imagensValidadas as $imagem) {
+        // gera um nome único para evitar sobrescrever
+        $nomeArquivo = uniqid() . '_' . basename($imagem['name']);
+        $caminhoDestino = "../a-uploads/$nomeArquivo";
+
+        // move arquivo para a pasta uploads
+        if (move_uploaded_file($imagem['tmp_name'], $caminhoDestino)) {
+            // insere caminho no banco
+            $sql = "INSERT INTO imagem (url_img, produto_id) VALUES (?, ?)";
+            $stmt = mysqli_prepare($conexao, $sql);
+            mysqli_stmt_bind_param($stmt, "si", $caminhoDestino, $idProduto);
+            mysqli_stmt_execute($stmt) or die("Erro ao inserir imagem: " . mysqli_stmt_error($stmt));
+        } else {
+            die("Erro ao enviar a imagem {$imagem['name']}");
+        }
+    }
 }
 
 // Função para inserir as tags relacionadas ao produto
@@ -195,19 +222,18 @@ function listarProdutos()
     AND (nome LIKE ? OR descricao LIKE ?)";
     // como pesquisar pelas tags?? pensar nisso depois
 
-$pesquisa = "%" . $conteudoPesquisa . "%";
+    $pesquisa = "%" . $conteudoPesquisa . "%";
 
-$stmt = mysqli_prepare($conexao, $sql);
-mysqli_stmt_bind_param($stmt, "ss", $pesquisa, $pesquisa);
-mysqli_stmt_execute($stmt);
+    $stmt = mysqli_prepare($conexao, $sql);
+    mysqli_stmt_bind_param($stmt, "ss", $pesquisa, $pesquisa);
+    mysqli_stmt_execute($stmt);
 
 
-return mysqli_stmt_get_result($stmt);
-
-    
+    return mysqli_stmt_get_result($stmt);
 }
 
-function listarMeusProdutos(){
+function listarMeusProdutos()
+{
     $conexao = conectarBD();
 
     $idUsuario = $_SESSION['id'] ?? '';
@@ -220,4 +246,28 @@ function listarMeusProdutos(){
     mysqli_stmt_execute($stmt);
 
     return mysqli_stmt_get_result($stmt);
+}
+
+function listarUmaImg($idProduto)
+{
+    $conexao = conectarBD();
+
+
+    // Prepara a query
+    $sql = "SELECT url_img FROM imagem WHERE produto_id = ? LIMIT 1";
+    $stmt = mysqli_prepare($conexao, $sql);
+    if (!$stmt) {
+        die("Erro na preparação da query: " . mysqli_error($conexao));
+    }
+
+    mysqli_stmt_bind_param($stmt, "i", $idProduto);
+    mysqli_stmt_execute($stmt);
+
+    $resultado = mysqli_stmt_get_result($stmt);
+
+    if ($registro = mysqli_fetch_assoc($resultado)) {
+        return $registro; // ['url_img' => ...]
+    } else {
+        return null; // não encontrou imagem
+    }
 }

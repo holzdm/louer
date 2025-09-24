@@ -21,6 +21,7 @@ USE `louerbd` ;
 CREATE TABLE IF NOT EXISTS `louerbd`.`usuario` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(100) NOT NULL,
+  `imagem` LONGBLOB,
   `tipo` ENUM('Cliente', 'Fornecedor', 'Gerente') NOT NULL,
   `cpf` VARCHAR(14) NULL DEFAULT NULL,
   `cnpj` VARCHAR(14) NULL DEFAULT NULL,
