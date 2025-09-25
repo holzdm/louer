@@ -210,10 +210,62 @@ function pesquisarProdutos($dadosPesquisa)
     exit;
 }
 
-function alterarProduto($idProduto)
+function alterarProduto($dadosPOST)
 {
+    $idProduto=$dadosPOST['idProduto'] ?? null;
+/**
+ * Verifica se o método é POST.
+ * Caso contrário, manda um erro
+ */
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    die('Método não é POST.');
+}
 
-    echo ("criar no controller o direcionamento para a pagina de alterar os produtos, assim como no acessarProduto");
+/**
+ * Verifica se o parâmetro foi enviado
+ * ou se está vazio
+ */
+if (!isset($_POST["datas_selecionadas"]) || empty($_POST["datas_selecionadas"])) {
+    http_response_code(400);
+    die('Nenhuma data selecionada.');
+}
+
+/**
+ * Seleciona a lista de datas como string
+ */
+$datas_json = $_POST["datas_selecionadas"];
+/**
+ * transformando a string
+ * em lista normal de volta
+ */
+$datas = json_decode($datas_json);
+
+/**
+ * Verifica se a conversão aconteceu com sucesso
+ */
+if ($datas === null || !is_array($datas)) {
+    http_response_code(400);
+    die('Formato de dados inválido.');
+}
+
+/**
+ * Verifica se há pelo menos uma data
+ */
+if (count($datas) === 0) {
+    http_response_code(400);
+    die('Nenhuma data válida foi encontrada.');
+}
+
+require_once "../model/ProdutoDao.php";
+excluirDatasAntigas($idProduto);
+
+ foreach($datas as $data) {
+    var_dump($idProduto);
+    alterarDatasProduto($idProduto, $data);
+}
+    header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msg=Produto alterado com sucesso!");
+    exit;
 }
 
 function acessarProdutoPraAlterar($idProduto){
@@ -224,7 +276,6 @@ function acessarProdutoPraAlterar($idProduto){
 
     $dadosProduto = consultarProduto($idProduto);
     $_SESSION['Produto'] = $dadosProduto;
-
 
     if (isset($dadosProduto)) {
         header("Location: ../view/produto/pag-produto-alterar.php");
