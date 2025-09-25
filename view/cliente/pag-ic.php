@@ -102,7 +102,7 @@ $conta_ativa = $dadosUsuario['conta_ativa'];
 
 <body>
 
-    <div class="min-h-screen flex flex-col  pt-24">
+    <div class="min-h-screen flex flex-col pt-24">
         <!-- Navbar -->
         <?php $fonte = 'cliente'; include '../navbar.php'; ?>
 

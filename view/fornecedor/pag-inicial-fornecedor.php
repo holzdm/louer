@@ -76,7 +76,7 @@ if (isset($_SESSION['formData'])) {
 
 <body>
 
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col pt-24">
     <!-- Navbar -->
     <?php $fonte = 'pag-inicial-fornecedor'; include '../navbar.php'; ?>
 
@@ -141,13 +141,8 @@ if (isset($_SESSION['formData'])) {
   </script>
 <?php endif; ?>
 
-
-
-  <div class="min-h-screen flex flex-col">
-
-
 <!-- notificacao -->
-<?php include '../notificacao.php'; include '../notificacao.php';?>
+<?php include '../notificacao.php'; include '../notificacao-erro.php'; ?>
 
     <!-- //////////////////////////////////////////////////////////////////////// -->
     <!-- Conteúdo -->

@@ -1,4 +1,5 @@
-<?php if (isset($_GET['msg'])): ?>
+
+<?php if (!empty($_GET['msg'])): ?>
             <div id="notificacao" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 fade-in">
                 <div class="bg-white border border-orange-300 text-orange-600 rounded-lg p-4 shadow-lg flex items-start max-w-md w-full">
                     <svg class="w-6 h-6 text-orange-600 mt-1 mr-2" fill="currentColor" viewBox="0 0 24 24">
