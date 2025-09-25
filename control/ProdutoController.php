@@ -115,7 +115,7 @@ function cadastrarImgProduto($dadosPOST, $arquivos)
     // Loop de validação
     for ($i = 0; $i < count($arquivos['name']); $i++) {
         $imagem = [
-            'name' => $arquivos['name'][$i],
+            'name' => sanitizeFilename($arquivos['name'][$i]),
             'type' => $arquivos['type'][$i],
             'tmp_name' => $arquivos['tmp_name'][$i],
             'error' => $arquivos['error'][$i],

@@ -173,12 +173,12 @@ if (isset($_SESSION['formData'])) {
         $valorDia = $registro["valor_dia"];
 
         $img = listarUmaImg($idProduto);
-        $srcImg = $img ? $img['url_img'] : '../../a-uploads/New-piskel.png';
+        $srcImg = $img ? '/louer/a-uploads/' . $img['url_img'] : '/louer/a-uploads/New-piskel.png';
 
         echo "
         <div >
         <div class='bg-white rounded-lg overflow-hidden h-60 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300'>
-            <a href='../../control/ProdutoController.php?acao=acessarMeuProduto&id=$idProduto'>
+            <a href='/louer/control/ProdutoController.php?acao=acessarMeuProduto&id=$idProduto'>
                 <img src='$srcImg' class='w-full h-40 object-cover' alt='Imagem do produto'>
                 <div class='p-2'>
                     <h3 class='text-sm text-gray-800 font-medium truncate'>$nome</h3>
