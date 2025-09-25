@@ -1,6 +1,11 @@
 <nav class="bg-white shadow-sm py-4">
     <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
-        <a href="../pag-inicial.php" class="text-primary font-bold text-3xl">LOUER</a>
+    <?php if ($fonte == 'pag-inicial'): ?>
+        <a href="#" class="text-primary font-bold text-3xl">LOUER</a>
+        <?php else:?>
+            <a href="../pag-inicial.php" class="text-primary font-bold text-3xl">LOUER</a>
+            <?php endif; ?>
+
         <!-- <div class="hidden md:flex space-x-6">
             <a href="#" class="text-gray-600 hover:text-primary">Espaços</a>
             <a href="#" class="text-gray-600 hover:text-primary">Itens</a>
@@ -35,17 +40,21 @@
                                 margin: 0;
                             }
                         </style>
-                        <?php if ($fonte == 'cliente'): ?>
-                            <a href="pag-ic-md.php" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
-                        <?php elseif ($fonte == 'produto' || $fonte == 'pag-inicial-fornecedor'): ?>
-                            <a href="../cliente/pag-ic.php" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
+                        <?php if ($fonte == 'pag-inicial'): ?>
+                            <a href="../control/ClienteController.php?acao=acessar" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
                         <?php else: ?>
-                            <a href="cliente/pag-ic.php" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
-
+                            <a href="../../control/ClienteController.php?acao=acessar" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
                         <?php endif; ?>
 
                         <a href="#" class="block px-5 py-1 hover:bg-gray-100">Notificacões</a>
+                        <?php if ($fonte == 'pag-inicial'): ?>
+                        <a href="../control/ClienteController.php?acao=sair" class="block px-5 py-1 hover:bg-gray-100 text-red-600 ">Sair</a>
+
+                        <?php else: ?>
                         <a href="../../control/ClienteController.php?acao=sair" class="block px-5 py-1 hover:bg-gray-100 text-red-600 ">Sair</a>
+
+                        <?php endif; ?>
+
                         <div class="border-t border-gray-200 my-2 mx-2"></div> <!-- Divisor sem hover -->
                         <?php if ($tipo == 'Fornecedor') {
                             if ($fonte == 'pag-fornecedor-inicial') {
@@ -70,7 +79,11 @@
                     </div>
                 </div>
             <?php else: ?>
-                <a href="../cliente/login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
+                <?php if ($fonte == 'pag-inicial'): ?>
+                <a href="cliente/login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
+                <?php else: ?>
+                    <a href="../cliente/login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
+                    <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>

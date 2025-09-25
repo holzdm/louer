@@ -33,6 +33,10 @@ switch ($acao) {
         pesquisarProdutos($_POST);
         break;
 
+    case 'acessarMeuProduto':
+        acessarProdutoPraAlterar($_GET['id'] ?? null);
+        break;
+
     case 'alterar':
         alterarProduto($_POST);
         break;
@@ -210,4 +214,23 @@ function alterarProduto($idProduto)
 {
 
     echo ("criar no controller o direcionamento para a pagina de alterar os produtos, assim como no acessarProduto");
+}
+
+function acessarProdutoPraAlterar($idProduto){
+    if (!$idProduto) {
+        header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msg=Produto inválido. (ProdutoController)");
+        exit;
+    }
+
+    $dadosProduto = consultarProduto($idProduto);
+    $_SESSION['Produto'] = $dadosProduto;
+
+
+    if (isset($dadosProduto)) {
+        header("Location: ../view/produto/pag-produto-alterar.php");
+        exit;
+    } else {
+        header("Location: ../view/fornecedor/pag-inicial-fornecedor.php");
+        exit;
+    }
 }

@@ -146,56 +146,8 @@ if (isset($_SESSION['formData'])) {
   <div class="min-h-screen flex flex-col">
 
 
-<!-- Notificacao de erro do login -->
- <?php if (isset($_GET['msgErro'])): ?>
-  <style>
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, -10px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
-    }
-    @keyframes fadeOut {
-      from { opacity: 1; transform: translate(-50%, 0); }
-      to { opacity: 0; transform: translate(-50%, -10px); }
-    }
-    .fade-in { animation: fadeIn 0.5s ease-out forwards; }
-    .fade-out { animation: fadeOut 0.4s ease-in forwards; }
-  </style>
-
-  <div id="erroLogin" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 fade-in">
-    <div class="notification-box shadow-lg rounded-lg bg-white mx-auto p-4 flex border border-orange-400">
-      <div class="pr-2">
-        <svg class="fill-current text-orange-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-          <path class="heroicon-ui" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm0 9a1 1 0 0 1-1-1V8a1 1 0 0 1 2 0v4a1 1 0 0 1-1 1zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-        </svg>
-      </div>
-      <div>
-        <div class="text-sm pb-2 font-semibold text-orange-600">
-          Erro. 
-        </div>
-        <div class="text-sm text-gray-600 tracking-tight">
-          <?php echo htmlspecialchars($_GET['msgErro']); ?>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    setTimeout(() => {
-      const notif = document.getElementById('erroLogin');
-      if (notif) {
-        notif.classList.remove('fade-in');
-        notif.classList.add('fade-out');
-        setTimeout(() => notif.remove(), 500);
-      }
-    }, 5000);
-  </script>
-
-  <style>
-    .notification-box {
-      width: 20rem;
-    }
-  </style>
-<?php endif; ?>
+<!-- notificacao -->
+<?php include '../notificacao.php'; include '../notificacao.php';?>
 
     <!-- //////////////////////////////////////////////////////////////////////// -->
     <!-- Conteúdo -->
@@ -205,8 +157,8 @@ if (isset($_SESSION['formData'])) {
 
     </div>
 
-    <div class="mx-[10%] mt-[5%]">
-    <div class="columns is-multiline pb-5">
+    <div class="mx-[3%] my-[2%]">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
 
       <?php 
 
@@ -220,35 +172,23 @@ if (isset($_SESSION['formData'])) {
         $descricao = $registro["descricao"];
         $valorDia = $registro["valor_dia"];
 
+        $img = listarUmaImg($idProduto);
+        $srcImg = $img ? $img['url_img'] : '../../a-uploads/New-piskel.png';
+
         echo "
-        <div class='column is-one-quarter'>
-            <div class='card'><a href='../../control/ProdutoController.php?acao=alterar&id=$idProduto'>
-                <div class='card-image'>
-                    <figure class='image is-4by3'>
-                        <img src='https://bulma.io/assets/images/placeholders/1280x960.png' alt='Imagem do produto' />
-                    </figure>
+        <div >
+        <div class='bg-white rounded-lg overflow-hidden h-60 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300'>
+            <a href='../../control/ProdutoController.php?acao=acessarMeuProduto&id=$idProduto'>
+                <img src='$srcImg' class='w-full h-40 object-cover' alt='Imagem do produto'>
+                <div class='p-2'>
+                    <h3 class='text-sm text-gray-800 font-medium truncate'>$nome</h3>
+                    <p class='text-gray-600'>R$$valorDia/dia</p>
                 </div>
-                <div class='card-content'>
-                    <div class='media'>
-                        <div class='media-left'>
-                            <figure class='image is-48x48'>
-                                <img src='https://bulma.io/assets/images/placeholders/96x96.png' alt='Avatar do fornecedor' />
-                            </figure>
-                        </div>
-                        <div class='media-content'>
-                            <p class='title is-5'>$nome</p>
-                            <p class='subtitle is-6'>R$$valorDia/dia</p>
-                        </div>
-                    </div>
-                    <div class='content'>
-                        $descricao
-                    </div>
-                </div>
-            </a></div>
+            </a> 
         </div>
+    </div>
         ";
-      }
-       ?>
+      }?>
 
     </div>
   </div>
