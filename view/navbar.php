@@ -1,4 +1,4 @@
-<nav class="bg-white shadow-sm py-4">
+<nav class="fixed top-0 w-full z-50 bg-white shadow-sm py-4">
     <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
     <a href="/louer/view/pag-inicial.php" class="text-primary font-bold text-3xl">LOUER</a>
 

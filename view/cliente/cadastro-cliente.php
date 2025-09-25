@@ -51,7 +51,7 @@
   </style>
 </head>
 <body>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col pt-24">
     <!-- Navbar -->
     <nav class="bg-white shadow-sm py-4">
       <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">

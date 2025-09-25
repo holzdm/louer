@@ -152,6 +152,12 @@ if (isset($_SESSION['formData'])) {
     <!-- //////////////////////////////////////////////////////////////////////// -->
     <!-- Conteúdo -->
     <div class="py-5 px-3">
+      <!-- Botão flutuante -->
+<a href="caminho/para/pagina-ou-acao" 
+   class="fixed bottom-6 right-6 bg-primary text-white w-14 h-14 flex items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-transform transform hover:scale-110">
+    <!-- Ícone de mais -->
+    <span class="text-3xl font-bold">+</span>
+</a>
 
       <h3>Crie seu produto <a href="../produto/pag-novo-produto.php">AQUI!</a></h3>
 

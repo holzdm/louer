@@ -73,7 +73,7 @@ if (isset($_SESSION['formData'])) {
 </head>
 
 <body>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col pt-24">
     <!-- Navbar -->
     <?php $fonte = 'fornecedor';
     include '../navbar.php'; ?>
