@@ -1,10 +1,6 @@
 <nav class="bg-white shadow-sm py-4">
     <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
-    <?php if ($fonte == 'pag-inicial'): ?>
-        <a href="#" class="text-primary font-bold text-3xl">LOUER</a>
-        <?php else:?>
-            <a href="../pag-inicial.php" class="text-primary font-bold text-3xl">LOUER</a>
-            <?php endif; ?>
+    <a href="/louer/view/pag-inicial.php" class="text-primary font-bold text-3xl">LOUER</a>
 
         <!-- <div class="hidden md:flex space-x-6">
             <a href="#" class="text-gray-600 hover:text-primary">Espaços</a>
@@ -14,7 +10,7 @@
         <?php if ($fonte == 'pag-inicial'): ?>
             <div class="hidden md:flex space-x-6">
 
-                <form action="../control/ProdutoController.php" method="POST" class="flex items-center space-x-2">
+                <form action="/louer/control/ProdutoController.php" method="POST" class="flex items-center space-x-2">
                     <input type="hidden" name="acao" value="pesquisar">
 
                     <label for="pesquisa" class="sr-only">Pesquisar</label>
@@ -40,51 +36,26 @@
                                 margin: 0;
                             }
                         </style>
-                        <?php if ($fonte == 'pag-inicial'): ?>
-                            <a href="../control/ClienteController.php?acao=acessar" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
-                        <?php else: ?>
-                            <a href="../../control/ClienteController.php?acao=acessar" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
-                        <?php endif; ?>
-
+                        <a href="/louer/control/ClienteController.php?acao=acessar" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
+                        
                         <a href="#" class="block px-5 py-1 hover:bg-gray-100">Notificacões</a>
-                        <?php if ($fonte == 'pag-inicial'): ?>
-                        <a href="../control/ClienteController.php?acao=sair" class="block px-5 py-1 hover:bg-gray-100 text-red-600 ">Sair</a>
-
-                        <?php else: ?>
-                        <a href="../../control/ClienteController.php?acao=sair" class="block px-5 py-1 hover:bg-gray-100 text-red-600 ">Sair</a>
-
-                        <?php endif; ?>
+                        <a href="/louer/control/ClienteController.php?acao=sair" class="block px-5 py-1 hover:bg-gray-100 text-red-600 ">Sair</a>
 
                         <div class="border-t border-gray-200 my-2 mx-2"></div> <!-- Divisor sem hover -->
                         <?php if ($tipo == 'Fornecedor') {
-                            if ($fonte == 'pag-fornecedor-inicial') {
                                 echo "
-                                <a href='#' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
-                            } elseif ($fonte == 'produto' || $fonte == 'cliente') {
-                                echo "
-                                <a href='../fornecedor/pag-inicial-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
-                            } else {
-                                echo "
-                                <a href='fornecedor/pag-inicial-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
-                            }
+                                <a href='/louer/view/fornecedor/pag-inicial-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
                         } else {
-                            if ($fonte == 'produto' || $fonte == 'cliente') {
                                 echo "
-                                <a href='../fornecedor/pag-cad-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
-                            } else {
-                                echo "
-                                <a href='fornecedor/pag-cad-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
-                            }
+                                <a href='/louer/view/fornecedor/pag-cad-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
+                            
                         } ?>
                     </div>
                 </div>
             <?php else: ?>
-                <?php if ($fonte == 'pag-inicial'): ?>
-                <a href="cliente/login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
-                <?php else: ?>
-                    <a href="../cliente/login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
-                    <?php endif; ?>
-            <?php endif; ?>
+                <a href="/louer/view/cliente/login-cliente.php" class="text-gray-600 hover:text-primary">Entrar</a>
+                <?php endif; ?>
+  
         </div>
     </div>
 </nav>

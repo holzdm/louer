@@ -160,3 +160,22 @@ function verificarImagem($dadosImagem)
 	}
 	return $msgErro;
 }
+
+function sanitizeFilename($filename) {
+    // converte para UTF-8 (garante compatibilidade)
+    $filename = mb_convert_encoding($filename, 'UTF-8', mb_list_encodings());
+
+    // troca espaços por underscore
+    $filename = str_replace(' ', '_', $filename);
+
+    // remove acentos
+    $filename = iconv('UTF-8', 'ASCII//TRANSLIT', $filename);
+
+    // mantém apenas letras, números, ponto, hífen e underscore
+    $filename = preg_replace('/[^A-Za-z0-9._-]/', '', $filename);
+
+    // opcional: deixar tudo minúsculo
+    $filename = strtolower($filename);
+
+    return $filename;
+}
