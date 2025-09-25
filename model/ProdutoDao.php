@@ -271,3 +271,30 @@ function listarUmaImg($idProduto)
         return null; // não encontrou imagem
     }
 }
+
+function excluirDatasAntigas($idProduto){
+    $conexao = conectarBD();
+    $sqlDelete = "DELETE FROM disponibilidades WHERE id_produto = ?";
+    $stmtDelete = mysqli_prepare($conexao, $sqlDelete);
+    mysqli_stmt_bind_param($stmtDelete, "i", $idProduto);
+    mysqli_stmt_execute($stmtDelete);
+}
+function alterarDatasProduto($idProduto, $data) {
+    $conexao = conectarBD();
+
+    // Insere as novas
+    $sqlInsert = "INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (?, ?)";
+    $stmtInsert = mysqli_prepare($conexao, $sqlInsert);
+
+    if (!$stmtInsert) {
+        die("Erro na preparação da query de inserção: " . mysqli_error($conexao));
+    }
+
+    mysqli_stmt_bind_param($stmtInsert, "is", $idProduto, $data);
+
+    if (mysqli_stmt_execute($stmtInsert)) {
+        echo "Data inserida com sucesso: $data<br>";
+    } else {
+        echo "Erro ao inserir a data $data: " . mysqli_stmt_error($stmtInsert) . "<br>";
+    }
+}
