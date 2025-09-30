@@ -26,14 +26,14 @@ function listarReservas($idUsuario)
     return mysqli_query($conexao, $sql);
 }
 
-function consultarReserva($id)
+function consultarReserva($idReserva)
 {
     $conexao = conectarBD();
 
     $sql = "SELECT * FROM Reserva WHERE id = ?";
 
     $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("i", $id);
+    $stmt->bind_param("i", $idReserva);
     $stmt->execute();
     $res = $stmt->get_result();
 
@@ -41,14 +41,13 @@ function consultarReserva($id)
     if ($row = $res->fetch_assoc()) {
 
         return [
-            "id" => $id,
+            "idReserva" => $idReserva,
             "idUsuario" => $row['id_usuario'],
             "idProduto" => $row['id_produto'],
             "dataInicial" => $row['data_reserva'],
             "dataFinal" => $row['data_final'],
             "valorReserva" => $row['valor_reserva'],
-            "status" => $row['status'],
-            "valorReserva" => $row['valor_reserva'],
+            "status" => $row['status']
         ];
     }
     return null;

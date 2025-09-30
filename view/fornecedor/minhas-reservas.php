@@ -10,8 +10,6 @@
 
     while ($registro = mysqli_fetch_assoc($res1)):
         $idReserva = $registro['id'];
-        $idCliente = $registro['id_usuario'];
-        $dadosCliente = consultarCliente($idCliente);
         $idProduto = $registro['id_produto'];
         $dadosProduto = consultarProduto($idProduto);
         $nome = $dadosProduto['nome'];

@@ -19,7 +19,7 @@ switch ($acao) {
         break;
 
     case 'acessarFornecedor':
-        acessarReservaComoFornecedor();
+        acessarReservaComoFornecedor($_GET['id'] ?? null);
         break;
 
     // case 'excluir':
@@ -42,7 +42,7 @@ function solicitarReserva($dadosPOST)
 
     date_default_timezone_set('America/Sao_Paulo'); // seu timezone local
     $dataSolicitacao = date('Y-m-d');
-    
+
     $valorProduto = $dadosPOST['valorProduto'];
 
     if (!empty($intervalo)) {
@@ -68,7 +68,7 @@ function solicitarReserva($dadosPOST)
 
     $dias = $Inicio->diff($Final)->days + 1;
 
-    $valorReserva = $dias*$valorProduto;
+    $valorReserva = $dias * $valorProduto;
 
 
     if (inserirSolicitacaoReserva($idUsuario, $idProduto, $valorReserva, $dataInicio, $dataFinal, $dataSolicitacao)) {
@@ -76,9 +76,6 @@ function solicitarReserva($dadosPOST)
         exit;
     }
     header("Location: ../view/produto/pag-produto.php?msg=Não foi possivel realizar a solicitação.");
-
-
-    
 }
 function acessarReserva($idReserva)
 {
@@ -92,7 +89,7 @@ function acessarReserva($idReserva)
     $dadosReserva = consultarReserva($idReserva);
     $IdProduto = $dadosReserva['idProduto'];
     $dadosProduto = consultarProduto($IdProduto);
-    
+
 
     $_SESSION['Reserva'] = array_merge($dadosProduto, $dadosReserva);
 
@@ -106,6 +103,31 @@ function acessarReserva($idReserva)
     }
 }
 
-function acessarReservaComoFornecedor(){
-    // fazer AGORA
+function acessarReservaComoFornecedor($idReserva)
+{
+    if (!$idReserva) {
+        header("Location: /louer/view/cliente/pag-inicial-fornecedor.php?msg=Reserva inválida.");
+        exit;
+    }
+    require_once "../model/ProdutoDao.php";
+    require_once "../model/ClienteDao.php";
+
+
+    $dadosReserva = consultarReserva($idReserva);
+    $idProduto = $dadosReserva['idProduto'];
+    $dadosProduto = consultarProduto($idProduto);
+    $idCliente = $dadosReserva['idUsuario'];
+    $dadosCliente = consultarCliente($idCliente); 
+
+
+    $_SESSION['Reserva'] = array_merge($dadosProduto, $dadosReserva, $dadosCliente);
+
+
+    if (isset($dadosProduto)) {
+        header("Location: /louer/view/fornecedor/pag-reserva-fornecedor.php");
+        exit;
+    } else {
+        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
+        exit;
+    }
 }
