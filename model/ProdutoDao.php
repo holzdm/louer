@@ -76,10 +76,11 @@ function inserirImgs($idProduto, $imagensValidadas)
     foreach ($imagensValidadas as $imagem) {
         // gera um nome único para evitar sobrescrever
         $nomeArquivo = uniqid() . '_' . basename($imagem['name']);
-        $caminhoDestino = "../a-uploads/$nomeArquivo";
+        $caminhoDestino = "/louer/a-uploads/$nomeArquivo";
+        $caminho = "../a-uploads/$nomeArquivo";
 
         // move arquivo para a pasta uploads
-        if (move_uploaded_file($imagem['tmp_name'], $caminhoDestino)) {
+        if (move_uploaded_file($imagem['tmp_name'], $caminho)) {
             // insere caminho no banco
             $sql = "INSERT INTO imagem (url_img, produto_id) VALUES (?, ?)";
             $stmt = mysqli_prepare($conexao, $sql);
@@ -172,6 +173,10 @@ function consultarProduto($id)
 
         // pegar datas disponiveis
         $datasDisponiveis = buscarDatasDisponiveis($id);
+        // pegar tags
+        $tags = buscarTags($id);
+        // pegar imagens
+        $imgs = buscarImgs($id);
 
         return [
             "idProduto" => $id,
@@ -180,7 +185,9 @@ function consultarProduto($id)
             "tipo" => $row['tipo'],
             "valor" => $row['valor_dia'],
             "nomeFornecedor" => $nomeFornecedor,
-            "datas" => $datasDisponiveis
+            "datas" => $datasDisponiveis,
+            "imgsArray" => $imgs,
+            "tagsArray" => $tags
         ];
     }
     return null;
@@ -204,10 +211,39 @@ function buscarDatasDisponiveis($idProduto)
 
     $datas = [];
     while ($row = mysqli_fetch_assoc($resultado)) {
-        $datas[] = $row['data_disponivel'];
+        // Converte de YYYY-mm-dd para dd/mm/YYYY
+        $dataFormatada = date("d/m/Y", strtotime($row['data_disponivel']));
+        $datas[] = $dataFormatada;
     }
 
     return $datas;
+}
+
+function buscarTags($idProduto)
+{
+    $conexao = conectarBD();
+
+    $sql = "SELECT t.nome 
+            FROM tags t
+            INNER JOIN tags_has_produto thp ON t.id = thp.tags_id
+            WHERE thp.produto_id = ?";
+
+    $stmt = mysqli_prepare($conexao, $sql);
+    if (!$stmt) {
+        die("Erro no prepare: " . mysqli_error($conexao));
+    }
+
+    mysqli_stmt_bind_param($stmt, "i", $idProduto);
+    mysqli_stmt_execute($stmt);
+
+    $resultado = mysqli_stmt_get_result($stmt);
+
+    $tags = [];
+    while ($registro = mysqli_fetch_assoc($resultado)) {
+        $tags[] = $registro['nome'];
+    }
+
+    return $tags; // retorna um array com os nomes das tags
 }
 
 
@@ -272,14 +308,16 @@ function listarUmaImg($idProduto)
     }
 }
 
-function excluirDatasAntigas($idProduto){
+function excluirDatasAntigas($idProduto)
+{
     $conexao = conectarBD();
     $sqlDelete = "DELETE FROM disponibilidades WHERE id_produto = ?";
     $stmtDelete = mysqli_prepare($conexao, $sqlDelete);
     mysqli_stmt_bind_param($stmtDelete, "i", $idProduto);
     mysqli_stmt_execute($stmtDelete);
 }
-function alterarDatasProduto($idProduto, $data) {
+function alterarDatasProduto($idProduto, $data)
+{
     $conexao = conectarBD();
 
     // Insere as novas
@@ -299,7 +337,8 @@ function alterarDatasProduto($idProduto, $data) {
     }
 }
 
-function deleteProduto($idProduto) {
+function deleteProduto($idProduto)
+{
     $conexao = conectarBD();
 
     $sql = "DELETE FROM produto WHERE id = ?";
@@ -316,4 +355,27 @@ function deleteProduto($idProduto) {
 
     mysqli_stmt_close($stmt);
     mysqli_close($conexao);
+}
+
+function buscarImgs($idProduto)
+{
+    $conexao = conectarBD();
+
+    $sql = "SELECT url_img FROM imagem WHERE produto_id = ?";
+    $stmt = mysqli_prepare($conexao, $sql);
+    if (!$stmt) {
+        die("Erro na preparação da query: " . mysqli_error($conexao));
+    }
+
+    mysqli_stmt_bind_param($stmt, "i", $idProduto);
+    mysqli_stmt_execute($stmt);
+
+    $resultado = mysqli_stmt_get_result($stmt);
+
+    $imagens = [];
+    while ($registro = mysqli_fetch_assoc($resultado)) {
+        $imagens[] = $registro['url_img'];
+    }
+
+    return $imagens; // array de strings com todas as urls
 }

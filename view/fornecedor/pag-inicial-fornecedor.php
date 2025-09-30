@@ -11,6 +11,7 @@ if (!isset($_SESSION['id'])) {
 if (isset($_SESSION['formData'])) {
   unset($_SESSION['formData']);
 }
+$pagina = $_GET['pagina'] ?? 'meus-dados';
 
 ?>
 
@@ -154,44 +155,56 @@ if (isset($_SESSION['formData'])) {
     <!-- //////////////////////////////////////////////////////////////////////// -->
     <!-- Conteúdo -->
 
-    <div class="mx-[3%] my-[2%]">
-      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+        <!-- Div pai que controla altura e espaçamento -->
+        <div class="min-h-screen flex justify-center items-start py-5 px-2">
 
+            <!-- Container branco (dashboard) -->
+            <div class="flex w-full max-w-6xl bg-white rounded-2xl shadow-lg overflow-hidden h-[calc(100vh-4rem)]">
 
+                <!-- Sidebar -->
+                <aside class="w-64 bg-white shadow rounded-lg p-4">
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="?pagina=meus-dados"
+                                class="block px-4 py-2 rounded
+               <?php echo ($pagina === 'meus-dados') ? 'bg-gray-100 text-primary font-semibold' : 'hover:bg-gray-100 text-gray-700'; ?>">
+                                Meus dados
+                            </a>
+                        </li>
+                        <li>
+                            <a href="?pagina=meus-produtos"
+                                class="block px-4 py-2 rounded
+               <?php echo ($pagina === 'meus-produtos') ? 'bg-gray-100 text-primary font-semibold' : 'hover:bg-gray-100 text-gray-700'; ?>">
+                                Meus produtos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="?pagina=minhas-reservas"
+                                class="block px-4 py-2 rounded
+               <?php echo ($pagina === 'minhas-reservas') ? 'bg-gray-100 text-primary font-semibold' : 'hover:bg-gray-100 text-gray-700'; ?>">
+                                Reservas
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
 
+                <!-- Conteúdo -->
+                <main class="flex-1 bg-white shadow rounded-lg p-6 ml-2 overflow-y-auto">
+                    <?php
+                    if ($pagina === 'meus-dados') {
+                        include 'meus-dados.php';
+                    } elseif ($pagina === 'meus-produtos') {
+                        include 'meus-produtos.php';
+                    } elseif ($pagina === 'minhas-reservas') {
+                        include 'minhas-reservas.php';
+                    } else {
+                        echo "<p>Escolha uma opção no menu.</p>";
+                    }
+                    ?>
+                </main>
 
-        <?php
-
-        require_once "../../model/ProdutoDao.php";
-
-        $res = listarMeusProdutos();
-
-        while ($registro = mysqli_fetch_assoc($res)) {
-          $idProduto = $registro["id"];
-          $nome = $registro["nome"];
-          $descricao = $registro["descricao"];
-          $valorDia = $registro["valor_dia"];
-
-          $img = listarUmaImg($idProduto);
-          $srcImg = $img ? '/louer/a-uploads/' . $img['url_img'] : '/louer/a-uploads/New-piskel.png';
-
-          echo "
-      
-        <div class='bg-white rounded-lg overflow-hidden h-60 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300'>
-            <a href='/louer/control/ProdutoController.php?acao=acessarMeuProduto&id=$idProduto'>
-                <img src='$srcImg' class='w-full h-40 object-cover' alt='Imagem do produto'>
-                <div class='p-2'>
-                    <h3 class='text-sm text-gray-800 font-medium truncate'>$nome</h3>
-                    <p class='text-gray-600'>R$$valorDia/dia</p>
-                </div>
-            </a> 
+            </div>
         </div>
-    
-        ";
-        } ?>
-
-      </div>
-    </div>
 
 
   <a href="/louer/view/produto/pag-novo-produto.php"

@@ -239,55 +239,96 @@ INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Roupa');
 INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Fotográfico');
 INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Escolar');
 
--- ----------data: usuario
-INSERT INTO `louerbd`.`usuario` (`nome`, `tipo`,`cpf`, `cidade`, `telefone`, `email`, `senha`) VALUES ('Carol', 'Fornecedor', '19919919922', 'Colatina', '27996937991', 'carol@gmail.com', '1234567');
+-- ---------- Inserir fornecedores ----------
+INSERT INTO usuario (nome, tipo, cpf, cidade, telefone, email, senha) VALUES
+('Fornecedor1', 'Fornecedor', '11111111111', 'CidadeA', '27999990001', 'fornecedor1@gmail.com', '123456'),
+('Fornecedor2', 'Fornecedor', '22222222222', 'CidadeB', '27999990002', 'fornecedor2@gmail.com', '123456'),
+('Fornecedor3', 'Fornecedor', '33333333333', 'CidadeC', '27999990003', 'fornecedor3@gmail.com', '123456'),
+('Fornecedor4', 'Fornecedor', '44444444444', 'CidadeD', '27999990004', 'fornecedor4@gmail.com', '123456'),
+('Carol', 'Fornecedor', '19919919922', 'Colatina', '27996937991', 'carol@gmail.com', '1234567');
 
--- ----------data: produto
-INSERT INTO `louerbd`.`produto` (`id_usuario`,`nome`, `descricao`, `tipo`, `valor_dia`, `dias_disponiveis`) VALUES (1, 'Barraca de Acampamento', 'Super confortável, protege contra a chuva e comporta 4 pessoas.', 'Equipamento', 50, 'Seg,Ter');
+-- ---------- Inserir clientes ----------
+INSERT INTO usuario (nome, tipo, cpf, cidade, telefone, email, senha) VALUES
+('Cliente1', 'Cliente', '55555555555', 'CidadeA', '27999990005', 'cliente1@gmail.com', '123456'),
+('Cliente2', 'Cliente', '66666666666', 'CidadeB', '27999990006', 'cliente2@gmail.com', '123456');
 
--- ----------data: disponibilidades do produto 1:
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-12');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-13');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-19');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-20');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-26');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-08-27');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-02');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-03');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-09');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-10');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-16');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-17');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-23');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-24');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-09-30');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-01');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-07');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-08');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-14');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-15');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-21');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-22');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-28');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-10-29');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-04');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-05');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-11');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-12');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-18');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-19');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-25');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-11-26');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-02');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-03');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-09');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-10');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-16');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-17');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-23');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-24');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-30');
-INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES (1, '2025-12-31');
+-- ---------- Inserir produtos ----------
+-- Produtos do Fornecedor1 (id_usuario = 1)
+INSERT INTO produto (id_usuario, nome, descricao, tipo, valor_dia, dias_disponiveis, cidade) VALUES
+(1, 'Produto1_F1', 'Descrição Produto 1 Fornecedor 1', 'Equipamento', 50.00, 'Seg,Ter', 'CidadeA'),
+(1, 'Produto2_F1', 'Descrição Produto 2 Fornecedor 1', 'Espaco', 100.00, 'Qua,Qui', 'CidadeA');
 
+-- Produtos do Fornecedor2 (id_usuario = 2)
+INSERT INTO produto (id_usuario, nome, descricao, tipo, valor_dia, dias_disponiveis, cidade) VALUES
+(2, 'Produto1_F2', 'Descrição Produto 1 Fornecedor 2', 'Equipamento', 60.00, 'Seg,Qua', 'CidadeB'),
+(2, 'Produto2_F2', 'Descrição Produto 2 Fornecedor 2', 'Espaco', 120.00, 'Ter,Qui', 'CidadeB');
+
+-- Produtos do Fornecedor3 (id_usuario = 3)
+INSERT INTO produto (id_usuario, nome, descricao, tipo, valor_dia, dias_disponiveis, cidade) VALUES
+(3, 'Produto1_F3', 'Descrição Produto 1 Fornecedor 3', 'Equipamento', 70.00, 'Seg,Sex', 'CidadeC'),
+(3, 'Produto2_F3', 'Descrição Produto 2 Fornecedor 3', 'Espaco', 130.00, 'Qua,Qui', 'CidadeC');
+
+-- Produtos do Fornecedor4 (id_usuario = 4)
+INSERT INTO produto (id_usuario, nome, descricao, tipo, valor_dia, dias_disponiveis, cidade) VALUES
+(4, 'Produto1_F4', 'Descrição Produto 1 Fornecedor 4', 'Equipamento', 80.00, 'Seg,Ter', 'CidadeD'),
+(4, 'Produto2_F4', 'Descrição Produto 2 Fornecedor 4', 'Espaco', 150.00, 'Qua,Sex', 'CidadeD');
+
+-- ---------- Inserir tags para cada produto ----------
+-- Considerando ids das tags já existentes: 1 a 7
+INSERT INTO tags_has_produto (tags_id, produto_id) VALUES
+(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (1, 8);
+
+-- ---------- Inserir imagens ----------
+-- Cada produto com 2 imagens, exceto Produto1_F4 (id=7) com 8 imagens
+INSERT INTO imagem (url_img, produto_id) VALUES
+('/louer/a-uploads/image.png', 1), ('/louer/a-uploads/image.png', 1),
+('/louer/a-uploads/image2.png', 2), ('/louer/a-uploads/image.png', 2),
+('/louer/a-uploads/image3.png', 3), ('/louer/a-uploads/image.png', 3),
+('/louer/a-uploads/image4.png', 4), ('/louer/a-uploads/image.png', 4),
+('/louer/a-uploads/image5.png', 5), ('/louer/a-uploads/image.png', 5),
+('/louer/a-uploads/image6.png', 6), ('/louer/a-uploads/image.png', 6),
+('/louer/a-uploads/image2.png', 7), ('/louer/a-uploads/image.png', 7), ('/louer/a-uploads/image3.png', 7), ('/louer/a-uploads/image4.png', 7),
+('/louer/a-uploads/image5.png', 7), ('/louer/a-uploads/image6.png', 7), ('/louer/a-uploads/image.png', 7), ('/louer/a-uploads/image.png1', 7),
+('/louer/a-uploads/image4.png', 8), ('/louer/a-uploads/image.png', 8);
+
+-- ---------- Disponibilidades Produto1_F1 (id=1) ----------
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES
+(1,'2025-09-01'),(1,'2025-09-02'),(1,'2025-09-08'),(1,'2025-09-09'),
+(1,'2025-09-15'),(1,'2025-09-16'),(1,'2025-09-22'),(1,'2025-09-23');
+
+-- ---------- Disponibilidades Produto2_F1 (id=2) ----------
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES
+(2,'2025-09-03'),(2,'2025-09-04'),(2,'2025-09-10'),(2,'2025-09-11'),
+(2,'2025-09-17'),(2,'2025-09-18'),(2,'2025-09-24'),(2,'2025-09-25');
+
+-- ---------- Disponibilidades Produto1_F2 (id=3) ----------
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES
+(3,'2025-09-05'),(3,'2025-09-06'),(3,'2025-09-12'),(3,'2025-09-13'),
+(3,'2025-09-19'),(3,'2025-09-20'),(3,'2025-09-26'),(3,'2025-09-27');
+
+-- ---------- Disponibilidades Produto2_F2 (id=4) ----------
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES
+(4,'2025-09-07'),(4,'2025-09-08'),(4,'2025-09-14'),(4,'2025-09-15'),
+(4,'2025-09-21'),(4,'2025-09-22'),(4,'2025-09-28'),(4,'2025-09-29');
+
+-- ---------- Disponibilidades Produto1_F3 (id=5) ----------
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES
+(5,'2025-09-01'),(5,'2025-09-03'),(5,'2025-09-08'),(5,'2025-09-10'),
+(5,'2025-09-15'),(5,'2025-09-17'),(5,'2025-09-22'),(5,'2025-09-24');
+
+-- ---------- Disponibilidades Produto2_F3 (id=6) ----------
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES
+(6,'2025-09-02'),(6,'2025-09-04'),(6,'2025-09-09'),(6,'2025-09-11'),
+(6,'2025-09-16'),(6,'2025-09-18'),(6,'2025-09-23'),(6,'2025-09-25');
+
+-- ---------- Disponibilidades Produto1_F4 (id=7) ----------
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES
+(7,'2025-09-01'),(7,'2025-09-02'),(7,'2025-09-03'),(7,'2025-09-04'),
+(7,'2025-09-05'),(7,'2025-09-06'),(7,'2025-09-07'),(7,'2025-09-08');
+
+-- ---------- Disponibilidades Produto2_F4 (id=8) ----------
+INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES
+(8,'2025-09-09'),(8,'2025-09-10'),(8,'2025-09-11'),(8,'2025-09-12'),
+(8,'2025-09-13'),(8,'2025-09-14'),(8,'2025-09-15'),(8,'2025-09-16');
 COMMIT;
 

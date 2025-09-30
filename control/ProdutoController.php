@@ -46,7 +46,7 @@ switch ($acao) {
     case 'excluir':
         excluirProduto($_GET['id'] ?? null);
         break;
-        
+
 
     default:
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
@@ -181,16 +181,14 @@ function acessarProduto($idProduto)
         header("Location: ../view/pag-inicial.php?msg=Produto inválido. (ProdutoController)");
         exit;
     }
-
     $dadosProduto = consultarProduto($idProduto);
-    $_SESSION['Produto'] = $dadosProduto;
-
-
     if (isset($dadosProduto)) {
-        header("Location: ../view/produto/pag-produto.php");
+
+        $_SESSION['Produto'] = $dadosProduto;
+        header("Location: /louer/view/produto/pag-produto.php");
         exit;
     } else {
-        header("Location: ../view/pag-inicial.php");
+        header("Location: /louer/view/pag-inicial.php");
         exit;
     }
 }
@@ -216,63 +214,64 @@ function pesquisarProdutos($dadosPesquisa)
 
 function alterarProduto($dadosPOST)
 {
-    $idProduto=$dadosPOST['idProduto'] ?? null;
-/**
- * Verifica se o método é POST.
- * Caso contrário, manda um erro
- */
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    die('Método não é POST.');
-}
+    $idProduto = $dadosPOST['idProduto'] ?? null;
+    /**
+     * Verifica se o método é POST.
+     * Caso contrário, manda um erro
+     */
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        die('Método não é POST.');
+    }
 
-/**
- * Verifica se o parâmetro foi enviado
- * ou se está vazio
- */
-if (!isset($_POST["datas_selecionadas"]) || empty($_POST["datas_selecionadas"])) {
-    http_response_code(400);
-    die('Nenhuma data selecionada.');
-}
+    /**
+     * Verifica se o parâmetro foi enviado
+     * ou se está vazio
+     */
+    if (!isset($_POST["datas_selecionadas"]) || empty($_POST["datas_selecionadas"])) {
+        http_response_code(400);
+        die('Nenhuma data selecionada.');
+    }
 
-/**
- * Seleciona a lista de datas como string
- */
-$datas_json = $_POST["datas_selecionadas"];
-/**
- * transformando a string
- * em lista normal de volta
- */
-$datas = json_decode($datas_json);
+    /**
+     * Seleciona a lista de datas como string
+     */
+    $datas_json = $_POST["datas_selecionadas"];
+    /**
+     * transformando a string
+     * em lista normal de volta
+     */
+    $datas = json_decode($datas_json);
 
-/**
- * Verifica se a conversão aconteceu com sucesso
- */
-if ($datas === null || !is_array($datas)) {
-    http_response_code(400);
-    die('Formato de dados inválido.');
-}
+    /**
+     * Verifica se a conversão aconteceu com sucesso
+     */
+    if ($datas === null || !is_array($datas)) {
+        http_response_code(400);
+        die('Formato de dados inválido.');
+    }
 
-/**
- * Verifica se há pelo menos uma data
- */
-if (count($datas) === 0) {
-    http_response_code(400);
-    die('Nenhuma data válida foi encontrada.');
-}
+    /**
+     * Verifica se há pelo menos uma data
+     */
+    if (count($datas) === 0) {
+        http_response_code(400);
+        die('Nenhuma data válida foi encontrada.');
+    }
 
-require_once "../model/ProdutoDao.php";
-excluirDatasAntigas($idProduto);
+    require_once "../model/ProdutoDao.php";
+    excluirDatasAntigas($idProduto);
 
- foreach($datas as $data) {
-    var_dump($idProduto);
-    alterarDatasProduto($idProduto, $data);
-}
+    foreach ($datas as $data) {
+        var_dump($idProduto);
+        alterarDatasProduto($idProduto, $data);
+    }
     header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msg=Produto alterado com sucesso!");
     exit;
 }
 
-function acessarProdutoPraAlterar($idProduto){
+function acessarProdutoPraAlterar($idProduto)
+{
     if (!$idProduto) {
         header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msg=Produto inválido. (ProdutoController)");
         exit;
@@ -290,7 +289,8 @@ function acessarProdutoPraAlterar($idProduto){
     }
 }
 
-function excluirProduto($idProduto){
+function excluirProduto($idProduto)
+{
     deleteProduto($idProduto);
     header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
 }

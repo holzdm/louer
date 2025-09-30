@@ -53,3 +53,21 @@ function consultarReserva($id)
     }
     return null;
 }
+
+function listarReservasFornecedor($idFornecedor)
+{
+    $conexao = conectarBD();
+
+    $sql = "SELECT r.* 
+            FROM reserva r
+            INNER JOIN produto p ON r.id_produto = p.id
+            WHERE p.id_usuario = ?";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $idFornecedor);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+
+    return $res; 
+}

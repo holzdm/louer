@@ -14,16 +14,12 @@ switch ($acao) {
         solicitarReserva($_POST);
         break;
 
-    case 'cadastrarEnd':
-        cadastrarEnderecoProduto($_POST);
-        break;
-
-    case 'cadastrarImg':
-        cadastrarImgProduto($_POST);
-        break;
-
     case 'acessar':
         acessarReserva($_GET['id'] ?? null);
+        break;
+
+    case 'acessarFornecedor':
+        acessarReservaComoFornecedor();
         break;
 
     // case 'excluir':
@@ -108,4 +104,8 @@ function acessarReserva($idReserva)
         header("Location: ../view/cliente/pag-ic.php");
         exit;
     }
+}
+
+function acessarReservaComoFornecedor(){
+    // fazer AGORA
 }

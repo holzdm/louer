@@ -11,6 +11,8 @@ if ($dadosProduto) {
     $descricaoProduto = $dadosProduto['descricao'];
     $valorProduto = $dadosProduto['valor'];
     $nomeFornecedor = $dadosProduto['nomeFornecedor'];
+    $tagsArray = $dadosProduto['tagsArray'];
+    $imgsArray = $dadosProduto['imgsArray'];
 } else {
     // Redirecionar ou mostrar erro se não houver produto
     header("Location: ../pag-inicial.php?msg=Produto não encontrado.");
@@ -87,9 +89,11 @@ if ($dadosProduto) {
         }
     </style>
 </head>
+
 <body>
 
-    <div class="min-h-screen flex flex-col">
+    <div class="min-h-screen flex flex-col pt-24">
+
         <!-- Navbar -->
         <?php $fonte = 'produto';
         include '../navbar.php'; ?>
@@ -97,129 +101,111 @@ if ($dadosProduto) {
 
 
         <!-- notificacao -->
-        <?php if (isset($_GET['msg'])): ?>
-            <div id="notificacao" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 fade-in">
-                <div class="bg-white border border-orange-300 text-orange-600 rounded-lg p-4 shadow-lg flex items-start max-w-md w-full">
-                    <svg class="w-6 h-6 text-orange-600 mt-1 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 14a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm1-8h-2v6h2V8z" />
-                    </svg>
-                    <div>
-                        <!-- <p class="font-medium text-sm">Erro no cadastro</p>  Tirei pra poder receber varias mensagens, n so as de erro de cadastro -->
-                        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msg']) ?></p>
-                    </div>
-                </div>
-            </div>
-
-            <style>
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translate(-50%, -10px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translate(-50%, 0);
-                    }
-                }
-
-                @keyframes fadeOut {
-                    from {
-                        opacity: 1;
-                        transform: translate(-50%, 0);
-                    }
-
-                    to {
-                        opacity: 0;
-                        transform: translate(-50%, -10px);
-                    }
-                }
-
-                .fade-in {
-                    animation: fadeIn 0.4s ease-out forwards;
-                }
-
-                .fade-out {
-                    animation: fadeOut 0.4s ease-in forwards;
-                }
-            </style>
-
-            <script>
-                setTimeout(() => {
-                    const notif = document.getElementById('notificacao');
-                    if (notif) {
-                        notif.classList.remove('fade-in');
-                        notif.classList.add('fade-out');
-                        setTimeout(() => notif.remove(), 500);
-                    }
-                }, 4000);
-            </script>
-        <?php endif; ?>
+        <?php include '../notificacao.php'; ?>
 
 
         <!-- //////////////////////////////////////////////////////////////////////// -->
-        <!-- Informacoes do Produto -->
+        <!-- CONTEUDO -->
+        <div class="mx-[3%] my-[2%]">
 
-        <h2> <?php echo $nomeProduto ?> </h2>
-        <br>
-        <h3> <?php echo $descricaoProduto ?> </h3>
-        <h3> <?php echo $valorProduto ?> </h3>
-        <h3> Puplicado por: <?php echo $nomeFornecedor ?> </h3>
+            <div class="flex items-center w-full max-w-5xl mx-auto">
+                <!-- Botão esquerdo -->
+                <button id="prev"
+                    class="text-gray-700 text-2xl p-2 transition-transform duration-200 hover:scale-125 disabled:text-gray-400 disabled:cursor-not-allowed">
+                    ◀
+                </button>
 
-
-        <!-- Formulario solicitacao de reserva -->
-        <div class="flex flex-col gap-4 max-w-sm mx-auto mt-10">
-            <form action="../../control/ReservaController.php" method="POST">
-
-                <input type="hidden" name="acao" value="solicitar">
-                <input type="hidden" name="idProduto" value="<?php echo $idProduto ?>">
-                <input type="hidden" name="valorProduto" value="<?php echo $valorProduto ?>">
-
-
-                <!-- Selecao de intervalo -->
-
-                <label for="intervalo" class="text-lg font-semibold">Selecione o intervalo</label>
-                <input id="intervalo" name="intervalo" type="text"
-                    class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Escolha as datas" readonly>
-
-                <!-- Botão para abrir o modal da solicitacao de Reserva -->
-                <?php if (empty($_SESSION['id'])): ?>
-                    <button id="btnSolicitarSemLogin" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                        Solicitar
-                    </button>
-                <?php else: ?>
-                    <button id="btnSolicitar" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                        Solicitar
-                    </button>
-
-                <?php endif; ?>
-
-                <!-- Modal solicitacao de Reserva -->
-                <div id="modalSolicitar" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-                    <div class="bg-white rounded-lg w-11/12 md:w-3/4 lg:w-2/3 p-6 relative">
-
-                        <!-- Botão fechar no canto -->
-                        <button id="fecharModal" type="button" class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
-
-                        <!-- Conteúdo do modal -->
-                        <h2 class="text-2xl font-bold mb-4">Modal Grande</h2>
-                        <p class="mb-4">Conteúdo do seu pop-up.</p>
-
-                        <!-- Botão dentro do modal -->
-                        <div class="flex justify-end">
-
-                            <button id="confirmarSolicitacao" type="submit" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Confirmar Solicitacao</button>
-                        </div>
-
+                <!-- Container do carrossel -->
+                <div id="carousel" class="overflow-hidden flex-1 mx-2">
+                    <div id="carousel-track" class="flex transition-transform duration-300">
+                        <?php foreach ($imgsArray as $img_url): ?>
+                            <div class="flex-shrink-0 mr-4 rounded-lg overflow-hidden">
+                                <img src="<?php echo $img_url ?>" class="h-40 w-auto object-contain">
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
-            </form>
+
+                <!-- Botão direito -->
+                <button id="next"
+                    class="text-gray-700 text-2xl p-2 transition-transform duration-200 hover:scale-125 disabled:text-gray-400 disabled:cursor-not-allowed">
+                    ▶
+                </button>
+            </div>
+
+            <hr class="w-[100vw] border-t border-gray-300 -mx-4">
+
+            <div class="flex flex-wrap gap-2 mt-3">
+
+                <?php foreach ($tagsArray as $tag): ?>
+                    <span class="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-700 font-medium">
+                        <?php echo htmlspecialchars($tag); ?>
+                    </span>
+                <?php endforeach; ?>
+            </div>
+
+
+            <h2> <?php echo $nomeProduto ?> </h2>
+            <br>
+            <h3> <?php echo $descricaoProduto ?> </h3>
+            <h3> <?php echo $valorProduto ?> </h3>
+            <h3> Puplicado por: <?php echo $nomeFornecedor ?> </h3>
+
+
+            <!-- Formulario solicitacao de reserva -->
+            <div class="flex flex-col gap-4 max-w-sm mx-auto mt-10">
+                <form action="../../control/ReservaController.php" method="POST">
+
+                    <input type="hidden" name="acao" value="solicitar">
+                    <input type="hidden" name="idProduto" value="<?php echo $idProduto ?>">
+                    <input type="hidden" name="valorProduto" value="<?php echo $valorProduto ?>">
+
+
+                    <!-- Selecao de intervalo -->
+
+                    <label for="intervalo" class="text-lg font-semibold">Selecione o intervalo</label>
+                    <input id="intervalo" name="intervalo" type="text"
+                        class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Escolha as datas" readonly>
+
+                    <!-- Botão para abrir o modal da solicitacao de Reserva -->
+                    <?php if (empty($_SESSION['id'])): ?>
+                        <button id="btnSolicitarSemLogin" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                            Solicitar
+                        </button>
+                    <?php else: ?>
+                        <button id="btnSolicitar" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                            Solicitar
+                        </button>
+
+                    <?php endif; ?>
+
+                    <!-- Modal solicitacao de Reserva -->
+                    <div id="modalSolicitar" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+                        <div class="bg-white rounded-lg w-11/12 md:w-3/4 lg:w-2/3 p-6 relative">
+
+                            <!-- Botão fechar no canto -->
+                            <button id="fecharModal" type="button" class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
+
+                            <!-- Conteúdo do modal -->
+                            <h2 class="text-2xl font-bold mb-4">Modal Grande</h2>
+                            <p class="mb-4">Conteúdo do seu pop-up.</p>
+
+                            <!-- Botão dentro do modal -->
+                            <div class="flex justify-end">
+
+                                <button id="confirmarSolicitacao" type="submit" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Confirmar Solicitacao</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
-
         <!-- footer -->
-        <?php $fonte = 'produto'; include '../footer.php'; ?>
+        <?php $fonte = 'produto';
+        include '../footer.php'; ?>
 
 
 
@@ -287,6 +273,90 @@ if ($dadosProduto) {
                     window.location.assign(`../cliente/login-cliente.php`);
                 });
             });
+
+            // Carrosel de fotos ////////////////////////////////////////////////////
+
+            const track = document.getElementById('carousel-track');
+            const prev = document.getElementById('prev');
+            const next = document.getElementById('next');
+            const carousel = document.getElementById('carousel');
+
+            let scrollAmount = 0;
+
+            // Atualiza estado das setas
+            function updateButtons() {
+                const maxScroll = track.scrollWidth - carousel.offsetWidth;
+                prev.disabled = scrollAmount <= 0;
+                next.disabled = scrollAmount >= maxScroll;
+            }
+
+            // Calcula largura de cada item (incluindo margin)
+            function getItemWidth() {
+                const item = track.querySelector('div');
+                return item.offsetWidth + parseInt(getComputedStyle(item).marginRight);
+            }
+
+            // Clique nas setas
+            next.addEventListener('click', () => {
+                const maxScroll = track.scrollWidth - carousel.offsetWidth;
+                scrollAmount += getItemWidth();
+                if (scrollAmount > maxScroll) scrollAmount = maxScroll;
+                track.style.transform = `translateX(-${scrollAmount}px)`;
+                updateButtons();
+            });
+
+            prev.addEventListener('click', () => {
+                scrollAmount -= getItemWidth();
+                if (scrollAmount < 0) scrollAmount = 0;
+                track.style.transform = `translateX(-${scrollAmount}px)`;
+                updateButtons();
+            });
+
+            // Drag com mouse/touch
+            let isDragging = false;
+            let startX;
+            let currentTranslate = 0;
+
+            carousel.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.pageX + scrollAmount;
+            });
+
+            carousel.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                scrollAmount = startX - e.pageX;
+                const maxScroll = track.scrollWidth - carousel.offsetWidth;
+                if (scrollAmount < 0) scrollAmount = 0;
+                if (scrollAmount > maxScroll) scrollAmount = maxScroll;
+                track.style.transform = `translateX(-${scrollAmount}px)`;
+                updateButtons();
+            });
+
+            carousel.addEventListener('mouseup', () => isDragging = false);
+            carousel.addEventListener('mouseleave', () => isDragging = false);
+
+            // Touch events
+            carousel.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                startX = e.touches[0].pageX + scrollAmount;
+            });
+
+            carousel.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                scrollAmount = startX - e.touches[0].pageX;
+                const maxScroll = track.scrollWidth - carousel.offsetWidth;
+                if (scrollAmount < 0) scrollAmount = 0;
+                if (scrollAmount > maxScroll) scrollAmount = maxScroll;
+                track.style.transform = `translateX(-${scrollAmount}px)`;
+                updateButtons();
+            });
+
+            carousel.addEventListener('touchend', () => isDragging = false);
+
+            // Inicial
+            updateButtons();
+
+            // ////////////////////////////////////////////////////////////////////////
         </script>
 
 

@@ -119,7 +119,7 @@
 
 
 
-  <div class="min-h-screen flex flex-col pt-24">
+  <div class="min-h-screen flex flex-col">
 
 
     <!-- Notificacao de erro do login -->

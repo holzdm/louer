@@ -162,7 +162,7 @@ if (isset($_SESSION['formData'])) {
           $valorDia = $registro["valor_dia"];
 
           $img = listarUmaImg($idProduto);
-          $srcImg = $img ? '/louer/a-uploads/' . $img['url_img'] : '/louer/a-uploads/New-piskel.png';
+          $srcImg = $img ? $img['url_img'] : '/louer/a-uploads/New-piskel.png';
 
           // $jaFavorito = verificarFavorito($_SESSION['id'], $idProduto);
 
@@ -194,24 +194,7 @@ if (isset($_SESSION['formData'])) {
   </div>
 
 
-  <script>
-    // BOTAO DO PERFIL ESSENCIAIS ///////////////////////////////////////////////////////////
-    const btnPerfil = document.getElementById('btnPerfil');
-    const cardPerfil = document.getElementById('cardPerfil');
-
-    // Alterna o card ao clicar no botão
-    btnPerfil.addEventListener('click', () => {
-      cardPerfil.classList.toggle('hidden');
-    });
-
-    // Fecha ao clicar fora
-    document.addEventListener('click', (e) => {
-      if (!btnPerfil.contains(e.target) && !cardPerfil.contains(e.target)) {
-        cardPerfil.classList.add('hidden');
-      }
-    });
-    // /////////////////////////////////////////////////////////////////////////////////////
-  </script>
+  
 </body>
 
 </html>
