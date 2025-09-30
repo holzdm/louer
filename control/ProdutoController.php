@@ -282,10 +282,10 @@ function acessarProdutoPraAlterar($idProduto){
     $_SESSION['Produto'] = $dadosProduto;
 
     if (isset($dadosProduto)) {
-        header("Location: ../view/produto/pag-produto-alterar.php");
+        header("Location: /louer/view/produto/pag-produto-alterar.php");
         exit;
     } else {
-        header("Location: ../view/fornecedor/pag-inicial-fornecedor.php");
+        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
         exit;
     }
 }
