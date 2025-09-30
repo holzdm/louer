@@ -217,6 +217,7 @@ if ($dadosProduto) {
             </form>
         </div>
 
+
         <!-- footer -->
         <?php $fonte = 'produto'; include '../footer.php'; ?>
 

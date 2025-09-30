@@ -78,106 +78,105 @@ if (isset($_SESSION['formData'])) {
 
   <div class="min-h-screen flex flex-col pt-24">
     <!-- Navbar -->
-    <?php $fonte = 'pag-inicial-fornecedor'; include '../navbar.php'; ?>
+    <?php $fonte = 'pag-inicial-fornecedor';
+    include '../navbar.php'; ?>
 
 
 
-      <!-- Notificacao de sucesso do cadastro -->
-<style>
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -10px); /* mantém -50% no X (centralizado) */
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, 0); /* continua centralizado */
-    }
-  }
+    <!-- Notificacao de sucesso do cadastro -->
+    <style>
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translate(-50%, -10px);
+          /* mantém -50% no X (centralizado) */
+        }
 
-  @keyframes fadeOut {
-    from {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-    to {
-      opacity: 0;
-      transform: translate(-50%, -10px);
-    }
-  }
-
-  .fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
-  }
-  .fade-out {
-    animation: fadeOut 0.4s ease-in forwards;
-  }
-</style>
-
-<?php if (isset($_GET["msg"])): ?>
-  <div id="notificacao"
-       class="fixed top-5 left-1/2 z-50 fade-in"
-       style="transform: translate(-50%, 0);">
-    <div class="bg-white rounded-lg border border-blue-300 p-4 shadow-lg flex items-start max-w-md w-full">
-      <svg width="24" height="24" viewBox="0 0 1792 1792" fill="#3B82F6" xmlns="http://www.w3.org/2000/svg" class="mt-1">
-        <path d="M1299 813l-422 422q-19 19-45 19t-45-19l-294-294q-19-19-19-45t19-45l102-102q19-19 45-19t45 19l147 147 275-275q19-19 45-19t45 19l102 102q19 19 19 45t-19 45zm141 83q0-148-73-273t-198-198-273-73-273 73-198 198-73 273 73 273 198 198 273 73 273-73 198-198 73-273zm224 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"/>
-      </svg>
-      <div class="ml-3">
-        <p class="font-semibold text-sm text-blue-600">Tudo pronto!</p>
-        <p class="text-gray-500 text-sm"><?php echo htmlspecialchars($_GET["msg"]); ?></p>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    setTimeout(() => {
-      const notif = document.getElementById('notificacao');
-      if (notif) {
-        notif.classList.remove('fade-in');
-        notif.classList.add('fade-out');
-        setTimeout(() => notif.remove(), 500);
+        to {
+          opacity: 1;
+          transform: translate(-50%, 0);
+          /* continua centralizado */
+        }
       }
-    }, 5000);
-  </script>
-<?php endif; ?>
 
-<!-- notificacao -->
-<?php include '../notificacao.php'; include '../notificacao-erro.php'; ?>
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+          transform: translate(-50%, 0);
+        }
+
+        to {
+          opacity: 0;
+          transform: translate(-50%, -10px);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+
+      .fade-out {
+        animation: fadeOut 0.4s ease-in forwards;
+      }
+    </style>
+
+    <?php if (isset($_GET["msg"])): ?>
+      <div id="notificacao"
+        class="fixed top-5 left-1/2 z-50 fade-in"
+        style="transform: translate(-50%, 0);">
+        <div class="bg-white rounded-lg border border-blue-300 p-4 shadow-lg flex items-start max-w-md w-full">
+          <svg width="24" height="24" viewBox="0 0 1792 1792" fill="#3B82F6" xmlns="http://www.w3.org/2000/svg" class="mt-1">
+            <path d="M1299 813l-422 422q-19 19-45 19t-45-19l-294-294q-19-19-19-45t19-45l102-102q19-19 45-19t45 19l147 147 275-275q19-19 45-19t45 19l102 102q19 19 19 45t-19 45zm141 83q0-148-73-273t-198-198-273-73-273 73-198 198-73 273 73 273 198 198 273 73 273-73 198-198 73-273zm224 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" />
+          </svg>
+          <div class="ml-3">
+            <p class="font-semibold text-sm text-blue-600">Tudo pronto!</p>
+            <p class="text-gray-500 text-sm"><?php echo htmlspecialchars($_GET["msg"]); ?></p>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        setTimeout(() => {
+          const notif = document.getElementById('notificacao');
+          if (notif) {
+            notif.classList.remove('fade-in');
+            notif.classList.add('fade-out');
+            setTimeout(() => notif.remove(), 500);
+          }
+        }, 5000);
+      </script>
+    <?php endif; ?>
+
+    <!-- notificacao -->
+    <?php include '../notificacao.php';
+    include '../notificacao-erro.php'; ?>
 
     <!-- //////////////////////////////////////////////////////////////////////// -->
     <!-- Conteúdo -->
-    <div class="py-5 px-3">
-      <!-- Botão flutuante -->
-<a href="caminho/para/pagina-ou-acao" 
-   class="fixed bottom-6 right-6 bg-primary text-white w-14 h-14 flex items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-transform transform hover:scale-110">
-    <!-- Ícone de mais -->
-    <span class="text-3xl font-bold">+</span>
-</a>
-
-      <h3>Crie seu produto <a href="../produto/pag-novo-produto.php">AQUI!</a></h3>
-
-    </div>
 
     <div class="mx-[3%] my-[2%]">
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
 
-      <?php 
 
-      require_once "../../model/ProdutoDao.php";
+
+
+        <?php
+
+        require_once "../../model/ProdutoDao.php";
+
+        $res = listarMeusProdutos();
+
+        while ($registro = mysqli_fetch_assoc($res)) {
+          $idProduto = $registro["id"];
+          $nome = $registro["nome"];
+          $descricao = $registro["descricao"];
+          $valorDia = $registro["valor_dia"];
+
+          $img = listarUmaImg($idProduto);
+          $srcImg = $img ? '/louer/a-uploads/' . $img['url_img'] : '/louer/a-uploads/New-piskel.png';
+
+          echo "
       
-      $res = listarMeusProdutos();
-
-      while ($registro = mysqli_fetch_assoc($res)) {
-        $idProduto = $registro["id"];
-        $nome = $registro["nome"];
-        $descricao = $registro["descricao"];
-        $valorDia = $registro["valor_dia"];
-
-        $img = listarUmaImg($idProduto);
-        $srcImg = $img ? '/louer/a-uploads/' . $img['url_img'] : '/louer/a-uploads/New-piskel.png';
-
-        echo "
-        <div >
         <div class='bg-white rounded-lg overflow-hidden h-60 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300'>
             <a href='/louer/control/ProdutoController.php?acao=acessarMeuProduto&id=$idProduto'>
                 <img src='$srcImg' class='w-full h-40 object-cover' alt='Imagem do produto'>
@@ -187,23 +186,26 @@ if (isset($_SESSION['formData'])) {
                 </div>
             </a> 
         </div>
-    </div>
+    
         ";
-      }?>
+        } ?>
 
+      </div>
     </div>
-  </div>
 
 
+  <a href="/louer/view/produto/pag-novo-produto.php"
+      class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg text-3xl">
+      +
+    </a>
 
     <!-- //////////////////////////////////////////////////////////////////////// -->
     <!-- Footer -->
-        <?php include '../footer.php'; ?>
+    <?php include '../footer.php'; ?>
 
-  </div>
 
   <script>
-     // BOTAO DO PERFIL ESSENCIAIS ///////////////////////////////////////////////////////////
+    // BOTAO DO PERFIL ESSENCIAIS ///////////////////////////////////////////////////////////
     const btnPerfil = document.getElementById('btnPerfil');
     const cardPerfil = document.getElementById('cardPerfil');
 
@@ -219,7 +221,6 @@ if (isset($_SESSION['formData'])) {
       }
     });
     // /////////////////////////////////////////////////////////////////////////////////////
-
   </script>
 </body>
 

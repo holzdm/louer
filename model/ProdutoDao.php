@@ -298,3 +298,22 @@ function alterarDatasProduto($idProduto, $data) {
         echo "Erro ao inserir a data $data: " . mysqli_stmt_error($stmtInsert) . "<br>";
     }
 }
+
+function deleteProduto($idProduto) {
+    $conexao = conectarBD();
+
+    $sql = "DELETE FROM produto WHERE id = ?";
+    $stmt = mysqli_prepare($conexao, $sql);
+    if (!$stmt) {
+        die("Erro na preparação da query: " . mysqli_error($conexao));
+    }
+
+    mysqli_stmt_bind_param($stmt, "i", $idProduto);
+
+    if (!mysqli_stmt_execute($stmt)) {
+        die("Erro ao excluir produto: " . mysqli_stmt_error($stmt));
+    }
+
+    mysqli_stmt_close($stmt);
+    mysqli_close($conexao);
+}

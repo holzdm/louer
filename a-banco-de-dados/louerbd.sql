@@ -151,9 +151,9 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`imagem` (
   CONSTRAINT `fk_imagem_produto1`
     FOREIGN KEY (`produto_id`)
     REFERENCES `louerbd`.`produto` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+) ENGINE=InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -212,8 +212,9 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`tags_has_produto` (
   CONSTRAINT `fk_tags_has_produto_produto1`
     FOREIGN KEY (`produto_id`)
     REFERENCES `louerbd`.`produto` (`id`)
-    )
-ENGINE = InnoDB;
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+) ENGINE=InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

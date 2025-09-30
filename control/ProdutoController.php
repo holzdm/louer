@@ -43,6 +43,10 @@ switch ($acao) {
     // case 'excluir':
     //     excluirCliente($_GET['id'] ?? null);
     //     break;
+    case 'excluir':
+        excluirProduto($_GET['id'] ?? null);
+        break;
+        
 
     default:
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
@@ -284,4 +288,9 @@ function acessarProdutoPraAlterar($idProduto){
         header("Location: ../view/fornecedor/pag-inicial-fornecedor.php");
         exit;
     }
+}
+
+function excluirProduto($idProduto){
+    deleteProduto($idProduto);
+    header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
 }
