@@ -163,7 +163,7 @@ $formData = $_SESSION['formData'] ?? [];
                         <input type="text" id="cep" name="cep" placeholder="" value="<?= htmlspecialchars($formData['cep'] ?? '') ?>"
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
                         <br><br>
-                        <label for="cidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade:: </label>
+                        <label for="cidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade: </label>
                         <input type="text" id="cidade" name="cidade" placeholder="" value="<?= htmlspecialchars($formData['cidade'] ?? '') ?>"
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
                         <br><br>
