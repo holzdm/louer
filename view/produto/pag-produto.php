@@ -219,19 +219,6 @@ if ($dadosProduto) {
                     if (el) el.addEventListener(event, handler);
                 };
 
-                // Perfil
-                on("#btnPerfil", "click", () => {
-                    const cardPerfil = document.querySelector("#cardPerfil");
-                    cardPerfil?.classList.toggle("hidden");
-                });
-
-                document.addEventListener("click", (e) => {
-                    const btnPerfil = document.querySelector("#btnPerfil");
-                    const cardPerfil = document.querySelector("#cardPerfil");
-                    if (btnPerfil && cardPerfil && !btnPerfil.contains(e.target) && !cardPerfil.contains(e.target)) {
-                        cardPerfil.classList.add("hidden");
-                    }
-                });
 
                 // Flatpickr
                 if (document.querySelector("#intervalo")) {

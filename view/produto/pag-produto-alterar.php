@@ -137,72 +137,94 @@ $nomeFornecedor = $dadosProduto['nomeFornecedor'];
 <body>
     <div class="min-h-screen flex flex-col bg-secondary">
 
-    <!-- Navbar -->
-    <div class=" w-full">
-        <?php $fonte = 'produto';
-        include '../navbar.php'; ?>
-    </div>
+        <!-- Navbar -->
+        <div class=" w-full">
+            <?php $fonte = 'produto';
+            include '../navbar.php'; ?>
+        </div>
 
-    <!-- Container centralizado -->
-    <div class="flex-1 w-full max-w-5xl mx-auto p-6">
+        <!-- Container centralizado -->
+        <div class="flex-1 w-full max-w-5xl mx-auto p-6">
 
-        <!-- Notificação -->
-        <?php if (isset($_GET['msg'])): ?>
-            <div id="notificacao" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 fade-in">
-                <div class="bg-white border border-orange-300 text-orange-600 rounded-lg p-4 shadow-lg flex items-start max-w-md w-full">
-                    <svg class="w-6 h-6 text-orange-600 mt-1 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 14a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm1-8h-2v6h2V8z" />
-                    </svg>
+            <!-- Notificação -->
+            <?php include "../notificacao-erro.php";
+            include "../notificacao.php"; ?>
+
+            <!-- Informações do Produto -->
+            <!-- <form action="../../control/ClienteController.php" method="post">
+                <input type="hidden" name="acao" value="alterar">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($_SESSION['id']) ?>">
+                <input type="hidden" name="emailAntigo" value="<?= htmlspecialchars($_SESSION['email']) ?>">
+                <div class="space-y-5">
                     <div>
-                        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msg']) ?></p>
+                        <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome completo</label>
+                        <input type="text" id="nome" name="nome" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['nome']) ?>" required />
+                    </div>
+
+                    <div>
+                        <label for="cidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade</label>
+                        <input type="text" id="cidade" name="cidade" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['cidade']) ?>" required />
+                    </div>
+
+                    <div>
+                        <label for="telefone" class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                        <input type="tel" id="telefone" name="telefone" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['telefone']) ?>" required />
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="email" name="email" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['email']) ?>" required />
+                    </div>
+
+                    <div>
+                        <label for="senha" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                        <input type="password" id="senha" name="senha" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="******" required />
+                        <p class="mt-1 text-xs text-gray-500">Mínimo de 6 caracteres com letras ou números</p>
+                    </div>
+
+                    <div class="flex items-start">
+                        <input type="hidden" id="terms" name="terms" class="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" required />
+                    </div>
+
+                    <div>
+                        <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium">
+                            Alterar Dados
+                        </button>
                     </div>
                 </div>
-            </div>
+            </form> -->
 
-            <script>
-                setTimeout(() => {
-                    const notif = document.getElementById('notificacao');
-                    if (notif) {
-                        notif.classList.remove('fade-in');
-                        notif.classList.add('fade-out');
-                        setTimeout(() => notif.remove(), 500);
-                    }
-                }, 4000);
-            </script>
-        <?php endif; ?>
+            <section class="my-6">
+                <h2 class="text-2xl font-bold"><?= htmlspecialchars($nomeProduto) ?></h2>
+                <p class="mt-2"><?= htmlspecialchars($descricaoProduto) ?></p>
+                <p class="mt-1 font-semibold">R$ <?= htmlspecialchars($valorProduto) ?> / dia</p>
+                <p class="mt-1 text-gray-600">Publicado por: <?= htmlspecialchars($nomeFornecedor) ?></p>
+            </section>
 
-        <!-- Informações do Produto -->
-        <section class="my-6">
-            <h2 class="text-2xl font-bold"><?= htmlspecialchars($nomeProduto) ?></h2>
-            <p class="mt-2"><?= htmlspecialchars($descricaoProduto) ?></p>
-            <p class="mt-1 font-semibold">R$ <?= htmlspecialchars($valorProduto) ?> / dia</p>
-            <p class="mt-1 text-gray-600">Publicado por: <?= htmlspecialchars($nomeFornecedor) ?></p>
-        </section>
+            <!-- Seletor de Datas -->
+            <section class="my-6">
+                <h3 class="text-lg font-semibold mb-2">Seletor de Datas</h3>
+                <form id="form-datas" action="../../control/ProdutoController.php" method="POST">
+                    <div id="input"></div>
 
-        <!-- Seletor de Datas -->
-        <section class="my-6">
-            <h3 class="text-lg font-semibold mb-2">Seletor de Datas</h3>
-            <form id="form-datas" action="../../control/ProdutoController.php" method="POST">
-                <div id="input"></div>
+                    <div class="status">
+                        <h4 class="font-medium">Datas Selecionadas:</h4>
+                        <div id="datas-selecionadas"></div>
+                    </div>
 
-                <div class="status">
-                    <h4 class="font-medium">Datas Selecionadas:</h4>
-                    <div id="datas-selecionadas"></div>
-                </div>
+                    <input type="hidden" name="acao" value="alterar">
+                    <input type="hidden" name="idProduto" value="<?= htmlspecialchars($idProduto) ?>">
+                    <input type="hidden" name="datas_selecionadas" id="campo-datas">
+                    <button type="submit" id="botao-enviar" class="btn-primary mt-2" disabled>Enviar Datas</button>
+                </form>
+                <a href="/louer/control/ProdutoController.php?id=<?= $idProduto ?>&acao=excluir" class="mt-2 inline-block text-red-600 hover:underline">Apagar Produto</a>
+            </section>
 
-                <input type="hidden" name="acao" value="alterar">
-                <input type="hidden" name="idProduto" value="<?= htmlspecialchars($idProduto) ?>">
-                <input type="hidden" name="datas_selecionadas" id="campo-datas">
-                <button type="submit" id="botao-enviar" class="btn-primary mt-2" disabled>Enviar Datas</button>
-            </form>
-            <a href="/louer/control/ProdutoController.php?id=<?= $idProduto ?>&acao=excluir" class="mt-2 inline-block text-red-600 hover:underline">Apagar Produto</a>
-        </section>
+        </div>
 
-    </div>
-
-    <!-- Footer -->
-    <?php $fonte = 'produto';
-    include '../footer.php'; ?>
+        <!-- Footer -->
+        <?php $fonte = 'produto';
+        include '../footer.php'; ?>
 
     </div>
 </body>

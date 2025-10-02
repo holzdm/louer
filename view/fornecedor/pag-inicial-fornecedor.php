@@ -83,71 +83,6 @@ $pagina = $_GET['pagina'] ?? 'meus-dados';
     include '../navbar.php'; ?>
 
 
-
-    <!-- Notificacao de sucesso do cadastro -->
-    <style>
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translate(-50%, -10px);
-          /* mantém -50% no X (centralizado) */
-        }
-
-        to {
-          opacity: 1;
-          transform: translate(-50%, 0);
-          /* continua centralizado */
-        }
-      }
-
-      @keyframes fadeOut {
-        from {
-          opacity: 1;
-          transform: translate(-50%, 0);
-        }
-
-        to {
-          opacity: 0;
-          transform: translate(-50%, -10px);
-        }
-      }
-
-      .fade-in {
-        animation: fadeIn 0.5s ease-out forwards;
-      }
-
-      .fade-out {
-        animation: fadeOut 0.4s ease-in forwards;
-      }
-    </style>
-
-    <?php if (isset($_GET["msg"])): ?>
-      <div id="notificacao"
-        class="fixed top-5 left-1/2 z-50 fade-in"
-        style="transform: translate(-50%, 0);">
-        <div class="bg-white rounded-lg border border-blue-300 p-4 shadow-lg flex items-start max-w-md w-full">
-          <svg width="24" height="24" viewBox="0 0 1792 1792" fill="#3B82F6" xmlns="http://www.w3.org/2000/svg" class="mt-1">
-            <path d="M1299 813l-422 422q-19 19-45 19t-45-19l-294-294q-19-19-19-45t19-45l102-102q19-19 45-19t45 19l147 147 275-275q19-19 45-19t45 19l102 102q19 19 19 45t-19 45zm141 83q0-148-73-273t-198-198-273-73-273 73-198 198-73 273 73 273 198 198 273 73 273-73 198-198 73-273zm224 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" />
-          </svg>
-          <div class="ml-3">
-            <p class="font-semibold text-sm text-blue-600">Tudo pronto!</p>
-            <p class="text-gray-500 text-sm"><?php echo htmlspecialchars($_GET["msg"]); ?></p>
-          </div>
-        </div>
-      </div>
-
-      <script>
-        setTimeout(() => {
-          const notif = document.getElementById('notificacao');
-          if (notif) {
-            notif.classList.remove('fade-in');
-            notif.classList.add('fade-out');
-            setTimeout(() => notif.remove(), 500);
-          }
-        }, 5000);
-      </script>
-    <?php endif; ?>
-
     <!-- notificacao -->
     <?php include '../notificacao.php';
     include '../notificacao-erro.php'; ?>
@@ -217,24 +152,6 @@ $pagina = $_GET['pagina'] ?? 'meus-dados';
     <?php include '../footer.php'; ?>
 
 
-  <script>
-    // BOTAO DO PERFIL ESSENCIAIS ///////////////////////////////////////////////////////////
-    const btnPerfil = document.getElementById('btnPerfil');
-    const cardPerfil = document.getElementById('cardPerfil');
-
-    // Alterna o card ao clicar no botão
-    btnPerfil.addEventListener('click', () => {
-      cardPerfil.classList.toggle('hidden');
-    });
-
-    // Fecha ao clicar fora
-    document.addEventListener('click', (e) => {
-      if (!btnPerfil.contains(e.target) && !cardPerfil.contains(e.target)) {
-        cardPerfil.classList.add('hidden');
-      }
-    });
-    // /////////////////////////////////////////////////////////////////////////////////////
-  </script>
 </body>
 
 </html>

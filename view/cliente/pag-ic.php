@@ -225,26 +225,6 @@ $conta_ativa = $dadosUsuario['conta_ativa'];
 
     </div>
 
-    <script>
-        // BOTAO DO PERFIL ESSENCIAIS ///////////////////////////////////////////////////////////
-        const btnPerfil = document.getElementById('btnPerfil');
-        const cardPerfil = document.getElementById('cardPerfil');
-
-        // Alterna o card ao clicar no botão
-        btnPerfil.addEventListener('click', () => {
-            cardPerfil.classList.toggle('hidden');
-        });
-
-        // Fecha ao clicar fora
-        document.addEventListener('click', (e) => {
-            if (!btnPerfil.contains(e.target) && !cardPerfil.contains(e.target)) {
-                cardPerfil.classList.add('hidden');
-            }
-        });
-        // /////////////////////////////////////////////////////////////////////////////////////
-    </script>
-
-
 
 </body>
 

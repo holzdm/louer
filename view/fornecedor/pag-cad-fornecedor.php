@@ -207,10 +207,7 @@ if (isset($_SESSION['formData'])) {
 
   </div>
 
-  <!-- Scripts -->
-  <script>
 
-  </script>
 </body>
 
 </html>
