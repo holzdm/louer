@@ -108,7 +108,7 @@ if ($dadosProduto) {
         <!-- CONTEUDO -->
         <div class="mx-[3%] my-[2%]">
 
-            <div class="flex items-center w-full max-w-5xl mx-auto">
+            <section class="flex items-center w-full max-w-5xl mx-auto">
                 <!-- Botão esquerdo -->
                 <button id="prev"
                     class="text-gray-700 text-2xl p-2 transition-transform duration-200 hover:scale-125 disabled:text-gray-400 disabled:cursor-not-allowed">
@@ -131,30 +131,33 @@ if ($dadosProduto) {
                     class="text-gray-700 text-2xl p-2 transition-transform duration-200 hover:scale-125 disabled:text-gray-400 disabled:cursor-not-allowed">
                     ▶
                 </button>
-            </div>
+            </section>
 
             <hr class="w-[100vw] border-t border-gray-300 -mx-4">
 
-            <div class="flex flex-wrap gap-2 mt-3">
+            <section class="flex flex-wrap gap-2 mt-3">
 
                 <?php foreach ($tagsArray as $tag): ?>
                     <span class="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-700 font-medium">
                         <?php echo htmlspecialchars($tag); ?>
                     </span>
                 <?php endforeach; ?>
-            </div>
+            </section>
 
 
-            <h2> <?php echo $nomeProduto ?> </h2>
-            <br>
-            <h3> <?php echo $descricaoProduto ?> </h3>
-            <h3> <?php echo $valorProduto ?> </h3>
-            <h3> Puplicado por: <?php echo $nomeFornecedor ?> </h3>
+
+            <section class="my-6">
+                <h2 class="text-2xl font-bold"><?= htmlspecialchars($nomeProduto) ?></h2>
+                <p class="mt-2"><?= nl2br(htmlspecialchars($descricaoProduto)) ?></p>
+                <p class="mt-1 font-semibold">R$ <?= htmlspecialchars($valorProduto) ?> / dia</p>
+                <p class="mt-1 text-gray-600">Publicado por: <?= htmlspecialchars($nomeFornecedor) ?></p>
+            </section>
+
 
 
             <!-- Formulario solicitacao de reserva -->
-            <div class="flex flex-col gap-4 max-w-sm mx-auto mt-10">
-                <form action="../../control/ReservaController.php" method="POST">
+            <section class="flex flex-col gap-4 max-w-sm mx-auto mt-10">
+                <form action="/louer/control/ReservaController.php" method="POST">
 
                     <input type="hidden" name="acao" value="solicitar">
                     <input type="hidden" name="idProduto" value="<?php echo $idProduto ?>">
@@ -200,7 +203,7 @@ if ($dadosProduto) {
                         </div>
                     </div>
                 </form>
-            </div>
+            </section>
         </div>
 
         <!-- footer -->

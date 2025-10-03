@@ -20,6 +20,14 @@ switch ($acao) {
     case 'cadastrarImg':
         cadastrarImgProduto($_POST, $_FILES['imagens']);
         break;
+    
+    case 'removerImg':
+        removerImgProduto($_GET['nomeImg']);
+        break;
+
+    case 'cadastrarProdutoFinal':
+        cadastrarProdutoFinal();
+        break;
 
     case 'cancelarCadastro':
         cancelarCadastro();
@@ -37,8 +45,12 @@ switch ($acao) {
         acessarProdutoPraAlterar($_GET['id'] ?? null);
         break;
 
+    case 'alterarDatas':
+        alterarDatasProduto($_POST);
+        break;
+
     case 'alterar':
-        alterarProduto($_POST);
+        alterarDadosProduto($_POST);
         break;
     // case 'excluir':
     //     excluirCliente($_GET['id'] ?? null);
@@ -61,29 +73,32 @@ function cadastrarProduto($dadosPOST)
     $tipoProduto = $dadosPOST['tipoProduto'];
     $nomeProduto = $dadosPOST['nomeProduto'] ?? [];
     $valorProduto = $dadosPOST['valorProduto'] ?? [];
-    $diasDisponiveis = $dadosPOST['diasDisponiveis'] ?? [];
+    $diasDisponiveisProduto = $dadosPOST['diasDisponiveis'] ?? [];
 
-    $msgErro = validarCamposProduto($nomeProduto, $valorProduto, $diasDisponiveis);
+    $msgErro = validarCamposProduto($nomeProduto, $valorProduto, $diasDisponiveisProduto);
 
     // $dadosPOST['diasDisponiveis'] = $_POST['diasDisponiveis'] ?? [];
     $dadosPOST['tagsIds'] = isset($_POST['arrayTags'])
         ? array_unique(array_map('intval', $_POST['arrayTags']))
         : [];
 
-    $_SESSION['formData'] = $dadosPOST;
+    $_SESSION['novoProduto']['tipoProduto'] = $tipoProduto;
+    $_SESSION['novoProduto']['nomeProduto'] = $nomeProduto;
+    $_SESSION['novoProduto']['valorProduto'] = $valorProduto;
+    $_SESSION['novoProduto']['diasDisponiveis'] = $diasDisponiveisProduto;
 
 
     if (!empty($msgErro)) {
-        header("Location:../view/produto/pag-novo-produto.php?msgErro=$msgErro");
+        header("Location:/louer/view/produto/pag-novo-produto.php?msgErro=$msgErro");
         exit;
     }
 
     if ($tipoProduto == 'Equipamento') {
         // header("Location:../view/fornecedor/pag-inicial-fornecedor0.php?msg=Produto $np adicionado com sucesso!"); adicionar essa depois de adicionar as fotos
-        header("Location: ../view/produto/pag-novo-produto-img.php");
+        header("Location: /louer/view/produto/pag-novo-produto-img.php");
         exit;
     }
-    header("Location: ../view/produto/pag-novo-produto-end.php");
+    header("Location: /louer/view/produto/pag-novo-produto-end.php");
     exit;
 }
 
@@ -100,22 +115,28 @@ function cadastrarEnderecoProduto($dadosPOST)
 
     $msgErro = validarCamposProduto($cepProduto, $cidadeProduto, $bairroProduto, $ruaProduto, $numeroProduto);
 
-    $_SESSION['formData'] = array_merge($_SESSION['formData'], $dadosPOST);
+    $_SESSION['novoProduto']['cepProduto'] = $cepProduto;
+    $_SESSION['novoProduto']['cidadeProduto'] = $cidadeProduto;
+    $_SESSION['novoProduto']['bairroProduto'] = $bairroProduto;
+    $_SESSION['novoProduto']['ruaProduto'] = $ruaProduto;
+    $_SESSION['novoProduto']['numeroProduto'] = $numeroProduto;
+
 
     if (!empty($msgErro)) {
-        header("Location:../view/produto/pag-novo-produto-end.php?msgErro=$msgErro");
+        header("Location:/louer/view/produto/pag-novo-produto-end.php?msgErro=$msgErro");
         exit;
     }
 
-    header("Location: ../view/produto/pag-novo-produto-img.php");
+    header("Location: /louer/view/produto/pag-novo-produto-img.php");
 }
 
-function cadastrarImgProduto($dadosPOST, $arquivos)
+function cadastrarImgProduto($arquivos)
 {
     $arquivos = $_FILES['imagens'];
     $mensagensErro = [];
-    $imagensValidadas = []; // aqui vamos armazenar apenas as válidas temporariamente
-
+    if (!isset($_SESSION['novoProduto']['imagens'])) {
+        $_SESSION['novoProduto']['imagens'] = [];
+    }
     // Loop de validação
     for ($i = 0; $i < count($arquivos['name']); $i++) {
         $imagem = [
@@ -131,46 +152,56 @@ function cadastrarImgProduto($dadosPOST, $arquivos)
             $mensagensErro[] = "Arquivo {$imagem['name']}: $msgErro";
         } else {
             // se válida, adiciona ao array temporário
-            $imagensValidadas[] = $imagem;
+            $_SESSION['novoProduto']['imagens'][] = $imagem;
         }
     }
 
-    if (!empty($mensagensErro)) {
-        // Tem erro: não salva nada, envia mensagens de erro e mantém seleção
-        $_SESSION['imagensSelecionadas'] = $arquivos; // para manter as imagens selecionadas
-        header("Location: ../view/cadastrar-imagens.php?msgErro=$mensagensErro");
-        exit;
+    header("Location:/louer/view/produto/novo-produto-img.php?msgErro=$mensagensErro");
+}
+
+function removerImgProduto($dadosPOST){
+    $nomeImg = $dadosPOST['nomeImg'];
+
+    // verifica se o array existe e se o índice está definido
+    if(isset($_SESSION['novoProduto']['imagens'][$nomeImg])){
+        unset($_SESSION['novoProduto']['imagens'][$nomeImg]);
     }
+}
+
+function cadastrarProdutoFinal()
+{
+
     // Operação
 
     $idUsuario = $_SESSION['id'];
+    $novoProduto = $_SESSION['novoProduto'];
 
-    $formData = $_SESSION['formData'] = array_merge($_SESSION['formData'], $dadosPOST);
 
-    if (!empty($formData)) {
-        $tipoProduto = $formData['tipoProduto'];
-        $nomeProduto = $formData['nomeProduto'];
-        $valorProduto = $formData['valorProduto'];
-        $descricaoProduto = $formData['descricaoProduto'] ?? [];
-        $tagsIds = $formData['tagsIds'] ?? [];
-        $diasDisponiveis = $formData['diasDisponiveis'];
-        $cep = $formData['cep'] ?? [];
-        $cidade = $formData['cidade'] ?? [];
-        $bairro = $formData['bairro'] ?? [];
-        $rua = $formData['rua'] ?? [];
-        $numero = $formData['numero'] ?? [];
-        $complemento = $formData['complemento'] ?? [];
+    if (!empty($novoProduto)) {
+        $tipoProduto = $novoProduto['tipoProduto'];
+        $nomeProduto = $novoProduto['nomeProduto'];
+        $valorProduto = $novoProduto['valorProduto'];
+        $descricaoProduto = $novoProduto['descricaoProduto'] ?? [];
+        $tagsIds = $novoProduto['tagsIds'] ?? [];
+        $diasDisponiveis = $novoProduto['diasDisponiveisProduto'];
+        $cep = $novoProduto['cepProduto'] ?? [];
+        $cidade = $novoProduto['cidadeProduto'] ?? [];
+        $bairro = $novoProduto['bairroProduto'] ?? [];
+        $rua = $novoProduto['ruaProduto'] ?? [];
+        $numero = $novoProduto['numeroProduto'] ?? [];
+        $complemento = $novoProduto['complementoProduto'] ?? [];
+        $imagensValidadas = $novoProduto['imagens'] ?? [];
 
 
         $np = inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
         if ($np) {
-            header("Location: ../view/fornecedor/pag-inicial-fornecedor.php");
+            header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
             exit;
         }
-        header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msgErro=Erro ao inserir produto.");
+        header("Location: /louer/view/produto/novo-produto-img.php?msgErro=Erro ao inserir produto.");
         exit;
     }
-    header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msgErro=Erro ao adicionar produto.");
+    header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?msgErro=Erro ao adicionar produto.");
     exit;
 }
 
@@ -212,7 +243,26 @@ function pesquisarProdutos($dadosPesquisa)
     exit;
 }
 
-function alterarProduto($dadosPOST)
+function acessarProdutoPraAlterar($idProduto)
+{
+    if (!$idProduto) {
+        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?msg=Produto inválido. (ProdutoController)");
+        exit;
+    }
+
+    $dadosProduto = consultarProduto($idProduto);
+    $_SESSION['Produto'] = $dadosProduto;
+
+    if (isset($dadosProduto)) {
+        header("Location: /louer/view/produto/pag-produto-alterar.php");
+        exit;
+    } else {
+        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
+        exit;
+    }
+}
+
+function alterarDatasProduto($dadosPOST)
 {
     $idProduto = $dadosPOST['idProduto'] ?? null;
     /**
@@ -259,32 +309,40 @@ function alterarProduto($dadosPOST)
         die('Nenhuma data válida foi encontrada.');
     }
 
-    require_once "../model/ProdutoDao.php";
+    require_once "/louer/model/ProdutoDao.php";
     excluirDatasAntigas($idProduto);
 
     foreach ($datas as $data) {
         var_dump($idProduto);
-        alterarDatasProduto($idProduto, $data);
+        updateDatasProduto($idProduto, $data);
     }
-    header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msg=Produto alterado com sucesso!");
+    header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?msg=Produto alterado com sucesso!");
     exit;
 }
 
-function acessarProdutoPraAlterar($idProduto)
+function alterarDadosProduto($dadosPOST)
 {
-    if (!$idProduto) {
-        header("Location: ../view/fornecedor/pag-inicial-fornecedor.php?msg=Produto inválido. (ProdutoController)");
-        exit;
-    }
+    // recebe os dados do formulario de alteracao 
+    $idProduto = $dadosPOST['idProduto'];
+    $nome = $dadosPOST['nome'];
+    $valorHora = $dadosPOST['valorHora'];
+    $descricaoProduto = $dadosPOST['descricaoProduto'] ?? null;
+    $disponibilidadesFake = "aaa";
+    //validar sem o cpf e cnpj
+    $msgErro = validarCamposProduto($nome, $valorHora, $disponibilidadesFake);
+    //alterando
+    if (empty($msgErro)) {
 
-    $dadosProduto = consultarProduto($idProduto);
-    $_SESSION['Produto'] = $dadosProduto;
+        if (updateDadosProduto($nome, $valorHora, $descricaoProduto, $idProduto)) {
+            //atualizando as variaveis de sessao
+            $_SESSION['Produto']['nome'] = $nome;
+            $_SESSION['Produto']['valorHora'] = $valorHora;
+            $_SESSION['Produto']['descricao'] = $descricaoProduto;
 
-    if (isset($dadosProduto)) {
-        header("Location: /louer/view/produto/pag-produto-alterar.php");
-        exit;
-    } else {
-        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
+            header("Location:/louer/view/produto/pag-produto-alterar.php?msg=Dados alterados com sucesso!");
+            exit;
+        }
+        header("Location:/louer/view/produto/pag-produto-alterar.php?msgErro=Não foi possível alterar.");
         exit;
     }
 }

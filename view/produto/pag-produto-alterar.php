@@ -1,12 +1,17 @@
 <?php
 session_start();
 
+if (empty($_SESSION['id'])) {
+    header("Location: /louer/view/pag-inicial.php");
+    exit;
+}
 // Obter dados do produto
 $dadosProduto = $_SESSION['Produto'] ?? null;
 if (!$dadosProduto) {
-    header("Location: ../pag-inicial.php?msg=Produto não encontrado.");
+    header("Location: /louer/pag-inicial.php?msg=Produto não encontrado.");
     exit;
 }
+
 
 $idProduto = $dadosProduto['idProduto'];
 $nomeProduto = $dadosProduto['nome'];
@@ -98,44 +103,11 @@ $nomeFornecedor = $dadosProduto['nomeFornecedor'];
             background-color: #ccc;
             cursor: not-allowed;
         }
-
-        /* Notificação */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
-        }
-
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
-
-            to {
-                opacity: 0;
-                transform: translate(-50%, -10px);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-
-        .fade-out {
-            animation: fadeOut 0.4s ease-in forwards;
-        }
     </style>
 </head>
 
 <body>
-    <div class="min-h-screen flex flex-col bg-secondary">
+    <div class="min-h-screen flex flex-col bg-secondary pt-24">
 
         <!-- Navbar -->
         <div class=" w-full">
@@ -151,80 +123,62 @@ $nomeFornecedor = $dadosProduto['nomeFornecedor'];
             include "../notificacao.php"; ?>
 
             <!-- Informações do Produto -->
-            <!-- <form action="../../control/ClienteController.php" method="post">
+            <form id="infoProduto" name="infoProduto" action="/louer/control/ProdutoController.php" method="post">
                 <input type="hidden" name="acao" value="alterar">
-                <input type="hidden" name="id" value="<?= htmlspecialchars($_SESSION['id']) ?>">
-                <input type="hidden" name="emailAntigo" value="<?= htmlspecialchars($_SESSION['email']) ?>">
+                <input type="hidden" name="idProduto" value="<?= htmlspecialchars($idProduto) ?>">
+
                 <div class="space-y-5">
                     <div>
-                        <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Nome completo</label>
-                        <input type="text" id="nome" name="nome" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['nome']) ?>" required />
+                        <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Título </label>
+                        <input type="text" id="nome" name="nome" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($nomeProduto) ?>" required />
                     </div>
 
                     <div>
-                        <label for="cidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade</label>
-                        <input type="text" id="cidade" name="cidade" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['cidade']) ?>" required />
+                        <label for="valorHora" class="block text-sm font-medium text-gray-700 mb-1">Valor/Hora </label>
+                        <input type="number" id="valorHora" name="valorHora" placeholder="R$00.00" step="0.01" min="0" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($valorProduto) ?>" required />
                     </div>
 
                     <div>
-                        <label for="telefone" class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
-                        <input type="tel" id="telefone" name="telefone" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['telefone']) ?>" required />
+                        <label for="descricaoProduto" class="block text-sm font-medium text-gray-700 mb-1">Descrição </label>
+                        <textarea id="descricaoProduto" name="descricaoProduto" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none"><?=(htmlspecialchars($descricaoProduto))?></textarea>
                     </div>
-
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" id="email" name="email" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($_SESSION['email']) ?>" required />
-                    </div>
-
-                    <div>
-                        <label for="senha" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
-                        <input type="password" id="senha" name="senha" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="******" required />
-                        <p class="mt-1 text-xs text-gray-500">Mínimo de 6 caracteres com letras ou números</p>
-                    </div>
-
-                    <div class="flex items-start">
-                        <input type="hidden" id="terms" name="terms" class="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" required />
-                    </div>
-
-                    <div>
-                        <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium">
-                            Alterar Dados
-                        </button>
-                    </div>
-                </div>
-            </form> -->
-
-            <section class="my-6">
-                <h2 class="text-2xl font-bold"><?= htmlspecialchars($nomeProduto) ?></h2>
-                <p class="mt-2"><?= htmlspecialchars($descricaoProduto) ?></p>
-                <p class="mt-1 font-semibold">R$ <?= htmlspecialchars($valorProduto) ?> / dia</p>
-                <p class="mt-1 text-gray-600">Publicado por: <?= htmlspecialchars($nomeFornecedor) ?></p>
-            </section>
+            </form>
 
             <!-- Seletor de Datas -->
             <section class="my-6">
                 <h3 class="text-lg font-semibold mb-2">Seletor de Datas</h3>
-                <form id="form-datas" action="../../control/ProdutoController.php" method="POST">
-                    <div id="input"></div>
+                <form id="form-datas" name="form-datas" action="/louer/control/ProdutoController.php" method="POST">
 
                     <div class="status">
                         <h4 class="font-medium">Datas Selecionadas:</h4>
                         <div id="datas-selecionadas"></div>
                     </div>
 
-                    <input type="hidden" name="acao" value="alterar">
+                    <input type="hidden" name="acao" value="alterarDatas">
                     <input type="hidden" name="idProduto" value="<?= htmlspecialchars($idProduto) ?>">
                     <input type="hidden" name="datas_selecionadas" id="campo-datas">
                     <button type="submit" id="botao-enviar" class="btn-primary mt-2" disabled>Enviar Datas</button>
                 </form>
-                <a href="/louer/control/ProdutoController.php?id=<?= $idProduto ?>&acao=excluir" class="mt-2 inline-block text-red-600 hover:underline">Apagar Produto</a>
             </section>
+
+            <div>
+                <button type="submit" form="infoProduto" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium">
+                    Alterar Dados
+                </button>
+                <a href="/louer/control/ProdutoController.php?id=<?= $idProduto ?>&acao=excluir"
+                    class="bg-red-800 block text-center mt-2 w-full py-3 px-4 rounded-lg text-white font-medium transition-all duration-300 ease hover:bg-red-900">
+                    Apagar Produto
+                </a>
+            </div>
+
 
         </div>
 
-        <!-- Footer -->
-        <?php $fonte = 'produto';
-        include '../footer.php'; ?>
+    </div>
+
+    <!-- Footer -->
+    <?php $fonte = 'produto';
+    include '../footer.php'; ?>
 
     </div>
 </body>

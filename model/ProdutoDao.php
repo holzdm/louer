@@ -316,7 +316,7 @@ function excluirDatasAntigas($idProduto)
     mysqli_stmt_bind_param($stmtDelete, "i", $idProduto);
     mysqli_stmt_execute($stmtDelete);
 }
-function alterarDatasProduto($idProduto, $data)
+function updateDatasProduto($idProduto, $data)
 {
     $conexao = conectarBD();
 
@@ -335,6 +335,20 @@ function alterarDatasProduto($idProduto, $data)
     } else {
         echo "Erro ao inserir a data $data: " . mysqli_stmt_error($stmtInsert) . "<br>";
     }
+}
+
+function updateDadosProduto($nome, $valorHora, $descricaoProduto, $idProduto) {
+    $conexao = conectarBD();
+
+    $sql = "UPDATE produto 
+            SET nome = ?, valor_dia = ?, descricao = ?
+            WHERE id = ?";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("sdsi", $nome, $valorHora, $descricaoProduto, $idProduto); 
+    // s = string, d = double (float), i = integer
+
+    return $stmt->execute();
 }
 
 function deleteProduto($idProduto)

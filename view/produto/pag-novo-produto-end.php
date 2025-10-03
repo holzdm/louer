@@ -2,11 +2,11 @@
 session_start();
 
 if (empty($_SESSION['id'])) {
-    header("Location: ../pag-inicial.php");
+    header("Location: /louer/view/pag-inicial.php");
     exit;
 }
 
-$formData = $_SESSION['formData'] ?? [];
+$novoProduto = $_SESSION['novoProduto'] ?? [];
 
 
 ?>
@@ -160,27 +160,27 @@ $formData = $_SESSION['formData'] ?? [];
                     <div>
                         <input type="hidden" name="acao" value="cadastrarEnd">
                         <label for="cep" class="block text-sm font-medium text-gray-700 mb-1">CEP: </label>
-                        <input type="text" id="cep" name="cep" placeholder="" value="<?= htmlspecialchars($formData['cep'] ?? '') ?>"
+                        <input type="text" id="cep" name="cep" placeholder="" value="<?= htmlspecialchars($novoProduto['cep'] ?? '') ?>"
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
                         <br><br>
                         <label for="cidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade: </label>
-                        <input type="text" id="cidade" name="cidade" placeholder="" value="<?= htmlspecialchars($formData['cidade'] ?? '') ?>"
+                        <input type="text" id="cidade" name="cidade" placeholder="" value="<?= htmlspecialchars($novoProduto['cidade'] ?? '') ?>"
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
                         <br><br>
                         <label for="rua" class="block text-sm font-medium text-gray-700 mb-1">Rua: </label>
-                        <input type="text" id="rua" name="rua" placeholder="" value="<?= htmlspecialchars($formData['rua'] ?? '') ?>"
+                        <input type="text" id="rua" name="rua" placeholder="" value="<?= htmlspecialchars($novoProduto['rua'] ?? '') ?>"
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
                         <br><br>
                         <label for="bairro" class="block text-sm font-medium text-gray-700 mb-1">Bairro: </label>
-                        <input type="text" id="bairro" name="bairro" placeholder="" value="<?= htmlspecialchars($formData['bairro'] ?? '') ?>"
+                        <input type="text" id="bairro" name="bairro" placeholder="" value="<?= htmlspecialchars($novoProduto['bairro'] ?? '') ?>"
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
                         <br><br>
                         <label for="numero" class="block text-sm font-medium text-gray-700 mb-1">N°: </label>
-                        <input type="number" id="numero" name="numero" placeholder="00" step="1" min="0" value="<?= htmlspecialchars($formData['numero'] ?? '') ?>"
+                        <input type="number" id="numero" name="numero" placeholder="00" step="1" min="0" value="<?= htmlspecialchars($novoProduto['numero'] ?? '') ?>"
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" required>
                         <br><br>
                         <label for="complemento" class="block text-sm font-medium text-gray-700 mb-1">Complemento: </label>
-                        <input type="text" id="complemento" name="complemento" placeholder="AP.. " value="<?= htmlspecialchars($formData['complemento'] ?? '') ?>"
+                        <input type="text" id="complemento" name="complemento" placeholder="AP.. " value="<?= htmlspecialchars($novoProduto['complemento'] ?? '') ?>"
                             class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary">
                         <br><br>
                         <div class="flex justify-between mt-6">
