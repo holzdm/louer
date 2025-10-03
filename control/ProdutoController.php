@@ -18,9 +18,9 @@ switch ($acao) {
         break;
 
     case 'cadastrarImg':
-        cadastrarImgProduto($_POST, $_FILES['imagens']);
+        cadastrarImgProduto($_FILES['imagens']);
         break;
-    
+
     case 'removerImg':
         removerImgProduto($_GET['nomeImg']);
         break;
@@ -73,6 +73,7 @@ function cadastrarProduto($dadosPOST)
     $tipoProduto = $dadosPOST['tipoProduto'];
     $nomeProduto = $dadosPOST['nomeProduto'] ?? [];
     $valorProduto = $dadosPOST['valorProduto'] ?? [];
+    $descricaoProduto = $dadosPOST['descricaoProduto'] = "" ;
     $diasDisponiveisProduto = $dadosPOST['diasDisponiveis'] ?? [];
 
     $msgErro = validarCamposProduto($nomeProduto, $valorProduto, $diasDisponiveisProduto);
@@ -85,7 +86,9 @@ function cadastrarProduto($dadosPOST)
     $_SESSION['novoProduto']['tipoProduto'] = $tipoProduto;
     $_SESSION['novoProduto']['nomeProduto'] = $nomeProduto;
     $_SESSION['novoProduto']['valorProduto'] = $valorProduto;
-    $_SESSION['novoProduto']['diasDisponiveis'] = $diasDisponiveisProduto;
+    $_SESSION['novoProduto']['descricaoProduto'] = $descricaoProduto;
+
+    $_SESSION['novoProduto']['diasDisponiveisProduto'] = $diasDisponiveisProduto;
 
 
     if (!empty($msgErro)) {
@@ -132,7 +135,6 @@ function cadastrarEnderecoProduto($dadosPOST)
 
 function cadastrarImgProduto($arquivos)
 {
-    $arquivos = $_FILES['imagens'];
     $mensagensErro = [];
     if (!isset($_SESSION['novoProduto']['imagens'])) {
         $_SESSION['novoProduto']['imagens'] = [];
@@ -156,20 +158,28 @@ function cadastrarImgProduto($arquivos)
         }
     }
 
-    header("Location:/louer/view/produto/novo-produto-img.php?msgErro=$mensagensErro");
+    if (!empty($mensagensErro)) {
+        $erroStr = implode(', ', $mensagensErro);
+        header("Location:/louer/view/produto/novo-produto-img.php?msgErro=$erroStr");
+    } else {
+        header("Location:/louer/view/produto/novo-produto-img.php");
+    }
 }
 
-function removerImgProduto($dadosPOST){
+function removerImgProduto($dadosPOST)
+{
     $nomeImg = $dadosPOST['nomeImg'];
 
     // verifica se o array existe e se o índice está definido
-    if(isset($_SESSION['novoProduto']['imagens'][$nomeImg])){
+    if (isset($_SESSION['novoProduto']['imagens'][$nomeImg])) {
         unset($_SESSION['novoProduto']['imagens'][$nomeImg]);
     }
 }
 
 function cadastrarProdutoFinal()
 {
+    var_dump($_SESSION['novoProduto']);
+    exit;
 
     // Operação
 
@@ -181,9 +191,9 @@ function cadastrarProdutoFinal()
         $tipoProduto = $novoProduto['tipoProduto'];
         $nomeProduto = $novoProduto['nomeProduto'];
         $valorProduto = $novoProduto['valorProduto'];
-        $descricaoProduto = $novoProduto['descricaoProduto'] ?? [];
+        $descricaoProduto = $novoProduto['descricaoProduto'] ?? '';
         $tagsIds = $novoProduto['tagsIds'] ?? [];
-        $diasDisponiveis = $novoProduto['diasDisponiveisProduto'];
+        $diasDisponiveis = $novoProduto['diasDisponiveisProduto'] ?? [];
         $cep = $novoProduto['cepProduto'] ?? [];
         $cidade = $novoProduto['cidadeProduto'] ?? [];
         $bairro = $novoProduto['bairroProduto'] ?? [];
@@ -195,6 +205,7 @@ function cadastrarProdutoFinal()
 
         $np = inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
         if ($np) {
+            unset($_SESSION['novoProduto']);
             header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
             exit;
         }
