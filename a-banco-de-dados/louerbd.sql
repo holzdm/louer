@@ -142,19 +142,15 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 -- Table `louerbd`.`imagem`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `louerbd`.`imagem` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `url_img` TEXT NULL DEFAULT NULL,
-  `produto_id` INT(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_imagem_produto1_idx` (`produto_id` ASC),
-  CONSTRAINT `fk_imagem_produto1`
-    FOREIGN KEY (`produto_id`)
-    REFERENCES `louerbd`.`produto` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
-) ENGINE=InnoDB
-DEFAULT CHARACTER SET = latin1;
+DROP TABLE IF EXISTS imagem;
+CREATE TABLE imagem (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  dados LONGBLOB NOT NULL,
+  tipo VARCHAR(50) NOT NULL,
+  produto_id INT NOT NULL,
+  FOREIGN KEY (produto_id) REFERENCES produto(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 
 -- -----------------------------------------------------
@@ -279,17 +275,7 @@ INSERT INTO tags_has_produto (tags_id, produto_id) VALUES
 (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (1, 8);
 
 -- ---------- Inserir imagens ----------
--- Cada produto com 2 imagens, exceto Produto1_F4 (id=7) com 8 imagens
-INSERT INTO imagem (url_img, produto_id) VALUES
-('/louer/a-uploads/image.png', 1), ('/louer/a-uploads/image.png', 1),
-('/louer/a-uploads/image2.png', 2), ('/louer/a-uploads/image.png', 2),
-('/louer/a-uploads/image3.png', 3), ('/louer/a-uploads/image.png', 3),
-('/louer/a-uploads/image4.png', 4), ('/louer/a-uploads/image.png', 4),
-('/louer/a-uploads/image5.png', 5), ('/louer/a-uploads/image.png', 5),
-('/louer/a-uploads/image6.png', 6), ('/louer/a-uploads/image.png', 6),
-('/louer/a-uploads/image2.png', 7), ('/louer/a-uploads/image.png', 7), ('/louer/a-uploads/image3.png', 7), ('/louer/a-uploads/image4.png', 7),
-('/louer/a-uploads/image5.png', 7), ('/louer/a-uploads/image6.png', 7), ('/louer/a-uploads/image.png', 7), ('/louer/a-uploads/image.png1', 7),
-('/louer/a-uploads/image4.png', 8), ('/louer/a-uploads/image.png', 8);
+
 
 -- ---------- Disponibilidades Produto1_F1 (id=1) ----------
 INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES
