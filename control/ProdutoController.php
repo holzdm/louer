@@ -17,8 +17,8 @@ switch ($acao) {
         cadastrarEnderecoProduto($_POST);
         break;
 
-    case 'cadastrarImg':
-        cadastrarImgProduto($_FILES['imagens']);
+    case 'adicionarImagem':
+        adicionarImgProduto($_FILES['imagens']);
         break;
 
     case 'removerImg':
@@ -133,53 +133,50 @@ function cadastrarEnderecoProduto($dadosPOST)
     header("Location: /louer/view/produto/pag-novo-produto-img.php");
 }
 
-function cadastrarImgProduto($arquivos)
+function adicionarImgProduto($arquivos)
 {
-    $mensagensErro = [];
+    $mensagensErro = '';
+
+    if (!isset($_SESSION['novoProduto'])) {
+        $_SESSION['novoProduto'] = [];
+    }
+
     if (!isset($_SESSION['novoProduto']['imagens'])) {
         $_SESSION['novoProduto']['imagens'] = [];
     }
-    // Loop de validação
-    for ($i = 0; $i < count($arquivos['name']); $i++) {
+
+    foreach ($arquivos['name'] as $i => $nome) {
         $imagem = [
-            'name' => sanitizeFilename($arquivos['name'][$i]),
+            'name' => sanitizeFilename($nome),
             'type' => $arquivos['type'][$i],
             'tmp_name' => $arquivos['tmp_name'][$i],
             'error' => $arquivos['error'][$i],
             'size' => $arquivos['size'][$i]
         ];
 
-        $msgErro = verificarImagem($imagem);
-        if ($msgErro) {
-            $mensagensErro[] = "Arquivo {$imagem['name']}: $msgErro";
-        } else {
-            // se válida, adiciona ao array temporário
-            $_SESSION['novoProduto']['imagens'][] = $imagem;
+        $msgErro = validarImagem($imagem);
+
+        if (empty($msgErro)) {
+            $conteudo = file_get_contents($imagem['tmp_name']);
+            $_SESSION['novoProduto']['imagens'][] = [
+                'dados' => $conteudo,
+                'tipo' => $imagem['type'],
+                'nome' => $imagem['name']
+            ];
         }
     }
-
-    if (!empty($mensagensErro)) {
-        $erroStr = implode(', ', $mensagensErro);
-        header("Location:/louer/view/produto/novo-produto-img.php?msgErro=$erroStr");
-    } else {
-        header("Location:/louer/view/produto/novo-produto-img.php");
-    }
-}
-
-function removerImgProduto($dadosPOST)
-{
-    $nomeImg = $dadosPOST['nomeImg'];
-
-    // verifica se o array existe e se o índice está definido
-    if (isset($_SESSION['novoProduto']['imagens'][$nomeImg])) {
-        unset($_SESSION['novoProduto']['imagens'][$nomeImg]);
+    
+    if (empty($mensagensErro)){
+        echo json_encode(['status' => 'ok']); // retorna JSON ao JS
+        exit;    
+    }else{
+        echo json_encode(['status' => 'erro', 'msg' => $mensagensErro]); // envia erros
     }
 }
 
 function cadastrarProdutoFinal()
 {
-    var_dump($_SESSION['novoProduto']);
-    exit;
+
 
     // Operação
 
@@ -202,6 +199,10 @@ function cadastrarProdutoFinal()
         $complemento = $novoProduto['complementoProduto'] ?? [];
         $imagensValidadas = $novoProduto['imagens'] ?? [];
 
+
+if (empty($imagensValidadas)) {
+    die("Nenhuma imagem encontrada na sessão!");
+}
 
         $np = inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
         if ($np) {
@@ -362,4 +363,19 @@ function excluirProduto($idProduto)
 {
     deleteProduto($idProduto);
     header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
+}
+
+function removerImgProduto($nomeImg)
+{
+    if (!empty($_SESSION['novoProduto']['imagens'])) {
+        foreach ($_SESSION['novoProduto']['imagens'] as $key => $img) {
+            if ($img['nome'] === $nomeImg) {
+                unset($_SESSION['novoProduto']['imagens'][$key]);
+            }
+        }
+        // Reindexa array
+        $_SESSION['novoProduto']['imagens'] = array_values($_SESSION['novoProduto']['imagens']);
+    }
+    echo json_encode(['status' => 'ok']);
+    exit;
 }

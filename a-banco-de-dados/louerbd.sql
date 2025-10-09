@@ -142,7 +142,6 @@ DEFAULT CHARACTER SET = latin1;
 -- -----------------------------------------------------
 -- Table `louerbd`.`imagem`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS imagem;
 CREATE TABLE imagem (
   id INT AUTO_INCREMENT PRIMARY KEY,
   dados LONGBLOB NOT NULL,

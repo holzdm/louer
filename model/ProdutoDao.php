@@ -51,7 +51,8 @@ function inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds,
 
     // Pega o código inserido
     $idProduto = mysqli_insert_id($conexao);
-
+    var_dump($_SESSION['novoProduto']['imagens']);
+    exit;
     inserirImgs($idProduto, $imagensValidadas);
 
     // Insere as tags relacionadas
@@ -69,28 +70,30 @@ function inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds,
 
 function inserirImgs($idProduto, $imagensValidadas)
 {
-
     $conexao = conectarBD();
 
-
     foreach ($imagensValidadas as $imagem) {
-        // gera um nome único para evitar sobrescrever
-        $nomeArquivo = uniqid() . '_' . basename($imagem['name']);
-        $caminhoDestino = "/louer/a-uploads/$nomeArquivo";
-        $caminho = "../a-uploads/$nomeArquivo";
+        $dados = $imagem['dados']; // já está em binário
+        $tipo = $imagem['tipo'];
 
-        // move arquivo para a pasta uploads
-        if (move_uploaded_file($imagem['tmp_name'], $caminho)) {
-            // insere caminho no banco
-            $sql = "INSERT INTO imagem (url_img, produto_id) VALUES (?, ?)";
-            $stmt = mysqli_prepare($conexao, $sql);
-            mysqli_stmt_bind_param($stmt, "si", $caminhoDestino, $idProduto);
-            mysqli_stmt_execute($stmt) or die("Erro ao inserir imagem: " . mysqli_stmt_error($stmt));
-        } else {
-            die("Erro ao enviar a imagem {$imagem['name']}");
+        $sql = "INSERT INTO imagem (dados, tipo, produto_id) VALUES (?, ?, ?)";
+        $stmt = mysqli_prepare($conexao, $sql);
+        if (!$stmt) {
+            die("Erro no prepare: " . mysqli_error($conexao));
         }
+
+        // 's' para string (funciona com BLOB pequeno)
+        mysqli_stmt_bind_param($stmt, "ssi", $dados, $tipo, $idProduto);
+
+        if (!mysqli_stmt_execute($stmt)) {
+            die("Erro ao inserir imagem: " . mysqli_stmt_error($stmt));
+        }
+
+        mysqli_stmt_close($stmt);
     }
 }
+
+
 
 // Função para inserir as tags relacionadas ao produto
 function inserirTagsHasProduto($tagsIds, $idProduto)
@@ -288,24 +291,20 @@ function listarUmaImg($idProduto)
 {
     $conexao = conectarBD();
 
-
-    // Prepara a query
-    $sql = "SELECT url_img FROM imagem WHERE produto_id = ? LIMIT 1";
+    $sql = "SELECT dados, tipo FROM imagem WHERE produto_id = ? LIMIT 1";
     $stmt = mysqli_prepare($conexao, $sql);
-    if (!$stmt) {
-        die("Erro na preparação da query: " . mysqli_error($conexao));
-    }
-
     mysqli_stmt_bind_param($stmt, "i", $idProduto);
     mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-    $resultado = mysqli_stmt_get_result($stmt);
-
-    if ($registro = mysqli_fetch_assoc($resultado)) {
-        return $registro; // ['url_img' => ...]
-    } else {
-        return null; // não encontrou imagem
+    if ($row = mysqli_fetch_assoc($result)) {
+        return [
+            'dados' => $row['dados'],
+            'tipo' => $row['tipo']
+        ];
     }
+
+    return null;
 }
 
 function excluirDatasAntigas($idProduto)
@@ -373,23 +372,17 @@ function deleteProduto($idProduto)
 
 function buscarImgs($idProduto)
 {
-    $conexao = conectarBD();
+$conexao = conectarBD();
+$sql = "SELECT dados, tipo FROM imagem WHERE produto_id = ?";
+$stmt = mysqli_prepare($conexao, $sql);
+mysqli_stmt_bind_param($stmt, "i", $idProduto);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
-    $sql = "SELECT url_img FROM imagem WHERE produto_id = ?";
-    $stmt = mysqli_prepare($conexao, $sql);
-    if (!$stmt) {
-        die("Erro na preparação da query: " . mysqli_error($conexao));
-    }
-
-    mysqli_stmt_bind_param($stmt, "i", $idProduto);
-    mysqli_stmt_execute($stmt);
-
-    $resultado = mysqli_stmt_get_result($stmt);
-
-    $imagens = [];
-    while ($registro = mysqli_fetch_assoc($resultado)) {
-        $imagens[] = $registro['url_img'];
-    }
-
-    return $imagens; // array de strings com todas as urls
+if ($row = mysqli_fetch_assoc($result)) {
+    header("Content-Type: " . $row['tipo']);
+    echo $row['dados'];
+} else {
+    http_response_code(404);
+}
 }

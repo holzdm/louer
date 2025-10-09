@@ -103,8 +103,8 @@ if (isset($_SESSION['formData'])) {
           $nome = $registro["nome"];
           $valorDia = $registro["valor_dia"];
 
-          $img = listarUmaImg($idProduto);
-          $srcImg = $img ? $img['url_img'] : '/louer/a-uploads/New-piskel.png';
+          $srcImg = "/louer/a-imagem/image.php?idProduto=" . $idProduto;
+
 
           // $jaFavorito = verificarFavorito($_SESSION['id'], $idProduto);
 

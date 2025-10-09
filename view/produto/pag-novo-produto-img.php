@@ -86,51 +86,96 @@ $novoProduto = $_SESSION['novoProduto'] ?? [];
     <!-- SCRIPT -->
     <script>
         const inputImagens = document.getElementById('imagens');
-        const preview = document.getElementById('preview');
+const preview = document.getElementById('preview');
 
-        // Preview para novas imagens
-        inputImagens.addEventListener('change', function(event) {
-            const files = event.target.files;
+// Função para atualizar o preview
+function adicionarPreview(file, indexSessao) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const div = document.createElement("div");
+        div.classList.add("relative", "w-32", "h-32");
 
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const div = document.createElement("div");
-                    div.classList.add("relative", "w-32", "h-32");
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.classList.add("object-cover", "w-full", "h-full", "rounded-lg", "shadow");
 
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.classList.add("object-cover", "w-full", "h-full", "rounded-lg", "shadow");
+        // Botão de remover
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.innerText = "x";
+        btn.classList.add(
+            "absolute", "top-1", "right-1", "bg-red-600", "hover:bg-red-700",
+            "text-white", "rounded-full", "w-6", "h-6", "flex", "items-center",
+            "justify-center", "text-xs", "remove-btn"
+        );
 
-                    // Botão de remover
-                    const btn = document.createElement("button");
-                    btn.type = "button";
-                    btn.innerText = "x";
-                    btn.classList.add("absolute", "top-1", "right-1", "bg-red-600", "hover:bg-red-700", "text-white", "rounded-full", "w-6", "h-6", "flex", "items-center", "justify-center", "text-xs", "remove-btn");
+        btn.addEventListener("click", () => {
+            // Remove do preview
+            div.remove();
 
-                    btn.addEventListener("click", () => {
-                        div.remove();
-                    });
+            // Remove da sessão via AJAX
+            fetch(`/louer/control/ProdutoController.php?acao=removerImg&nomeImg=${encodeURIComponent(file.name)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status !== "ok") {
+                        console.error("Erro ao remover imagem da sessão:", data.msg);
+                    }
+                });
+        });
 
-                    div.appendChild(img);
-                    div.appendChild(btn);
-                    preview.appendChild(div);
+        div.appendChild(img);
+        div.appendChild(btn);
+        preview.appendChild(div);
+    }
+    reader.readAsDataURL(file);
+}
+
+// Upload via AJAX
+inputImagens.addEventListener('change', function(event) {
+    const files = Array.from(event.target.files);
+    const formData = new FormData();
+    formData.append("acao", "adicionarImagem");
+
+    files.forEach(file => formData.append("imagens[]", file));
+
+    fetch("/louer/control/ProdutoController.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "ok") {
+            // Adiciona todas as imagens selecionadas ao preview
+            files.forEach(file => adicionarPreview(file));
+        } else {
+            alert("Erro ao enviar imagens: " + data.msg);
+        }
+    })
+    .catch(err => console.error("Erro no envio:", err));
+
+    // Limpa o input para permitir adicionar mais imagens depois
+    inputImagens.value = '';
+});
+
+// Preview inicial das imagens já na sessão
+document.querySelectorAll('#preview img').forEach(img => {
+    const div = img.parentElement;
+    const btn = div.querySelector('.remove-btn');
+
+    btn.addEventListener('click', () => {
+        const nomeImg = img.getAttribute('data-nome');
+        div.remove();
+
+        fetch(`/louer/control/ProdutoController.php?acao=removerImg&nomeImg=${encodeURIComponent(nomeImg)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status !== "ok") {
+                    console.error("Erro ao remover imagem da sessão:", data.msg);
                 }
-                reader.readAsDataURL(file);
             });
-        });
+    });
+});
 
-        // Remover imagens já carregadas (do PHP/session)
-        document.querySelectorAll('.remove-btn').forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.target.parentElement.remove();
-            });
-        });
-
-        // Botão cancelar
-        document.getElementById('btnCancelar').addEventListener('click', () => {
-            window.location.href = "/louer/control/ProdutoController.php?acao=cancelarCadastro";
-        });
     </script>
 </body>
 
