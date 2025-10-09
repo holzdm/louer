@@ -26,7 +26,7 @@ switch ($acao) {
         break;
 
     case 'cadastrarProdutoFinal':
-        cadastrarProdutoFinal();
+        cadastrarProdutoFinal($_FILES['imagens']);
         break;
 
     case 'cancelarCadastro':
@@ -174,7 +174,7 @@ function adicionarImgProduto($arquivos)
     }
 }
 
-function cadastrarProdutoFinal()
+function cadastrarProdutoFinal($imagensValidadas)
 {
 
 
@@ -197,7 +197,7 @@ function cadastrarProdutoFinal()
         $rua = $novoProduto['ruaProduto'] ?? [];
         $numero = $novoProduto['numeroProduto'] ?? [];
         $complemento = $novoProduto['complementoProduto'] ?? [];
-        $imagensValidadas = $novoProduto['imagens'] ?? [];
+     //   $imagensValidadas = $novoProduto['imagens'] ?? [];
 
 
 if (empty($imagensValidadas)) {

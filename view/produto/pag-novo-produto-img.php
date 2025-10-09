@@ -130,51 +130,7 @@ function adicionarPreview(file, indexSessao) {
     reader.readAsDataURL(file);
 }
 
-// Upload via AJAX
-inputImagens.addEventListener('change', function(event) {
-    const files = Array.from(event.target.files);
-    const formData = new FormData();
-    formData.append("acao", "adicionarImagem");
 
-    files.forEach(file => formData.append("imagens[]", file));
-
-    fetch("/louer/control/ProdutoController.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "ok") {
-            // Adiciona todas as imagens selecionadas ao preview
-            files.forEach(file => adicionarPreview(file));
-        } else {
-            alert("Erro ao enviar imagens: " + data.msg);
-        }
-    })
-    .catch(err => console.error("Erro no envio:", err));
-
-    // Limpa o input para permitir adicionar mais imagens depois
-    inputImagens.value = '';
-});
-
-// Preview inicial das imagens já na sessão
-document.querySelectorAll('#preview img').forEach(img => {
-    const div = img.parentElement;
-    const btn = div.querySelector('.remove-btn');
-
-    btn.addEventListener('click', () => {
-        const nomeImg = img.getAttribute('data-nome');
-        div.remove();
-
-        fetch(`/louer/control/ProdutoController.php?acao=removerImg&nomeImg=${encodeURIComponent(nomeImg)}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.status !== "ok") {
-                    console.error("Erro ao remover imagem da sessão:", data.msg);
-                }
-            });
-    });
-});
 
     </script>
 </body>

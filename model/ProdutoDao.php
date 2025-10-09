@@ -51,8 +51,8 @@ function inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds,
 
     // Pega o código inserido
     $idProduto = mysqli_insert_id($conexao);
-    var_dump($_SESSION['novoProduto']['imagens']);
-    exit;
+    //var_dump($_SESSION['novoProduto']['imagens']);
+    //exit;
     inserirImgs($idProduto, $imagensValidadas);
 
     // Insere as tags relacionadas
@@ -73,8 +73,14 @@ function inserirImgs($idProduto, $imagensValidadas)
     $conexao = conectarBD();
 
     foreach ($imagensValidadas as $imagem) {
-        $dados = $imagem['dados']; // já está em binário
-        $tipo = $imagem['tipo'];
+        // $dados = $imagem['dados']; // já está em binário
+        // $tipo = $imagem['tipo'];
+        $tipo = "jpg";
+
+        // Converter a imagem
+        $tamanhoImg = $imagem["size"]; 
+        $arqAberto = fopen ( $imagem["tmp_name"], "r" );
+        $foto = addslashes( fread ( $arqAberto , $tamanhoImg ) );
 
         $sql = "INSERT INTO imagem (dados, tipo, produto_id) VALUES (?, ?, ?)";
         $stmt = mysqli_prepare($conexao, $sql);
@@ -83,7 +89,7 @@ function inserirImgs($idProduto, $imagensValidadas)
         }
 
         // 's' para string (funciona com BLOB pequeno)
-        mysqli_stmt_bind_param($stmt, "ssi", $dados, $tipo, $idProduto);
+        mysqli_stmt_bind_param($stmt, "bsi", $foto, $tipo, $idProduto);
 
         if (!mysqli_stmt_execute($stmt)) {
             die("Erro ao inserir imagem: " . mysqli_stmt_error($stmt));
