@@ -58,8 +58,14 @@ switch ($acao) {
     case 'excluir':
         excluirProduto($_GET['id'] ?? null);
         break;
+    
+    case 'inserirFavorito':
+        inserirFavorito($_POST);
+        break;
 
 
+    case 'exlcuirFavorito':    
+        excluirFavorito($_POST);
     default:
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
         // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msgErro=" . urlencode("Ação inválida!"));
@@ -378,4 +384,25 @@ function removerImgProduto($nomeImg)
     }
     echo json_encode(['status' => 'ok']);
     exit;
+}
+
+function inserirFavorito($dadosPOST){
+$id_produto=$dadosPOST['idProduto'];
+$id_usuario=$_SESSION['id'];
+if(inserirFavoritosDAO($id_usuario, $id_produto)){
+    header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msg=Produto adicionado aos favoritos!");
+    exit;
+}else{
+    header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msgErro=Erro ao adicionar produto aos favoritos!");
+    exit;
+}
+}
+function excluirFavorito($dadosPOST){
+    $id_produto=$dadosPOST['idProduto'];
+    $id_usuario=$_SESSION['id'];
+    if(excluirFavoritosDAO($id_usuario, $id_produto)){
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msg=Produto removido dos favoritos!");
+        exit;
+}
+
 }

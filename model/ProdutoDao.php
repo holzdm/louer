@@ -392,3 +392,61 @@ if ($row = mysqli_fetch_assoc($result)) {
     http_response_code(404);
 }
 }
+
+function inserirFavoritosDAO($id_usuario, $id_produto){
+    $conexao = conectarBD(); // Função para conectar ao banco de dados
+    if (!$conexao) {
+        die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
+    }
+
+    $sql = "INSERT INTO favoritos (id_usuario, id_produto) VALUES (?, ?)";
+    
+    $stmt = $conexao->prepare($sql);
+
+    if (!$stmt) {
+        die("Erro ao preparar a inserção: " . $conexao->error);
+    }
+
+    $stmt->bind_param("ii", $id_usuario, $id_produto);
+    return $stmt->execute();
+}
+function listarFavoritosDAO($idUsuario) {
+    $conexao = conectarBD(); // Função para conectar ao banco de dados
+    if (!$conexao) {
+        die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
+    }
+
+    $sql = "SELECT p.id, p.nome, p.valor_dia 
+            FROM favoritos f
+            INNER JOIN produto p ON f.id_produto = p.id
+            WHERE f.id_usuario = ?";
+    
+    $stmt = $conexao->prepare($sql);
+
+    if (!$stmt) {
+        die("Erro ao preparar a consulta: " . $conexao->error);
+    }
+
+    $stmt->bind_param("i", $idUsuario);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+function excluirFavoritosDAO($id_usuario, $id_produto){
+    $conexao = conectarBD(); // Função para conectar ao banco de dados
+    if (!$conexao) {
+        die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
+    }
+
+    $sql = "DELETE FROM favoritos WHERE id_usuario = ? AND id_produto = ?";
+    
+    $stmt = $conexao->prepare($sql);
+
+    if (!$stmt) {
+        die("Erro ao preparar a exclusão: " . $conexao->error);
+    }
+
+    $stmt->bind_param("ii", $id_usuario, $id_produto);
+    return $stmt->execute();
+
+}

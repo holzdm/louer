@@ -217,6 +217,24 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
+-- Table `louerbd`.`favoritos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `louerbd`.`favoritos` (
+  `id_usuario` INT(11) NOT NULL,
+  `id_produto` INT(11) NOT NULL,
+  PRIMARY KEY (`id_usuario`, `id_produto`),
+  CONSTRAINT `idusuario_ibfk1`
+    FOREIGN KEY (`id_usuario`)
+    REFERENCES `louerbd`.`usuario`(`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `idproduto_ibfk2`
+    FOREIGN KEY (`id_produto`)
+    REFERENCES `louerbd`.`produto`(`id`)
+    ON DELETE CASCADE
+);
+
+
+-- -----------------------------------------------------
 -- Data for tables 
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -245,7 +263,8 @@ INSERT INTO usuario (nome, tipo, cpf, cidade, telefone, email, senha) VALUES
 -- ---------- Inserir clientes ----------
 INSERT INTO usuario (nome, tipo, cpf, cidade, telefone, email, senha) VALUES
 ('Cliente1', 'Cliente', '55555555555', 'CidadeA', '27999990005', 'cliente1@gmail.com', '123456'),
-('Cliente2', 'Cliente', '66666666666', 'CidadeB', '27999990006', 'cliente2@gmail.com', '123456');
+('Cliente2', 'Cliente', '66666666666', 'CidadeB', '27999990006', 'cliente2@gmail.com', '123456'),
+('vitor', 'Cliente', '16577570728', 'Baixo Guandu', '27998594498', 'vitorholz07@gmail.com', '123456');
 
 -- ---------- Inserir produtos ----------
 -- Produtos do Fornecedor1 (id_usuario = 1)
@@ -317,3 +336,5 @@ INSERT INTO disponibilidades (id_produto, data_disponivel) VALUES
 (8,'2025-09-13'),(8,'2025-09-14'),(8,'2025-09-15'),(8,'2025-09-16');
 COMMIT;
 
+INSERT INTO favoritos (id_usuario, id_produto) VALUES
+(8, 1), (8, 3), (8, 4);
