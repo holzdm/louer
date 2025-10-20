@@ -1,7 +1,7 @@
 <?php
 require_once "ConexaoBD.php";
 
-function inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento)
+function inserirProduto($tipoProduto, $nomeProduto, $imagensFinais, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento)
 {
     $conexao = conectarBD();
 
@@ -52,7 +52,7 @@ function inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds,
     // Pega o código inserido
     $idProduto = mysqli_insert_id($conexao);
 
-    inserirImgs($idProduto, $imagensValidadas);
+    inserirImgs($idProduto, $imagensFinais);
 
     // Insere as tags relacionadas
     if (!inserirTagsHasProduto($tagsIds, $idProduto)) {

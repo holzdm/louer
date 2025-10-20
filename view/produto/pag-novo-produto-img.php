@@ -53,30 +53,19 @@ $novoProduto = $_SESSION['novoProduto'] ?? [];
                             </button>
                         </div>
                     </div>
-
-                    <!-- Galeria (botão + imagens) -->
-                    <div id="preview" class="grid grid-cols-6 gap-4">
-
-                        <!-- Botão de adicionar imagens -->
-                        <div>
-                            <label class="h-30 aspect-square cursor-pointer flex items-center justify-center bg-red-700 hover:bg-red-800 text-white rounded-lg shadow transition-all duration-300">
-                                +
-                                <input type="file" name="imagens[]" id="imagens" class="hidden" multiple accept="image/jpeg,image/png,image/gif">
-                            </label>
-                        </div>
-
-                        <!-- Loop das imagens -->
-                        <?php if (!empty($novoProduto['imagens'])): ?>
-                            <?php foreach ($novoProduto['imagens'] as $img_url): ?>
-                                <div class="relative h-30 aspect-square">
-                                    <img src="<?php echo $img_url ?>" class="object-cover w-full h-full rounded-lg shadow">
-                                    <button type="button" class="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs remove-btn">x</button>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-
-                    </div>
                 </form>
+
+                <!-- Galeria (botão + imagens) -->
+                <div id="preview" class="grid grid-cols-6 gap-4">
+                    <!-- Botão de adicionar imagens -->
+                    <div>
+                        <label for="inputAddImg" class="h-30 aspect-square cursor-pointer flex items-center justify-center bg-red-700 hover:bg-red-800 text-white rounded-lg shadow transition-all duration-300">
+                            +
+                        </label>
+                    </div>
+                    <input type="file" name="imagens[]" id="inputAddImg" multiple accept="image/jpeg,image/png,image/gif" style="display:none;">
+                    <!-- Remova o <div id="imagensPreview"></div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -85,47 +74,61 @@ $novoProduto = $_SESSION['novoProduto'] ?? [];
 
     <!-- SCRIPT -->
     <script>
-        const inputImagens = document.getElementById('imagens');
+        let imagens = [];
+
+        const inputAddImg = document.getElementById('inputAddImg');
         const preview = document.getElementById('preview');
 
-        // Preview para novas imagens
-        inputImagens.addEventListener('change', function(event) {
-            const files = event.target.files;
+        // Botão "+" abre o seletor de arquivos
+        document.querySelector('label[for="inputAddImg"]').addEventListener('click', () => {
+            inputAddImg.click();
+        });
 
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const div = document.createElement("div");
-                    div.classList.add("relative", "w-32", "h-32");
+        // Preview e adição
+        inputAddImg.addEventListener('change', function(e) {
+            for (const file of e.target.files) {
+                imagens.push(file);
+            }
+            atualizarPreview();
+            inputAddImg.value = ""; // Limpa o input para permitir adicionar novamente
+        });
 
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.classList.add("object-cover", "w-full", "h-full", "rounded-lg", "shadow");
+        // Função para atualizar o preview
+        function atualizarPreview() {
+            // Mantém o botão "+" como primeiro filho
+            preview.innerHTML = preview.children[0].outerHTML;
+            imagens.forEach((img, idx) => {
+                const url = URL.createObjectURL(img);
+                const div = document.createElement('div');
+                div.className = "relative h-30 aspect-square";
+                div.innerHTML = `
+            <img src="${url}" class="object-cover w-full h-full rounded-lg shadow">
+            <button type="button" class="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs" onclick="removerImg(${idx})">x</button>
+        `;
+                preview.appendChild(div);
+            });
+        }
 
-                    // Botão de remover
-                    const btn = document.createElement("button");
-                    btn.type = "button";
-                    btn.innerText = "x";
-                    btn.classList.add("absolute", "top-1", "right-1", "bg-red-600", "hover:bg-red-700", "text-white", "rounded-full", "w-6", "h-6", "flex", "items-center", "justify-center", "text-xs", "remove-btn");
-
-                    btn.addEventListener("click", () => {
-                        div.remove();
-                    });
-
-                    div.appendChild(img);
-                    div.appendChild(btn);
-                    preview.appendChild(div);
-                }
-                reader.readAsDataURL(file);
+        // Remoção
+        window.removerImg = function(idx) {
+            imagens.splice(idx, 1);
+            atualizarPreview();
+        }
+        // Ao confirmar, envia todas as imagens via FormData
+        document.getElementById('confirmarProduto').addEventListener('submit', function(e) {
+            if (imagens.length === 0) return; // Se não há imagens, segue normal
+            e.preventDefault();
+            const formData = new FormData(this);
+            imagens.forEach(img => formData.append('imagens[]', img));
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            }).then(res => res.text()).then(resp => {
+                // Redireciona ou mostra mensagem
+                window.location.href = "/louer/view/fornecedor/pag-inicial-fornecedor.php";
             });
         });
 
-        // Remover imagens já carregadas (do PHP/session)
-        document.querySelectorAll('.remove-btn').forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.target.parentElement.remove();
-            });
-        });
 
         // Botão cancelar
         document.getElementById('btnCancelar').addEventListener('click', () => {

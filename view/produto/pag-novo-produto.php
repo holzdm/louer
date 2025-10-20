@@ -5,8 +5,9 @@ if (empty($_SESSION['id'])) {
   header("Location: /louer/view/pag-inicial.php");
   exit;
 }
-
-$novoProduto = $_SESSION['novoProduto'] ?? [];
+if (isset($_SESSION['novoProduto'])){
+  $novoProduto = $_SESSION['novoProduto'];
+}
 
 
 ?>
