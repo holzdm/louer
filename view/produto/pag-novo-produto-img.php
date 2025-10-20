@@ -74,6 +74,7 @@ $novoProduto = $_SESSION['novoProduto'] ?? [];
 
     <!-- SCRIPT -->
     <script>
+<<<<<<< HEAD
         let imagens = [];
 
         const inputAddImg = document.getElementById('inputAddImg');
@@ -129,11 +130,55 @@ $novoProduto = $_SESSION['novoProduto'] ?? [];
             });
         });
 
+=======
+        const inputImagens = document.getElementById('imagens');
+const preview = document.getElementById('preview');
 
-        // Botão cancelar
-        document.getElementById('btnCancelar').addEventListener('click', () => {
-            window.location.href = "/louer/control/ProdutoController.php?acao=cancelarCadastro";
+// Função para atualizar o preview
+function adicionarPreview(file, indexSessao) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const div = document.createElement("div");
+        div.classList.add("relative", "w-32", "h-32");
+
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.classList.add("object-cover", "w-full", "h-full", "rounded-lg", "shadow");
+
+        // Botão de remover
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.innerText = "x";
+        btn.classList.add(
+            "absolute", "top-1", "right-1", "bg-red-600", "hover:bg-red-700",
+            "text-white", "rounded-full", "w-6", "h-6", "flex", "items-center",
+            "justify-center", "text-xs", "remove-btn"
+        );
+
+        btn.addEventListener("click", () => {
+            // Remove do preview
+            div.remove();
+
+            // Remove da sessão via AJAX
+            fetch(`/louer/control/ProdutoController.php?acao=removerImg&nomeImg=${encodeURIComponent(file.name)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status !== "ok") {
+                        console.error("Erro ao remover imagem da sessão:", data.msg);
+                    }
+                });
         });
+
+        div.appendChild(img);
+        div.appendChild(btn);
+        preview.appendChild(div);
+    }
+    reader.readAsDataURL(file);
+}
+
+
+>>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
+
     </script>
 </body>
 

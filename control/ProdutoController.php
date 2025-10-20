@@ -17,8 +17,8 @@ switch ($acao) {
         cadastrarEnderecoProduto($_POST);
         break;
 
-    case 'cadastrarImg':
-        cadastrarImgProduto($_FILES['imagens']);
+    case 'adicionarImagem':
+        adicionarImgProduto($_FILES['imagens']);
         break;
 
     case 'removerImg':
@@ -26,7 +26,7 @@ switch ($acao) {
         break;
 
     case 'cadastrarProdutoFinal':
-        cadastrarProdutoFinal();
+        cadastrarProdutoFinal($_FILES['imagens']);
         break;
 
     case 'cancelarCadastro':
@@ -58,8 +58,14 @@ switch ($acao) {
     case 'excluir':
         excluirProduto($_GET['id'] ?? null);
         break;
+    
+    case 'inserirFavorito':
+        inserirFavorito($_POST);
+        break;
 
 
+    case 'exlcuirFavorito':    
+        excluirFavorito($_POST);
     default:
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
         // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msgErro=" . urlencode("Ação inválida!"));
@@ -133,8 +139,9 @@ function cadastrarEnderecoProduto($dadosPOST)
     header("Location: /louer/view/produto/pag-novo-produto-img.php");
 }
 
-function cadastrarImgProduto($arquivos)
+function adicionarImgProduto($arquivos)
 {
+<<<<<<< HEAD
 
     foreach ($arquivos as $imagem) {
         $msgErro = verificarImagem($imagem);
@@ -149,19 +156,28 @@ function cadastrarImgProduto($arquivos)
         }
     }
     $mensagensErro = [];
+=======
+    $mensagensErro = '';
+
+    if (!isset($_SESSION['novoProduto'])) {
+        $_SESSION['novoProduto'] = [];
+    }
+
+>>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
     if (!isset($_SESSION['novoProduto']['imagens'])) {
         $_SESSION['novoProduto']['imagens'] = [];
     }
-    // Loop de validação
-    for ($i = 0; $i < count($arquivos['name']); $i++) {
+
+    foreach ($arquivos['name'] as $i => $nome) {
         $imagem = [
-            'name' => sanitizeFilename($arquivos['name'][$i]),
+            'name' => sanitizeFilename($nome),
             'type' => $arquivos['type'][$i],
             'tmp_name' => $arquivos['tmp_name'][$i],
             'error' => $arquivos['error'][$i],
             'size' => $arquivos['size'][$i]
         ];
 
+<<<<<<< HEAD
         if ($msgErro) {
             $mensagensErro[] = "Arquivo {$imagem['name']}: $msgErro";
         } else {
@@ -175,11 +191,31 @@ function cadastrarImgProduto($arquivos)
         header("Location:/louer/view/produto/pag-novo-produto-img.php?msgErro=$erroStr");
     } else {
         header("Location:/louer/view/produto/pag-novo-produto-img.php");
+=======
+        $msgErro = validarImagem($imagem);
+
+        if (empty($msgErro)) {
+            $conteudo = file_get_contents($imagem['tmp_name']);
+            $_SESSION['novoProduto']['imagens'][] = [
+                'dados' => $conteudo,
+                'tipo' => $imagem['type'],
+                'nome' => $imagem['name']
+            ];
+        }
+    }
+    
+    if (empty($mensagensErro)){
+        echo json_encode(['status' => 'ok']); // retorna JSON ao JS
+        exit;    
+    }else{
+        echo json_encode(['status' => 'erro', 'msg' => $mensagensErro]); // envia erros
+>>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
     }
 }
 
-function removerImgProduto($dadosPOST)
+function cadastrarProdutoFinal($imagensValidadas)
 {
+<<<<<<< HEAD
     $nomeImg = $dadosPOST['imgIndex'];
 
     // verifica se o array existe e se o índice está definido
@@ -194,6 +230,9 @@ function cadastrarProdutoFinal()
 {
     var_dump($_SESSION['novoProduto']);
     exit;
+=======
+
+>>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
 
     // Operação
 
@@ -208,6 +247,7 @@ function cadastrarProdutoFinal()
         $descricaoProduto = $novoProduto['descricaoProduto'] ?? '';
         $tagsIds = $novoProduto['tagsIds'] ?? [];
         $diasDisponiveis = $novoProduto['diasDisponiveisProduto'] ?? [];
+<<<<<<< HEAD
         $cep = $novoProduto['cepProduto'] ?? '';
         $cidade = $novoProduto['cidadeProduto'] ?? '';
         $bairro = $novoProduto['bairroProduto'] ?? '';
@@ -217,6 +257,22 @@ function cadastrarProdutoFinal()
         $imagensFinais = $novoProduto['imagens'] ?? [];
 
         $np = inserirProduto($tipoProduto, $nomeProduto, $imagensFinais, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
+=======
+        $cep = $novoProduto['cepProduto'] ?? [];
+        $cidade = $novoProduto['cidadeProduto'] ?? [];
+        $bairro = $novoProduto['bairroProduto'] ?? [];
+        $rua = $novoProduto['ruaProduto'] ?? [];
+        $numero = $novoProduto['numeroProduto'] ?? [];
+        $complemento = $novoProduto['complementoProduto'] ?? [];
+     //   $imagensValidadas = $novoProduto['imagens'] ?? [];
+
+
+if (empty($imagensValidadas)) {
+    die("Nenhuma imagem encontrada na sessão!");
+}
+
+        $np = inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
+>>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
         if ($np) {
             unset($_SESSION['novoProduto']);
             header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?msg=Produto Adicionado");
@@ -375,4 +431,40 @@ function excluirProduto($idProduto)
 {
     deleteProduto($idProduto);
     header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
+}
+
+function removerImgProduto($nomeImg)
+{
+    if (!empty($_SESSION['novoProduto']['imagens'])) {
+        foreach ($_SESSION['novoProduto']['imagens'] as $key => $img) {
+            if ($img['nome'] === $nomeImg) {
+                unset($_SESSION['novoProduto']['imagens'][$key]);
+            }
+        }
+        // Reindexa array
+        $_SESSION['novoProduto']['imagens'] = array_values($_SESSION['novoProduto']['imagens']);
+    }
+    echo json_encode(['status' => 'ok']);
+    exit;
+}
+
+function inserirFavorito($dadosPOST){
+$id_produto=$dadosPOST['idProduto'];
+$id_usuario=$_SESSION['id'];
+if(inserirFavoritosDAO($id_usuario, $id_produto)){
+    header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msg=Produto adicionado aos favoritos!");
+    exit;
+}else{
+    header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msgErro=Erro ao adicionar produto aos favoritos!");
+    exit;
+}
+}
+function excluirFavorito($dadosPOST){
+    $id_produto=$dadosPOST['idProduto'];
+    $id_usuario=$_SESSION['id'];
+    if(excluirFavoritosDAO($id_usuario, $id_produto)){
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msg=Produto removido dos favoritos!");
+        exit;
+}
+
 }

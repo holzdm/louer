@@ -103,21 +103,26 @@ if (isset($_SESSION['formData'])) {
           $nome = $registro["nome"];
           $valorDia = $registro["valor_dia"];
 
-          $img = listarUmaImg($idProduto);
-          $srcImg = $img ? $img['url_img'] : '/louer/a-uploads/New-piskel.png';
+          $srcImg = "/louer/a-imagem/image.php?idProduto=" . $idProduto;
+
 
           // $jaFavorito = verificarFavorito($_SESSION['id'], $idProduto);
 
           echo "
       <div >
-        <div class='bg-white rounded-lg overflow-hidden h-60 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300'>
+        <div class='bg-white rounded-lg overflow-hidden h-70 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300'>
             <a href='../control/ProdutoController.php?acao=acessar&id=$idProduto'>
                 <img src='$srcImg' class='w-full h-40 object-cover' alt='Imagem do produto'>
                 <div class='p-2'>
                     <h3 class='text-sm text-gray-800 font-medium truncate'>$nome</h3>
                     <p class='text-gray-600'>R$$valorDia/dia</p>
                 </div>
-            </a> 
+            </a>
+            <form action='../control/ProdutoController.php' method='POST' class='p-2'>
+                                <input type='hidden' name='acao' value='inserirFavorito'>
+                                <input type='hidden' name='idProduto' value='$idProduto'>
+                                <button type='submit' class='text-red-500 hover:underline'>♡</button>
+              </form> 
         </div>
     </div>
     ";

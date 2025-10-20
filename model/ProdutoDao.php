@@ -51,8 +51,14 @@ function inserirProduto($tipoProduto, $nomeProduto, $imagensFinais, $tagsIds, $i
 
     // Pega o código inserido
     $idProduto = mysqli_insert_id($conexao);
+<<<<<<< HEAD
 
     inserirImgs($idProduto, $imagensFinais);
+=======
+    //var_dump($_SESSION['novoProduto']['imagens']);
+    //exit;
+    inserirImgs($idProduto, $imagensValidadas);
+>>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
 
     // Insere as tags relacionadas
     if (!inserirTagsHasProduto($tagsIds, $idProduto)) {
@@ -69,28 +75,36 @@ function inserirProduto($tipoProduto, $nomeProduto, $imagensFinais, $tagsIds, $i
 
 function inserirImgs($idProduto, $imagensValidadas)
 {
-
     $conexao = conectarBD();
 
-
     foreach ($imagensValidadas as $imagem) {
-        // gera um nome único para evitar sobrescrever
-        $nomeArquivo = uniqid() . '_' . basename($imagem['name']);
-        $caminhoDestino = "/louer/a-uploads/$nomeArquivo";
-        $caminho = "../a-uploads/$nomeArquivo";
+        // $dados = $imagem['dados']; // já está em binário
+        // $tipo = $imagem['tipo'];
+        $tipo = "jpg";
 
-        // move arquivo para a pasta uploads
-        if (move_uploaded_file($imagem['tmp_name'], $caminho)) {
-            // insere caminho no banco
-            $sql = "INSERT INTO imagem (url_img, produto_id) VALUES (?, ?)";
-            $stmt = mysqli_prepare($conexao, $sql);
-            mysqli_stmt_bind_param($stmt, "si", $caminhoDestino, $idProduto);
-            mysqli_stmt_execute($stmt) or die("Erro ao inserir imagem: " . mysqli_stmt_error($stmt));
-        } else {
-            die("Erro ao enviar a imagem {$imagem['name']}");
+        // Converter a imagem
+        $tamanhoImg = $imagem["size"]; 
+        $arqAberto = fopen ( $imagem["tmp_name"], "r" );
+        $foto = addslashes( fread ( $arqAberto , $tamanhoImg ) );
+
+        $sql = "INSERT INTO imagem (dados, tipo, produto_id) VALUES (?, ?, ?)";
+        $stmt = mysqli_prepare($conexao, $sql);
+        if (!$stmt) {
+            die("Erro no prepare: " . mysqli_error($conexao));
         }
+
+        // 's' para string (funciona com BLOB pequeno)
+        mysqli_stmt_bind_param($stmt, "bsi", $foto, $tipo, $idProduto);
+
+        if (!mysqli_stmt_execute($stmt)) {
+            die("Erro ao inserir imagem: " . mysqli_stmt_error($stmt));
+        }
+
+        mysqli_stmt_close($stmt);
     }
 }
+
+
 
 // Função para inserir as tags relacionadas ao produto
 function inserirTagsHasProduto($tagsIds, $idProduto)
@@ -288,24 +302,20 @@ function listarUmaImg($idProduto)
 {
     $conexao = conectarBD();
 
-
-    // Prepara a query
-    $sql = "SELECT url_img FROM imagem WHERE produto_id = ? LIMIT 1";
+    $sql = "SELECT dados, tipo FROM imagem WHERE produto_id = ? LIMIT 1";
     $stmt = mysqli_prepare($conexao, $sql);
-    if (!$stmt) {
-        die("Erro na preparação da query: " . mysqli_error($conexao));
-    }
-
     mysqli_stmt_bind_param($stmt, "i", $idProduto);
     mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-    $resultado = mysqli_stmt_get_result($stmt);
-
-    if ($registro = mysqli_fetch_assoc($resultado)) {
-        return $registro; // ['url_img' => ...]
-    } else {
-        return null; // não encontrou imagem
+    if ($row = mysqli_fetch_assoc($result)) {
+        return [
+            'dados' => $row['dados'],
+            'tipo' => $row['tipo']
+        ];
     }
+
+    return null;
 }
 
 function excluirDatasAntigas($idProduto)
@@ -373,23 +383,75 @@ function deleteProduto($idProduto)
 
 function buscarImgs($idProduto)
 {
-    $conexao = conectarBD();
+$conexao = conectarBD();
+$sql = "SELECT dados, tipo FROM imagem WHERE produto_id = ?";
+$stmt = mysqli_prepare($conexao, $sql);
+mysqli_stmt_bind_param($stmt, "i", $idProduto);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
-    $sql = "SELECT url_img FROM imagem WHERE produto_id = ?";
-    $stmt = mysqli_prepare($conexao, $sql);
+if ($row = mysqli_fetch_assoc($result)) {
+    header("Content-Type: " . $row['tipo']);
+    echo $row['dados'];
+} else {
+    http_response_code(404);
+}
+}
+
+function inserirFavoritosDAO($id_usuario, $id_produto){
+    $conexao = conectarBD(); // Função para conectar ao banco de dados
+    if (!$conexao) {
+        die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
+    }
+
+    $sql = "INSERT INTO favoritos (id_usuario, id_produto) VALUES (?, ?)";
+    
+    $stmt = $conexao->prepare($sql);
+
     if (!$stmt) {
-        die("Erro na preparação da query: " . mysqli_error($conexao));
+        die("Erro ao preparar a inserção: " . $conexao->error);
     }
 
-    mysqli_stmt_bind_param($stmt, "i", $idProduto);
-    mysqli_stmt_execute($stmt);
-
-    $resultado = mysqli_stmt_get_result($stmt);
-
-    $imagens = [];
-    while ($registro = mysqli_fetch_assoc($resultado)) {
-        $imagens[] = $registro['url_img'];
+    $stmt->bind_param("ii", $id_usuario, $id_produto);
+    return $stmt->execute();
+}
+function listarFavoritosDAO($idUsuario) {
+    $conexao = conectarBD(); // Função para conectar ao banco de dados
+    if (!$conexao) {
+        die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
     }
 
-    return $imagens; // array de strings com todas as urls
+    $sql = "SELECT p.id, p.nome, p.valor_dia 
+            FROM favoritos f
+            INNER JOIN produto p ON f.id_produto = p.id
+            WHERE f.id_usuario = ?";
+    
+    $stmt = $conexao->prepare($sql);
+
+    if (!$stmt) {
+        die("Erro ao preparar a consulta: " . $conexao->error);
+    }
+
+    $stmt->bind_param("i", $idUsuario);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+function excluirFavoritosDAO($id_usuario, $id_produto){
+    $conexao = conectarBD(); // Função para conectar ao banco de dados
+    if (!$conexao) {
+        die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
+    }
+
+    $sql = "DELETE FROM favoritos WHERE id_usuario = ? AND id_produto = ?";
+    
+    $stmt = $conexao->prepare($sql);
+
+    if (!$stmt) {
+        die("Erro ao preparar a exclusão: " . $conexao->error);
+    }
+
+    $stmt->bind_param("ii", $id_usuario, $id_produto);
+    return $stmt->execute();
+
 }
