@@ -36,36 +36,49 @@ $novoProduto = $_SESSION['novoProduto'] ?? [];
                 <form action="/louer/control/ProdutoController.php" id="confirmarProduto" name="confirmarProduto" method="post" enctype="multipart/form-data" class="space-y-6">
                     <input type="hidden" name="acao" value="cadastrarProdutoFinal">
 
-                    <!-- Botão Cancelar -->
-                    <div class="flex justify-between">
+
+                    <!-- Botao de adicionar imagens -->
+                    <div class="flex items-center">
+                            <label for="images" class="h-16 w-16 rounded-full cursor-pointer flex items-center justify-center bg-red-700 hover:bg-red-800 text-white rounded-full shadow transition-all duration-300">
+                                +
+                            </label>
+                            <input type="file" id="images" name="images[]" accept="image/*" class="hidden" multiple required>
+
+                        <h3 class="text-xl md:text-3xl font-bold text-primary text-center ml-4">Adicione imagens de seu produto:</h3>
+                    </div>
+
+
+
+
+                    <!-- Galeria -->
+                    <div id="preview" class="grid grid-cols-6 gap-4">
+
+                    </div>
+
+
+
+                    <!-- BOTOES CANCELAR, VOLTAR E CONFIRMAR -->
+                    <div class="flex justify-between mt-6">
+                        <!-- Botão Cancelar -->
                         <button type="button" id="btnCancelar" class="px-4 py-2 rounded-md text-gray-700 hover:underline">
                             Cancelar
                         </button>
 
                         <div>
                             <!-- Botão Voltar -->
-                            <button id="btnVoltar" type="button" onclick="history.back()" class="px-4 py-2 rounded-md bg-primary text-white">
+                            <button id="btnVoltar" type="button" onclick="history.back()"
+                                class="px-4 py-2 rounded-md bg-primary text-white">
                                 Voltar
                             </button>
                             <!-- Botão Confirmar -->
-                            <button id="btnConfirmar" type="submit" form="confirmarProduto" class="px-4 py-2 rounded-md bg-primary text-white">
+                            <button id="btnConfirmar" type="submit"
+                                class="px-4 py-2 rounded-md bg-primary text-white">
                                 Confirmar
                             </button>
                         </div>
+
                     </div>
                 </form>
-
-                <!-- Galeria (botão + imagens) -->
-                <div id="preview" class="grid grid-cols-6 gap-4">
-                    <!-- Botão de adicionar imagens -->
-                    <div>
-                        <label for="inputAddImg" class="h-30 aspect-square cursor-pointer flex items-center justify-center bg-red-700 hover:bg-red-800 text-white rounded-lg shadow transition-all duration-300">
-                            +
-                        </label>
-                    </div>
-                    <input type="file" name="imagens[]" id="inputAddImg" multiple accept="image/jpeg,image/png,image/gif" style="display:none;">
-                    <!-- Remova o <div id="imagensPreview"></div> -->
-                </div>
             </div>
         </div>
     </div>
@@ -74,111 +87,36 @@ $novoProduto = $_SESSION['novoProduto'] ?? [];
 
     <!-- SCRIPT -->
     <script>
-<<<<<<< HEAD
-        let imagens = [];
+        // botao cancelar
+        document.getElementById('btnCancelar').addEventListener('click', () => {
+            window.location.href = "/louer/control/ProdutoController.php?acao=cancelarCadastro";
+        });
 
-        const inputAddImg = document.getElementById('inputAddImg');
+        // PREVIEW DE IMAGENS /////////////////////////////
+        const input = document.getElementById('images');
         const preview = document.getElementById('preview');
 
-        // Botão "+" abre o seletor de arquivos
-        document.querySelector('label[for="inputAddImg"]').addEventListener('click', () => {
-            inputAddImg.click();
-        });
+        input.addEventListener('change', () => {
+            preview.innerHTML = '';
+            const files = Array.from(input.files);
+            files.forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+                const img = document.createElement('img');
+                img.alt = file.name;
+                const reader = new FileReader();
+                reader.onload = e => img.src = e.target.result;
+                reader.readAsDataURL(file);
 
-        // Preview e adição
-        inputAddImg.addEventListener('change', function(e) {
-            for (const file of e.target.files) {
-                imagens.push(file);
-            }
-            atualizarPreview();
-            inputAddImg.value = ""; // Limpa o input para permitir adicionar novamente
-        });
+                // envolver a img num card para o grid (recomendado)
+                const card = document.createElement('div');
+                card.className = 'relative w-full h-32 rounded-lg overflow-hidden shadow';
+                img.className = 'object-cover w-full h-full';
+                card.appendChild(img);
 
-        // Função para atualizar o preview
-        function atualizarPreview() {
-            // Mantém o botão "+" como primeiro filho
-            preview.innerHTML = preview.children[0].outerHTML;
-            imagens.forEach((img, idx) => {
-                const url = URL.createObjectURL(img);
-                const div = document.createElement('div');
-                div.className = "relative h-30 aspect-square";
-                div.innerHTML = `
-            <img src="${url}" class="object-cover w-full h-full rounded-lg shadow">
-            <button type="button" class="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs" onclick="removerImg(${idx})">x</button>
-        `;
-                preview.appendChild(div);
-            });
-        }
-
-        // Remoção
-        window.removerImg = function(idx) {
-            imagens.splice(idx, 1);
-            atualizarPreview();
-        }
-        // Ao confirmar, envia todas as imagens via FormData
-        document.getElementById('confirmarProduto').addEventListener('submit', function(e) {
-            if (imagens.length === 0) return; // Se não há imagens, segue normal
-            e.preventDefault();
-            const formData = new FormData(this);
-            imagens.forEach(img => formData.append('imagens[]', img));
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            }).then(res => res.text()).then(resp => {
-                // Redireciona ou mostra mensagem
-                window.location.href = "/louer/view/fornecedor/pag-inicial-fornecedor.php";
+                preview.appendChild(card);
             });
         });
-
-=======
-        const inputImagens = document.getElementById('imagens');
-const preview = document.getElementById('preview');
-
-// Função para atualizar o preview
-function adicionarPreview(file, indexSessao) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const div = document.createElement("div");
-        div.classList.add("relative", "w-32", "h-32");
-
-        const img = document.createElement("img");
-        img.src = e.target.result;
-        img.classList.add("object-cover", "w-full", "h-full", "rounded-lg", "shadow");
-
-        // Botão de remover
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.innerText = "x";
-        btn.classList.add(
-            "absolute", "top-1", "right-1", "bg-red-600", "hover:bg-red-700",
-            "text-white", "rounded-full", "w-6", "h-6", "flex", "items-center",
-            "justify-center", "text-xs", "remove-btn"
-        );
-
-        btn.addEventListener("click", () => {
-            // Remove do preview
-            div.remove();
-
-            // Remove da sessão via AJAX
-            fetch(`/louer/control/ProdutoController.php?acao=removerImg&nomeImg=${encodeURIComponent(file.name)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status !== "ok") {
-                        console.error("Erro ao remover imagem da sessão:", data.msg);
-                    }
-                });
-        });
-
-        div.appendChild(img);
-        div.appendChild(btn);
-        preview.appendChild(div);
-    }
-    reader.readAsDataURL(file);
-}
-
-
->>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
-
+        // //////////////////////////////////////////////
     </script>
 </body>
 

@@ -17,16 +17,12 @@ switch ($acao) {
         cadastrarEnderecoProduto($_POST);
         break;
 
-    case 'adicionarImagem':
-        adicionarImgProduto($_FILES['imagens']);
-        break;
-
     case 'removerImg':
         removerImgProduto($_POST);
         break;
 
     case 'cadastrarProdutoFinal':
-        cadastrarProdutoFinal($_FILES['imagens']);
+        cadastrarProdutoFinal($_FILES['images']);
         break;
 
     case 'cancelarCadastro':
@@ -58,14 +54,20 @@ switch ($acao) {
     case 'excluir':
         excluirProduto($_GET['id'] ?? null);
         break;
-    
+
     case 'inserirFavorito':
         inserirFavorito($_POST);
         break;
 
 
-    case 'exlcuirFavorito':    
+    case 'exlcuirFavorito':
         excluirFavorito($_POST);
+        break;
+
+    case 'listarUmaImg':
+        listarUmaImg($idProduto);
+        break;
+
     default:
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
         // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msgErro=" . urlencode("Ação inválida!"));
@@ -85,9 +87,9 @@ function cadastrarProduto($dadosPOST)
     $msgErro = validarCamposProduto($nomeProduto, $valorProduto, $diasDisponiveisProduto);
 
     // $dadosPOST['diasDisponiveis'] = $_POST['diasDisponiveis'] ?? [];
-    $dadosPOST['tagsIds'] = isset($_POST['arrayTags'])
-        ? array_unique(array_map('intval', $_POST['arrayTags']))
-        : [];
+    $tagsIds = $_POST['arrayTags'] ?? [];        // se nada selecionado, array vazio
+    if (!is_array($tagsIds)) $tagsIds = [$tagsIds]; // segurança se vier só 1 valor
+    $tagsIds = array_map('intval', $tagsIds);    // converte strings para inteiros
 
     $_SESSION['novoProduto']['tipoProduto'] = $tipoProduto;
     $_SESSION['novoProduto']['nomeProduto'] = $nomeProduto;
@@ -95,6 +97,7 @@ function cadastrarProduto($dadosPOST)
     $_SESSION['novoProduto']['descricaoProduto'] = $descricaoProduto;
 
     $_SESSION['novoProduto']['diasDisponiveisProduto'] = $diasDisponiveisProduto;
+    $_SESSION['novoProduto']['tagsProduto'] = $tagsIds;
 
 
     if (!empty($msgErro)) {
@@ -139,100 +142,52 @@ function cadastrarEnderecoProduto($dadosPOST)
     header("Location: /louer/view/produto/pag-novo-produto-img.php");
 }
 
-function adicionarImgProduto($arquivos)
+
+function adicionarImgProduto($files, $idProduto)
 {
-<<<<<<< HEAD
-
-    foreach ($arquivos as $imagem) {
-        $msgErro = verificarImagem($imagem);
-        // gera um nome único para evitar sobrescrever
-        $nomeArquivo = uniqid() . '_' . basename($imagem['name']);
-        $caminhoDestino = "/louer/a-uploads/$nomeArquivo";
-        $caminho = "../a-uploads/$nomeArquivo";
- 
-        // move arquivo para a pasta uploads
-        if (move_uploaded_file($imagem['tmp_name'], $caminho)) {
-            $_SESSION['novoProduto']['imagens'][] = $caminhoDestino;
-        }
-    }
-    $mensagensErro = [];
-=======
-    $mensagensErro = '';
-
-    if (!isset($_SESSION['novoProduto'])) {
-        $_SESSION['novoProduto'] = [];
-    }
-
->>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
-    if (!isset($_SESSION['novoProduto']['imagens'])) {
-        $_SESSION['novoProduto']['imagens'] = [];
-    }
-
-    foreach ($arquivos['name'] as $i => $nome) {
-        $imagem = [
-            'name' => sanitizeFilename($nome),
-            'type' => $arquivos['type'][$i],
-            'tmp_name' => $arquivos['tmp_name'][$i],
-            'error' => $arquivos['error'][$i],
-            'size' => $arquivos['size'][$i]
-        ];
-
-<<<<<<< HEAD
-        if ($msgErro) {
-            $mensagensErro[] = "Arquivo {$imagem['name']}: $msgErro";
-        } else {
-            // se válida, adiciona ao array temporário
-            $_SESSION['novoProduto']['imagens'][] = $imagem;
-        }
-    }
-
-    if (!empty($mensagensErro)) {
-        $erroStr = implode(', ', $mensagensErro);
-        header("Location:/louer/view/produto/pag-novo-produto-img.php?msgErro=$erroStr");
-    } else {
-        header("Location:/louer/view/produto/pag-novo-produto-img.php");
-=======
-        $msgErro = validarImagem($imagem);
-
-        if (empty($msgErro)) {
-            $conteudo = file_get_contents($imagem['tmp_name']);
-            $_SESSION['novoProduto']['imagens'][] = [
-                'dados' => $conteudo,
-                'tipo' => $imagem['type'],
-                'nome' => $imagem['name']
-            ];
-        }
-    }
     
-    if (empty($mensagensErro)){
-        echo json_encode(['status' => 'ok']); // retorna JSON ao JS
-        exit;    
-    }else{
-        echo json_encode(['status' => 'erro', 'msg' => $mensagensErro]); // envia erros
->>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
+
+    // limites e validações
+    $MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB por arquivo
+    $ALLOWED_MIME = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp'
+    ];
+
+
+    foreach ($files["tmp_name"] as $i => $imagens_tmp) {
+    if ($files['error'][$i] !== UPLOAD_ERR_OK) {
+        // ignore ou trate conforme a necessidade
+        continue;
+    }
+
+    $tmpName = $files['tmp_name'][$i];
+    $name = basename($files['name'][$i]);
+    $size = $files['size'][$i];
+    $type = mime_content_type($tmpName);
+
+    // validações
+    if ($size > $MAX_FILE_SIZE) continue;
+    if (!in_array($type, $ALLOWED_MIME)) continue;
+
+    $data = file_get_contents($tmpName);
+    if ($data === false) continue;
+
+    // opção A: salvar no disco (recomendado)
+    $safeName = uniqid() . '-' . preg_replace('/[^A-Za-z0-9.\-_]/', '_', $name);
+    $destPath = __DIR__ . '/../a-imagem/tmpUploads/' . $safeName;
+    if (!move_uploaded_file($tmpName, $destPath)) continue;
+
+
+        inserirImgs($destPath, $type, $idProduto);
     }
 }
 
-function cadastrarProdutoFinal($imagensValidadas)
+
+function cadastrarProdutoFinal($files)
 {
-<<<<<<< HEAD
-    $nomeImg = $dadosPOST['imgIndex'];
-
-    // verifica se o array existe e se o índice está definido
-    if (isset($_SESSION['novoProduto']['imagens'][$nomeImg])) {
-        unset($_SESSION['novoProduto']['imagens'][$nomeImg]);
-    }
-    header("Location: /louer/view/produto/pag-novo-produto-img.php");
-    exit;
-}
-
-function cadastrarProdutoFinal()
-{
-    var_dump($_SESSION['novoProduto']);
-    exit;
-=======
-
->>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
 
     // Operação
 
@@ -245,35 +200,19 @@ function cadastrarProdutoFinal()
         $nomeProduto = $novoProduto['nomeProduto'];
         $valorProduto = $novoProduto['valorProduto'];
         $descricaoProduto = $novoProduto['descricaoProduto'] ?? '';
-        $tagsIds = $novoProduto['tagsIds'] ?? [];
+        $tagsIds = $novoProduto['tagsProduto'] ?? [];
         $diasDisponiveis = $novoProduto['diasDisponiveisProduto'] ?? [];
-<<<<<<< HEAD
         $cep = $novoProduto['cepProduto'] ?? '';
         $cidade = $novoProduto['cidadeProduto'] ?? '';
         $bairro = $novoProduto['bairroProduto'] ?? '';
         $rua = $novoProduto['ruaProduto'] ?? '';
         $numero = $novoProduto['numeroProduto'] ?? '';
         $complemento = $novoProduto['complementoProduto'] ?? '';
-        $imagensFinais = $novoProduto['imagens'] ?? [];
 
-        $np = inserirProduto($tipoProduto, $nomeProduto, $imagensFinais, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
-=======
-        $cep = $novoProduto['cepProduto'] ?? [];
-        $cidade = $novoProduto['cidadeProduto'] ?? [];
-        $bairro = $novoProduto['bairroProduto'] ?? [];
-        $rua = $novoProduto['ruaProduto'] ?? [];
-        $numero = $novoProduto['numeroProduto'] ?? [];
-        $complemento = $novoProduto['complementoProduto'] ?? [];
-     //   $imagensValidadas = $novoProduto['imagens'] ?? [];
-
-
-if (empty($imagensValidadas)) {
-    die("Nenhuma imagem encontrada na sessão!");
-}
-
-        $np = inserirProduto($tipoProduto, $nomeProduto, $imagensValidadas, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
->>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
+        $np = inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
         if ($np) {
+            adicionarImgProduto($files, $np);
+
             unset($_SESSION['novoProduto']);
             header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?msg=Produto Adicionado");
             exit;
@@ -288,20 +227,26 @@ if (empty($imagensValidadas)) {
 
 function acessarProduto($idProduto)
 {
+    
     if (!$idProduto) {
+        
         header("Location: /louer/view/pag-inicial.php?msg=Produto inválido. (ProdutoController)");
         exit;
     }
+    
     $dadosProduto = consultarProduto($idProduto);
     if (isset($dadosProduto)) {
+        
 
         $_SESSION['Produto'] = $dadosProduto;
         header("Location: /louer/view/produto/pag-produto.php");
         exit;
     } else {
+        
         header("Location: /louer/view/pag-inicial.php");
         exit;
     }
+    
 }
 
 function cancelarCadastro()
@@ -448,23 +393,24 @@ function removerImgProduto($nomeImg)
     exit;
 }
 
-function inserirFavorito($dadosPOST){
-$id_produto=$dadosPOST['idProduto'];
-$id_usuario=$_SESSION['id'];
-if(inserirFavoritosDAO($id_usuario, $id_produto)){
-    header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msg=Produto adicionado aos favoritos!");
-    exit;
-}else{
-    header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msgErro=Erro ao adicionar produto aos favoritos!");
-    exit;
+function inserirFavorito($dadosPOST)
+{
+    $id_produto = $dadosPOST['idProduto'];
+    $id_usuario = $_SESSION['id'];
+    if (inserirFavoritosDAO($id_usuario, $id_produto)) {
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msg=Produto adicionado aos favoritos!");
+        exit;
+    } else {
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msgErro=Erro ao adicionar produto aos favoritos!");
+        exit;
+    }
 }
-}
-function excluirFavorito($dadosPOST){
-    $id_produto=$dadosPOST['idProduto'];
-    $id_usuario=$_SESSION['id'];
-    if(excluirFavoritosDAO($id_usuario, $id_produto)){
+function excluirFavorito($dadosPOST)
+{
+    $id_produto = $dadosPOST['idProduto'];
+    $id_usuario = $_SESSION['id'];
+    if (excluirFavoritosDAO($id_usuario, $id_produto)) {
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msg=Produto removido dos favoritos!");
         exit;
-}
-
+    }
 }

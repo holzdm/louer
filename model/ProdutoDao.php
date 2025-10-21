@@ -1,7 +1,7 @@
 <?php
 require_once "ConexaoBD.php";
 
-function inserirProduto($tipoProduto, $nomeProduto, $imagensFinais, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento)
+function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento)
 {
     $conexao = conectarBD();
 
@@ -51,19 +51,12 @@ function inserirProduto($tipoProduto, $nomeProduto, $imagensFinais, $tagsIds, $i
 
     // Pega o código inserido
     $idProduto = mysqli_insert_id($conexao);
-<<<<<<< HEAD
 
-    inserirImgs($idProduto, $imagensFinais);
-=======
-    //var_dump($_SESSION['novoProduto']['imagens']);
-    //exit;
-    inserirImgs($idProduto, $imagensValidadas);
->>>>>>> 51bc78eeab9e099ac2c391ee18705aadcbe53994
 
     // Insere as tags relacionadas
     if (!inserirTagsHasProduto($tagsIds, $idProduto)) {
         die('Erro ao inserir na tabela relacional: ' . mysqli_error($conexao));
-    } // fazer essa forma ou com "or die"?
+    }
 
     if (!inserirDisponibilidades($diasDisponiveis, $idProduto)) {
         die('Erro ao inserir na tabela relacional: ' . mysqli_error($conexao));
@@ -73,35 +66,31 @@ function inserirProduto($tipoProduto, $nomeProduto, $imagensFinais, $tagsIds, $i
     return $idProduto;
 }
 
-function inserirImgs($idProduto, $imagensValidadas)
+function inserirImgs($destPath, $type, $idProduto)
 {
     $conexao = conectarBD();
 
-    foreach ($imagensValidadas as $imagem) {
-        // $dados = $imagem['dados']; // já está em binário
-        // $tipo = $imagem['tipo'];
-        $tipo = "jpg";
+    $conteudo = file_get_contents($destPath);
 
-        // Converter a imagem
-        $tamanhoImg = $imagem["size"]; 
-        $arqAberto = fopen ( $imagem["tmp_name"], "r" );
-        $foto = addslashes( fread ( $arqAberto , $tamanhoImg ) );
 
-        $sql = "INSERT INTO imagem (dados, tipo, produto_id) VALUES (?, ?, ?)";
-        $stmt = mysqli_prepare($conexao, $sql);
-        if (!$stmt) {
-            die("Erro no prepare: " . mysqli_error($conexao));
-        }
-
-        // 's' para string (funciona com BLOB pequeno)
-        mysqli_stmt_bind_param($stmt, "bsi", $foto, $tipo, $idProduto);
-
-        if (!mysqli_stmt_execute($stmt)) {
-            die("Erro ao inserir imagem: " . mysqli_stmt_error($stmt));
-        }
-
-        mysqli_stmt_close($stmt);
+    $sql = "INSERT INTO imagem (dados, tipo, produto_id) VALUES (?, ?, ?)";
+    $stmt = mysqli_prepare($conexao, $sql);
+    if (!$stmt) {
+        die("Erro no prepare: " . mysqli_error($conexao));
     }
+
+    // o primeiro campo será "b" (BLOB)
+    mysqli_stmt_bind_param($stmt, "bsi", $null, $type, $idProduto);
+
+    // envia os dados binários
+    mysqli_stmt_send_long_data($stmt, 0, $conteudo);
+
+    // executa
+    if (!mysqli_stmt_execute($stmt)) {
+        die("Erro ao inserir imagem: " . mysqli_stmt_error($stmt));
+    }
+
+    mysqli_stmt_close($stmt);
 }
 
 
@@ -310,7 +299,7 @@ function listarUmaImg($idProduto)
 
     if ($row = mysqli_fetch_assoc($result)) {
         return [
-            'dados' => $row['dados'],
+            'dados' => base64_encode($row['dados']), // <- converte o binário em base64
             'tipo' => $row['tipo']
         ];
     }
@@ -347,7 +336,8 @@ function updateDatasProduto($idProduto, $data)
     }
 }
 
-function updateDadosProduto($nome, $valorHora, $descricaoProduto, $idProduto) {
+function updateDadosProduto($nome, $valorHora, $descricaoProduto, $idProduto)
+{
     $conexao = conectarBD();
 
     $sql = "UPDATE produto 
@@ -355,7 +345,7 @@ function updateDadosProduto($nome, $valorHora, $descricaoProduto, $idProduto) {
             WHERE id = ?";
 
     $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("sdsi", $nome, $valorHora, $descricaoProduto, $idProduto); 
+    $stmt->bind_param("sdsi", $nome, $valorHora, $descricaoProduto, $idProduto);
     // s = string, d = double (float), i = integer
 
     return $stmt->execute();
@@ -383,29 +373,38 @@ function deleteProduto($idProduto)
 
 function buscarImgs($idProduto)
 {
-$conexao = conectarBD();
-$sql = "SELECT dados, tipo FROM imagem WHERE produto_id = ?";
-$stmt = mysqli_prepare($conexao, $sql);
-mysqli_stmt_bind_param($stmt, "i", $idProduto);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
+    $conexao = conectarBD();
+    $sql = "SELECT dados, tipo FROM imagem WHERE produto_id = ?";
+    $stmt = mysqli_prepare($conexao, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $idProduto);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-if ($row = mysqli_fetch_assoc($result)) {
-    header("Content-Type: " . $row['tipo']);
-    echo $row['dados'];
-} else {
-    http_response_code(404);
-}
+    $imagens = [];
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $imagens[] = [
+            'dados' => base64_encode($row['dados']), // converte o BLOB para base64
+            'tipo' => $row['tipo']
+        ];
+    }
+
+    mysqli_stmt_close($stmt);
+    mysqli_close($conexao);
+
+    return $imagens; // retorna um array com todas as imagens
 }
 
-function inserirFavoritosDAO($id_usuario, $id_produto){
+
+function inserirFavoritosDAO($id_usuario, $id_produto)
+{
     $conexao = conectarBD(); // Função para conectar ao banco de dados
     if (!$conexao) {
         die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
     }
 
     $sql = "INSERT INTO favoritos (id_usuario, id_produto) VALUES (?, ?)";
-    
+
     $stmt = $conexao->prepare($sql);
 
     if (!$stmt) {
@@ -415,7 +414,8 @@ function inserirFavoritosDAO($id_usuario, $id_produto){
     $stmt->bind_param("ii", $id_usuario, $id_produto);
     return $stmt->execute();
 }
-function listarFavoritosDAO($idUsuario) {
+function listarFavoritosDAO($idUsuario)
+{
     $conexao = conectarBD(); // Função para conectar ao banco de dados
     if (!$conexao) {
         die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
@@ -425,7 +425,7 @@ function listarFavoritosDAO($idUsuario) {
             FROM favoritos f
             INNER JOIN produto p ON f.id_produto = p.id
             WHERE f.id_usuario = ?";
-    
+
     $stmt = $conexao->prepare($sql);
 
     if (!$stmt) {
@@ -437,14 +437,15 @@ function listarFavoritosDAO($idUsuario) {
     return $stmt->get_result();
 }
 
-function excluirFavoritosDAO($id_usuario, $id_produto){
+function excluirFavoritosDAO($id_usuario, $id_produto)
+{
     $conexao = conectarBD(); // Função para conectar ao banco de dados
     if (!$conexao) {
         die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
     }
 
     $sql = "DELETE FROM favoritos WHERE id_usuario = ? AND id_produto = ?";
-    
+
     $stmt = $conexao->prepare($sql);
 
     if (!$stmt) {
@@ -453,5 +454,4 @@ function excluirFavoritosDAO($id_usuario, $id_produto){
 
     $stmt->bind_param("ii", $id_usuario, $id_produto);
     return $stmt->execute();
-
 }

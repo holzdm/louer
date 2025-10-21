@@ -116,11 +116,14 @@ if ($dadosProduto) {
                 </button>
 
                 <!-- Container do carrossel -->
+                 <?php require_once "../../model/ProdutoDao.php";
+                 $imagens = buscarImgs($idProduto); ?>
+
                 <div id="carousel" class="overflow-hidden flex-1 mx-2">
                     <div id="carousel-track" class="flex transition-transform duration-300">
-                        <?php foreach ($imgsArray as $img_url): ?>
+                        <?php foreach ($imagens as $img): $src = "data:" . $img['tipo'] . ";base64," . $img['dados']; ?>
                             <div class="flex-shrink-0 mr-4 rounded-lg overflow-hidden">
-                                <img src="<?php echo $img_url ?>" class="h-40 w-auto object-contain">
+                                <img src="<?php echo $src ?>" class="h-40 w-auto object-contain">
                             </div>
                         <?php endforeach; ?>
                     </div>
