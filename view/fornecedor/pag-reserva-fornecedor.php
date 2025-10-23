@@ -48,55 +48,7 @@ if ($dadosReserva) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
 
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#164564',
-                        secondary: '#f0fbfe',
-                    },
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                },
-            },
-        };
-    </script>
-    <style>
-        body {
-            background-color: #f0fbfe;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .input-field {
-            transition: all 0.3s ease;
-        }
-
-        .input-field:focus {
-            border-color: #164564;
-            box-shadow: 0 0 0 2px rgba(22, 69, 100, 0.2);
-        }
-
-        .btn-primary {
-            background-color: #164564;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #0d3854;
-        }
-
-        .toggle-button {
-            transition: all 0.3s ease;
-        }
-
-        .toggle-button.active {
-            background-color: #164564;
-            color: white;
-        }
-    </style>
+    <?php include "../script-style.php"; ?>
 </head>
 
 <body>
@@ -125,11 +77,14 @@ if ($dadosReserva) {
                 </button>
 
                 <!-- Container do carrossel -->
+                <?php require_once "../../model/ProdutoDao.php";
+                 $imagens = buscarImgs($idProduto); ?>
+
                 <div id="carousel" class="overflow-hidden flex-1 mx-2">
                     <div id="carousel-track" class="flex transition-transform duration-300">
-                        <?php foreach ($imgsArray as $img_url): ?>
+                        <?php foreach ($imagens as $img): $src = "data:" . $img['tipo'] . ";base64," . $img['dados']; ?>
                             <div class="flex-shrink-0 mr-4 rounded-lg overflow-hidden">
-                                <img src="<?php echo $img_url ?>" class="h-40 w-auto object-contain">
+                                <img src="<?php echo $src ?>" class="h-40 w-auto object-contain">
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -172,9 +127,9 @@ if ($dadosReserva) {
 
 
         <script>
-            // Carrosel de fotos ////////////////////////////////////////////////////
+           // Carrosel de fotos ////////////////////////////////////////////////////
 
-            const track = document.getElementById('carousel-track');
+           const track = document.getElementById('carousel-track');
             const prev = document.getElementById('prev');
             const next = document.getElementById('next');
             const carousel = document.getElementById('carousel');

@@ -30,6 +30,7 @@ switch ($acao) {
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
         // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msgErro=" . urlencode("Ação inválida!"));
         break;
+
 }
 
 
@@ -105,29 +106,41 @@ function acessarReserva($idReserva)
 
 function acessarReservaComoFornecedor($idReserva)
 {
+    header('Content-Type: application/json');
+
     if (!$idReserva) {
-        header("Location: /louer/view/cliente/pag-inicial-fornecedor.php?msg=Reserva inválida.");
+        echo json_encode(['erro' => 'Reserva inválida']);
         exit;
     }
+
     require_once "../model/ProdutoDao.php";
     require_once "../model/ClienteDao.php";
 
-
     $dadosReserva = consultarReserva($idReserva);
-    $idProduto = $dadosReserva['idProduto'];
-    $dadosProduto = consultarProduto($idProduto);
-    $idCliente = $dadosReserva['idUsuario'];
-    $dadosCliente = consultarCliente($idCliente); 
 
-
-    $_SESSION['Reserva'] = array_merge($dadosProduto, $dadosReserva, $dadosCliente);
-
-
-    if (isset($dadosProduto)) {
-        header("Location: /louer/view/fornecedor/pag-reserva-fornecedor.php");
-        exit;
-    } else {
-        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
+    if (!$dadosReserva) {
+        echo json_encode(['erro' => 'Reserva não encontrada']);
         exit;
     }
+
+    $idProduto = $dadosReserva['idProduto'];
+    $idCliente = $dadosReserva['idUsuario'];
+
+    $dadosProduto = consultarProduto($idProduto);
+    $dadosCliente = consultarCliente($idCliente);
+
+    // Monta resposta com os campos que você precisa no modal
+    $resposta = [
+        'nomeUsuario'   => $dadosCliente['nomeUsuario'],
+        'emailUsuario'  => $dadosCliente['email'],
+        'nome'          => $dadosProduto['nome'],
+        'descricao'     => $dadosProduto['descricao'] ?? '',
+        'dataInicial'   => $dadosReserva['dataInicial'],
+        'dataFinal'     => $dadosReserva['dataFinal'],
+        'valorReserva'  => $dadosReserva['valorReserva'],
+        'status'        => $dadosReserva['status']
+    ];
+
+    echo json_encode($resposta);
+    exit;
 }

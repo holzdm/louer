@@ -48,7 +48,7 @@
                                 <a href='/louer/view/fornecedor/pag-inicial-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
                         } else {
                                 echo "
-                                <a href='/louer/view/fornecedor/pag-cad-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Página do Fornecedor</a>";
+                                <a href='/louer/view/fornecedor/pag-cad-fornecedor.php' class='block px-5 py-1 mb-2  hover:bg-gray-100 '>Quero ser Fornecedor</a>";
                             
                         } ?>
                     </div>

@@ -17,7 +17,14 @@ $res = listarReservas($_SESSION['id']);
         $status = $registro['status'];
 
         $img = listarUmaImg($idProduto);
-        $srcImg = $img ? $img['url_img'] : '/louer/a-uploads/New-piskel.png';
+
+          if ($img) {
+            // monta a URL base64
+            $srcImg = "data:" . $img['tipo'] . ";base64," . $img['dados'];
+          } else {
+            // imagem padrão
+            $srcImg = "/louer/a-uploads/New-piskel.png";
+          }
 
     ?>
         <div class='bg-white rounded-lg overflow-hidden h-60 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300'>
