@@ -18,7 +18,6 @@
 
         $img = listarUmaImg($idProduto);
 
-
           if ($img) {
             // monta a URL base64
             $srcImg = "data:" . $img['tipo'] . ";base64," . $img['dados'];
@@ -30,7 +29,7 @@
     ?>
         <div id="openModal" class='bg-white rounded-lg overflow-hidden h-60 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300' onclick="abrirModal(<?= $idReserva ?>)">
             
-                <img src='<?= $srcImg ?>'
+                <img src='<?php echo $srcImg ?>' class='w-full h-40 object-cover' alt='Imagem do produto'
                     alt='Imagem do produto' class="w-full h-40 object-cover">
                 <div class="p-4">
                     <h3 class="font-bold text-lg"><?= $nomeProduto ?></h3>
