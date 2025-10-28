@@ -453,5 +453,7 @@ function excluirFavoritosDAO($id_usuario, $id_produto)
     }
 
     $stmt->bind_param("ii", $id_usuario, $id_produto);
+
     return $stmt->execute();
+    
 }
