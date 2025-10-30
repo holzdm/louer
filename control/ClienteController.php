@@ -20,7 +20,7 @@ switch ($acao) {
         break;
 
     case 'acessar':
-        acessarCliente();
+        acessarCliente($_GET['pagina'] ?? null);
         break;
 
     case 'alterar':
@@ -136,11 +136,21 @@ function sairCliente()
     exit;
 }
 
-function acessarCliente(){
+function acessarCliente($pagina){
     if (!isset($_SESSION['id'])) {
         header("Location: ../view/pag-inicial.php?msg=Cliente inválido.");
         exit;
     }
+    if ($pagina === 'favoritos') {
+        $idUsuario = $_SESSION['id'];
+
+        $dadosUsuario = consultarCliente($idUsuario);
+        $_SESSION['Usuario'] = $dadosUsuario;
+
+        header("Location: ../view/cliente/pag-ic.php?pagina=favoritos");
+        exit;
+    }
+
     $idUsuario = $_SESSION['id'];
 
     $dadosUsuario = consultarCliente($idUsuario);

@@ -395,13 +395,18 @@ function removerImgProduto($nomeImg)
 
 function inserirFavorito($dadosPOST)
 {
+    if (!isset($_SESSION['id'])) {
+        header("Location: /louer/view/pag-inicial.php?msgErro=Você precisa estar logado para adicionar favoritos!");
+        exit;
+    }
+    
     $id_produto = $dadosPOST['idProduto'];
     $id_usuario = $_SESSION['id'];
     if (inserirFavoritosDAO($id_usuario, $id_produto)) {
-        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msg=Produto adicionado aos favoritos!");
+        header("Location: /louer/view/pag-inicial.php?msg=Produto adicionado aos favoritos!");
         exit;
     } else {
-        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msgErro=Erro ao adicionar produto aos favoritos!");
+        header("Location: /louer/view/pag-inicial.php?msgErro=Erro ao adicionar produto aos favoritos!");
         exit;
     }
 }

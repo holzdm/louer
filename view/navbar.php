@@ -39,7 +39,7 @@
                         <a href="/louer/control/ClienteController.php?acao=acessar" class="block px-5 py-1 mt-2 hover:bg-gray-100 ">Informações da Conta</a>
                         
                         <a href="#" class="block px-5 py-1 hover:bg-gray-100">Notificacões</a>
-                        <a href="/louer/view/cliente/pag-ic.php?pagina=favoritos" class="block px-5 py-1 hover:bg-gray-100">Favoritos</a>
+                        <a href="/louer/control/ClienteController.php?acao=acessar&pagina=favoritos" class="block px-5 py-1 hover:bg-gray-100">Favoritos</a>
                         <a href="/louer/control/ClienteController.php?acao=sair" class="block px-5 py-1 hover:bg-gray-100 text-red-600 ">Sair</a>
 
                         <div class="border-t border-gray-200 my-2 mx-2"></div> <!-- Divisor sem hover -->

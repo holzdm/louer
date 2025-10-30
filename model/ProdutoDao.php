@@ -396,24 +396,30 @@ function buscarImgs($idProduto)
 }
 
 
-function inserirFavoritosDAO($id_usuario, $id_produto)
+function inserirFavoritosDAO($idUsuario, $idProduto)
 {
+    
     $conexao = conectarBD(); // Função para conectar ao banco de dados
     if (!$conexao) {
+        
         die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
     }
 
-    $sql = "INSERT INTO favoritos (id_usuario, id_produto) VALUES (?, ?)";
+    $sql = "INSERT IGNORE INTO favoritos (id_usuario, id_produto) VALUES (?, ?)";
 
     $stmt = $conexao->prepare($sql);
 
     if (!$stmt) {
+        
         die("Erro ao preparar a inserção: " . $conexao->error);
     }
 
-    $stmt->bind_param("ii", $id_usuario, $id_produto);
+    $stmt->bind_param("ii", $idUsuario, $idProduto);
     return $stmt->execute();
+
+
 }
+
 function listarFavoritosDAO($idUsuario)
 {
     $conexao = conectarBD(); // Função para conectar ao banco de dados
