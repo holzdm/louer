@@ -24,6 +24,8 @@ $favoritos = listarFavoritosDAO($idUsuario);
 </head>
 
 <body class="">
+    
+
 <h1 class="text-2xl md:text-3xl font-bold text-primary mb-3">Meus Favoritos</h1>
     <div class="container mx-auto p-4">
         <br>
@@ -43,13 +45,19 @@ $favoritos = listarFavoritosDAO($idUsuario);
                                 <div class="p-2">
                                     <h3 class="text-sm text-gray-800 font-medium truncate"><?= $nome ?></h3>
                                     <p class="text-gray-600">R$<?= $valorDia ?>/dia</p>
-                                    <form action='../../control/ProdutoController.php' method='POST' class='p-2'>
-                                    <input type='hidden' name='acao' value='excluirFavorito'>
-                                    <input type='hidden' name='idProduto' value='$idProduto'>
-                                    <button type='submit' class='text-red-500 hover:underline'>Remover</button>
-                            </form>
+
+                                    <!--  formulario pra mandar o remover-->
+     
+
+
                                 </div>
                             </a>
+                            <form action='../../control/ProdutoController.php' method='POST' class='p-2'>
+                                    <input type='hidden' name='acao' value='excluirFavorito'>
+                                    <input type='hidden' name='idProduto' value="<?= $idProduto ?>">
+                                    
+                                    <button type='submit' class='text-red-500 hover:underline'>Remover</button>
+                                    </form>
                         </div>
                     </div>
                 <?php endwhile; ?>

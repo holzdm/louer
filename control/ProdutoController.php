@@ -60,7 +60,7 @@ switch ($acao) {
         break;
 
 
-    case 'exlcuirFavorito':
+    case 'excluirFavorito':
         excluirFavorito($_POST);
         break;
 
@@ -372,9 +372,10 @@ function alterarDadosProduto($dadosPOST)
     }
 }
 
-function excluirProduto($idProduto)
+function excluirProduto($dadosPOST)
 {
-    deleteProduto($idProduto);
+    $id_produto = $dadosPOST['idProduto'];
+    deleteProduto($id_produto);
     header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
 }
 
@@ -413,9 +414,12 @@ function inserirFavorito($dadosPOST)
 function excluirFavorito($dadosPOST)
 {
     $id_produto = $dadosPOST['idProduto'];
+    $retorno = $dadosPOST['retorno'];
     $id_usuario = $_SESSION['id'];
-    if (excluirFavoritosDAO($id_usuario, $id_produto)) {
-        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-inicial.php') . "?msg=Produto removido dos favoritos!");
+
+    if (excluirFavoritosDAO($id_usuario, $id_produto) ){
+        
+        header("Location: ../view/pag-inicial.php?msg=Produto removido dos favoritos!");
         exit;
     }
 }
