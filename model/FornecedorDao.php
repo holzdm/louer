@@ -1,11 +1,9 @@
 <?php
 
-
-
-
 require_once "ConexaoBD.php";
 
-function inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha) {    
+function inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha)
+{
 
     $conexao = conectarBD();
 
@@ -21,10 +19,10 @@ function inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $se
     $stmt->bind_param("ssssssss", $tipo, $cep, $rua, $bairro, $nEnd, $complemento, $email, $senha);
     $stmt->execute();
     return true;
-    
 }
 
-function pesquisarFornecedor($idFornecedor){
+function pesquisarFornecedor($idFornecedor)
+{
 
     $conexao = conectarBD();
 
@@ -34,13 +32,26 @@ function pesquisarFornecedor($idFornecedor){
     $stmt->execute();
     $res = $stmt->get_result();
 
-    if ($row = $res->fetch_assoc()){
+    if ($row = $res->fetch_assoc()) {
         return $row['nome'];
     }
     return null;
 }
 
+function alterarDadosFornecedor($cep, $bairro, $rua, $nEnd, $complemento, $id)
+{
+    $conexao = conectarBD();
 
+    // Montar SQL
+    $sql = "UPDATE usuario 
+            SET cep = ?, bairro = ?, rua = ?, numero = ?, complemento = ?
+            WHERE id = ?";
 
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("sssisi", $cep, $bairro, $rua, $nEnd, $complemento, $id);
+    $resultado = $stmt->execute();
+    $stmt->close();
+    $conexao->close();
 
-?>
+    return $resultado;
+}

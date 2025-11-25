@@ -149,6 +149,8 @@ if (isset($_SESSION['formData'])) {
           <!-- formulario -->
           <form action="../../control/CadFornecedor.php" method="post">
             <div class="space-y-5">
+              <input type="hidden" name="acao" value="cadastrar">
+
 
               <!-- cep -->
               <div>
