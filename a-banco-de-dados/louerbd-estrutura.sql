@@ -7,13 +7,24 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema louerbd
 -- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema louerbd
--- -----------------------------------------------------
 DROP SCHEMA IF EXISTS `louerbd`;
 CREATE SCHEMA IF NOT EXISTS `louerbd` DEFAULT CHARACTER SET latin1 ;
+
 USE `louerbd` ;
+
+-- -----------------------------------------------------
+-- Criar usuário e dar permissões
+-- -----------------------------------------------------
+
+-- Criação do usuário (substitua a senha pelo que você quiser)
+CREATE USER 'loueruser'@'127.0.0.1' IDENTIFIED BY 'kivicaLOUER';
+
+-- Permissões completas para esse banco de dados
+GRANT ALL PRIVILEGES ON louerbd.* TO 'loueruser'@'127.0.0.1';
+
+-- Aplicar permissões
+FLUSH PRIVILEGES;
+
 
 -- -----------------------------------------------------
 -- Table `louerbd`.`usuario`
