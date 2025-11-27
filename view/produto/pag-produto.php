@@ -38,56 +38,8 @@ if ($dadosProduto) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <?php include "../script-style.php"; ?>
 
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#164564',
-                        secondary: '#f0fbfe',
-                    },
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                },
-            },
-        };
-    </script>
-    <style>
-        body {
-            background-color: #f0fbfe;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .input-field {
-            transition: all 0.3s ease;
-        }
-
-        .input-field:focus {
-            border-color: #164564;
-            box-shadow: 0 0 0 2px rgba(22, 69, 100, 0.2);
-        }
-
-        .btn-primary {
-            background-color: #164564;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #0d3854;
-        }
-
-        .toggle-button {
-            transition: all 0.3s ease;
-        }
-
-        .toggle-button.active {
-            background-color: #164564;
-            color: white;
-        }
-    </style>
 </head>
 
 <body>
@@ -98,11 +50,8 @@ if ($dadosProduto) {
         <?php $fonte = 'produto';
         include '../navbar.php'; ?>
 
-
-
         <!-- notificacao -->
         <?php include '../notificacao.php'; ?>
-
 
         <!-- //////////////////////////////////////////////////////////////////////// -->
         <!-- CONTEUDO -->
@@ -116,8 +65,8 @@ if ($dadosProduto) {
                 </button>
 
                 <!-- Container do carrossel -->
-                 <?php require_once "../../model/ProdutoDao.php";
-                 $imagens = buscarImgs($idProduto); ?>
+                <?php require_once "../../model/ProdutoDao.php";
+                $imagens = buscarImgs($idProduto); ?>
 
                 <div id="carousel" class="overflow-hidden flex-1 mx-2">
                     <div id="carousel-track" class="flex transition-transform duration-300">
@@ -138,75 +87,122 @@ if ($dadosProduto) {
 
             <hr class="w-[100vw] border-t border-gray-300 -mx-4">
 
-            <section class="flex flex-wrap gap-2 mt-3">
+            <div class="flex justify-between w-full mt-6 px-6">
+                <!-- descricao -->
+                <div class="mr-20">
 
-                <?php foreach ($tagsArray as $tag): ?>
-                    <span class="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-700 font-medium">
-                        <?php echo htmlspecialchars($tag); ?>
-                    </span>
-                <?php endforeach; ?>
-            </section>
+                    <section class="flex flex-wrap gap-2 mt-3">
+
+                        <?php foreach ($tagsArray as $tag): ?>
+                            <span class="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-700 font-medium">
+                                <?php echo htmlspecialchars($tag); ?>
+                            </span>
+                        <?php endforeach; ?>
+                    </section>
+
+                    <section class="my-6">
+                        <h2 class="text-2xl text-gray-800 font-bold truncate"><?= htmlspecialchars($nomeProduto) ?></h2>
+                        <p class="mt-2 text-gray-600"><?= nl2br(htmlspecialchars($descricaoProduto)) ?></p>
+                        <p class="mt-1 font-semibold text-gray-600">R$ <?= htmlspecialchars($valorProduto) ?> / dia</p>
+                        <p class="mt-1 text-gray-600 ">Publicado por: <?= htmlspecialchars($nomeFornecedor) ?></p>
+                    </section>
+                </div>
+                <!-- compra -->
+                <div class=" rounded-lg shadow px-4 py-6 bg-[rgba(22,69,100,0.15)] w-96 mr-20">
+
+                    <!-- Formulario solicitacao de reserva -->
+                    <section class="flex flex-col gap-2 items-center">
+
+                        <p class="text-2xl md:text-3xl font-bold text-primary">R$ <?= htmlspecialchars($valorProduto) ?> / dia</p>
+                        <form action="/louer/control/ReservaController.php" method="POST" class="flex flex-col items-center w-full gap-2">
+
+                            <input type="hidden" name="acao" value="solicitar">
+                            <input type="hidden" name="idProduto" value="<?php echo $idProduto ?>">
+                            <input type="hidden" name="valorProduto" id="valorProduto" value="<?php echo $valorProduto ?>">
+
+
+                            <!-- Selecao de intervalo -->
+
+                            <label for="intervalo" class="text-lg font-semibold text-gray-600">Selecione o intervalo:</label>
+                            <input id="intervalo" name="intervalo" type="text"
+                                class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                                placeholder="Escolha as datas" readonly>
+
+
+                            <!-- Botão para abrir o modal da solicitacao de Reserva -->
+                            <?php if (empty($_SESSION['id'])): ?>
+                                <button id="btnSolicitarSemLogin" type="button" class="px-4 py-2 bg-[rgba(22,69,100,0.40)] text-white rounded hover:bg-[rgba(22,69,100,0.80)] transition w-full">
+                                    Solicitar
+                                </button>
+                            <?php else: ?>
+                                <button id="btnSolicitar" type="button" class="px-4 py-2 bg-[rgba(22,69,100,0.40)] text-white rounded hover:bg-[rgba(22,69,100,0.80)] transition w-full">
+                                    Solicitar
+                                </button>
+
+                            <?php endif; ?>
+
+                            <!-- Modal solicitacao de Reserva -->
+                            <div id="modalSolicitar" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+                                <div class="bg-white rounded-lg w-11/12 md:w-3/4 lg:w-2/3 p-6 relative">
+
+                                    <!-- Botão fechar no canto -->
+                                    <button id="fecharModal" type="button" class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
+
+                                    <!-- Conteúdo do modal -->
+                                    <!-- parte superior -->
+                                    <div class="flex justify-between">
+                                        <!-- fotos -->
+                                        <div class="bg-gray-200 rounded-xl overflow-hidden shadow w-1/2 h-60">
+                                            <div class="grid grid-cols-2 grid-rows-2 w-full h-full gap-0.5">
+
+                                                <?php
+                                                $imagens = buscarQuatroImgs($idProduto);
+
+                                                foreach ($imagens as $img): $src = "data:" . $img['tipo'] . ";base64," . $img['dados']; ?>
+                                                    <img src="<?php echo $src ?>" class="w-full h-full object-cover">
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                        <div class="w-1/2">
+                                            <!-- info -->
+                                            <div class="border-b-1 border-[#b2d2df] shadow-[0_2px_3px_-2px_rgba(178,210,223,0.6)] flex justify-center pb-2">
+                                                <h1 class="text-xl text-[#b2d2df] font-bold truncate"><?php echo $nomeProduto ?> </h1>
+                                            </div>
+                                            <div class="flex flex-col items-center p-6 gap-2">
+                                                <p class="text-xl text-gray-600 font-semibold"> Total: R$ <span id="mostrarTotal"></span>
+                                                </p>
+
+                                                <p>
+                                                    <span id="mostrarDataInicial"></span>
+                                                    →
+                                                    <span id="mostrarDataFinal"></span>
+                                                </p>
 
 
 
-            <section class="my-6">
-                <h2 class="text-2xl font-bold"><?= htmlspecialchars($nomeProduto) ?></h2>
-                <p class="mt-2"><?= nl2br(htmlspecialchars($descricaoProduto)) ?></p>
-                <p class="mt-1 font-semibold">R$ <?= htmlspecialchars($valorProduto) ?> / dia</p>
-                <p class="mt-1 text-gray-600">Publicado por: <?= htmlspecialchars($nomeFornecedor) ?></p>
-            </section>
 
+                                                <button id="confirmarSolicitacao" type="submit" class="px-4 py-2 bg-[rgba(22,69,100,0.40)] text-white rounded hover:bg-[rgba(22,69,100,0.80)] transition w-full">
+                                                    Confirmar Solicitação
+                                                </button>
+                                                <p class="mt-1 text-gray-500 text-sm">Você ainda não será cobrado.</p>
 
+                                            </div>
 
-            <!-- Formulario solicitacao de reserva -->
-            <section class="flex flex-col gap-4 max-w-sm mx-auto mt-10">
-                <form action="/louer/control/ReservaController.php" method="POST">
+                                        </div>
+                                    </div>
+                                    <!-- ///////////////////////////////////////////////////////////////// -->
+                                    <!-- parte inferior -->
+                                    <div>
 
-                    <input type="hidden" name="acao" value="solicitar">
-                    <input type="hidden" name="idProduto" value="<?php echo $idProduto ?>">
-                    <input type="hidden" name="valorProduto" value="<?php echo $valorProduto ?>">
+                                    </div>
 
-
-                    <!-- Selecao de intervalo -->
-
-                    <label for="intervalo" class="text-lg font-semibold">Selecione o intervalo</label>
-                    <input id="intervalo" name="intervalo" type="text"
-                        class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Escolha as datas" readonly>
-
-                    <!-- Botão para abrir o modal da solicitacao de Reserva -->
-                    <?php if (empty($_SESSION['id'])): ?>
-                        <button id="btnSolicitarSemLogin" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                            Solicitar
-                        </button>
-                    <?php else: ?>
-                        <button id="btnSolicitar" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                            Solicitar
-                        </button>
-
-                    <?php endif; ?>
-
-                    <!-- Modal solicitacao de Reserva -->
-                    <div id="modalSolicitar" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-                        <div class="bg-white rounded-lg w-11/12 md:w-3/4 lg:w-2/3 p-6 relative">
-
-                            <!-- Botão fechar no canto -->
-                            <button id="fecharModal" type="button" class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
-
-                            <!-- Conteúdo do modal -->
-                            <h2 class="text-2xl font-bold mb-4">Modal Grande</h2>
-                            <p class="mb-4">Conteúdo do seu pop-up.</p>
-
-                            <!-- Botão dentro do modal -->
-                            <div class="flex justify-end">
-
-                                <button id="confirmarSolicitacao" type="submit" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Confirmar Solicitacao</button>
+                                </div>
                             </div>
-
-                        </div>
-                    </div>
-                </form>
-            </section>
+                        </form>
+                        <p class="mt-1 text-gray-500 text-sm">Você ainda não será cobrado.</p>
+                    </section>
+                </div>
+            </div>
         </div>
 
         <!-- footer -->
@@ -238,6 +234,11 @@ if ($dadosProduto) {
                     });
                 }
 
+function formatarDataBR(dataISO) {
+    const [ano, mes, dia] = dataISO.split("-");
+    return `${dia}/${mes}/${ano}`;
+}
+
                 // Solicitar com login
                 on("#btnSolicitar", "click", () => {
                     const intervalo = document.querySelector("#intervalo")?.value;
@@ -245,7 +246,37 @@ if ($dadosProduto) {
                         alert("Por favor, selecione um intervalo de datas antes.");
                         return;
                     }
+
                     document.querySelector("#modalSolicitar")?.classList.remove("hidden");
+
+                    // Separar as datas
+                    let [dataInicial, dataFinal] = intervalo.split(" to ");
+
+                    // Se a segunda data não vier, puxar a mesma
+                    if (!dataFinal || dataFinal.trim() === "") {
+                        dataFinal = dataInicial;
+                    }
+
+                    document.querySelector("#mostrarDataInicial").textContent = formatarDataBR(dataInicial);
+                    document.querySelector("#mostrarDataFinal").textContent = formatarDataBR(dataFinal);
+
+                    // Calcular dias
+                    const diaMs = 1000 * 60 * 60 * 24;
+                    let qtdDias = Math.round(
+                        (new Date(dataFinal) - new Date(dataInicial)) / diaMs
+                    );
+
+                    if (qtdDias === 0) qtdDias = 1; // mesma data = 1 diária
+
+                    // Valor por dia
+                    const valorDia = parseFloat(
+                        document.querySelector("#valorProduto").value.replace(",", ".")
+                    );
+
+                    const total = qtdDias * valorDia;
+
+                    document.querySelector("#mostrarTotal").textContent =
+                        total.toFixed(2).replace(".", ",");
                 });
 
                 // Fechar modal
