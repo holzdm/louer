@@ -307,6 +307,8 @@ function listarUmaImg($idProduto)
     return null;
 }
 
+
+
 function excluirDatasAntigas($idProduto)
 {
     $conexao = conectarBD();
@@ -395,6 +397,29 @@ function buscarImgs($idProduto)
     return $imagens; // retorna um array com todas as imagens
 }
 
+function buscarQuatroImgs($idProduto)
+{
+    $conexao = conectarBD();
+    $sql = "SELECT dados, tipo FROM imagem WHERE produto_id = ? LIMIT 4";
+    $stmt = mysqli_prepare($conexao, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $idProduto);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $imagens = [];
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $imagens[] = [
+            'dados' => base64_encode($row['dados']), // converte o BLOB para base64
+            'tipo' => $row['tipo']
+        ];
+    }
+
+    mysqli_stmt_close($stmt);
+    mysqli_close($conexao);
+
+    return $imagens; // retorna um array com todas as imagens
+}
 
 function inserirFavoritosDAO($idUsuario, $idProduto)
 {
