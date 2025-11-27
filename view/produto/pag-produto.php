@@ -154,7 +154,6 @@ if ($dadosProduto) {
                                         <!-- fotos -->
                                         <div class="bg-gray-200 rounded-xl overflow-hidden shadow w-1/2 h-60">
                                             <div class="grid grid-cols-2 grid-rows-2 w-full h-full gap-0.5">
-
                                                 <?php
                                                 $imagens = buscarQuatroImgs($idProduto);
 
@@ -271,6 +270,8 @@ function formatarDataBR(dataISO) {
                     // Valor por dia
                     const valorDia = parseFloat(
                         document.querySelector("#valorProduto").value.replace(",", ".")
+
+                    
                     );
 
                     const total = qtdDias * valorDia;

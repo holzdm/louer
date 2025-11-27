@@ -33,51 +33,72 @@ switch ($acao) {
 
 }
 
-
 function solicitarReserva($dadosPOST)
 {
-
     $idUsuario = $_SESSION['id'];
     $idProduto = $dadosPOST['idProduto'];
     $intervalo = $dadosPOST['intervalo'] ?? '';
 
-    date_default_timezone_set('America/Sao_Paulo'); // seu timezone local
+    date_default_timezone_set('America/Sao_Paulo');
     $dataSolicitacao = date('Y-m-d');
 
     $valorProduto = $dadosPOST['valorProduto'];
 
+    // ========================
+    // TRATAR INTERVALO
+    // ========================
     if (!empty($intervalo)) {
-        list($dataInicio, $dataFinal) = array_map('trim', explode('to', $intervalo));
+
+        // Se veio intervalo completo "YYYY-MM-DD to YYYY-MM-DD"
+        if (strpos($intervalo, ' to ') !== false) {
+            list($dataInicio, $dataFinal) = array_map('trim', explode(' to ', $intervalo));
+        } else {
+            // apenas 1 data selecionada → 1 diária
+            $dataInicio = trim($intervalo);
+            $dataFinal  = trim($intervalo);
+        }
+
     } else {
-        // Se estiver vazio, usar a data de hoje como padrão
+        // Se estiver vazio, usar a data de hoje
         $dataHoje = date('Y-m-d');
         $dataInicio = $dataHoje;
         $dataFinal = $dataHoje;
     }
 
-    // calculo valor da reserva
-
+    // ========================
+    // CORRIGIR ORDEM SE NECESSÁRIO
+    // ========================
     if (strtotime($dataFinal) < strtotime($dataInicio)) {
         $temp = $dataFinal;
         $dataFinal = $dataInicio;
         $dataInicio = $temp;
     }
 
-
+    // ========================
+    // CALCULAR DIAS
+    // ========================
     $Inicio = new DateTime($dataInicio);
     $Final = new DateTime($dataFinal);
 
     $dias = $Inicio->diff($Final)->days + 1;
 
-    $valorReserva = $dias * $valorProduto;
+    // ========================
+    // CALCULAR VALOR
+    // ========================
+    $valorReserva = $dias * floatval(str_replace(',', '.', $valorProduto));
 
-
+    // ========================
+    // INSERIR NO BANCO
+    // ========================
     if (inserirSolicitacaoReserva($idUsuario, $idProduto, $valorReserva, $dataInicio, $dataFinal, $dataSolicitacao)) {
         header("Location: ../view/produto/pag-produto.php?msg=Solicitação de reserva enviada!");
         exit;
     }
+
     header("Location: ../view/produto/pag-produto.php?msg=Não foi possivel realizar a solicitação.");
 }
+
+
 function acessarReserva($idReserva)
 {
 

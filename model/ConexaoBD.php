@@ -3,7 +3,7 @@
 static $conexao;
 
 function conectarBD(){
-    $conexao = mysqli_connect('127.0.0.1','loueruser','kivicaLOUER','louerbd');
+    $conexao = mysqli_connect('127.0.0.1','root','','louerbd');
 
     //Se falhar:
 	
