@@ -25,63 +25,7 @@ if (isset($_SESSION['formData'])) {
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-  <!-- <link rel="stylesheet" href="styles.css?"> -->
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
-  <!-- <script src="https://kit.fontawesome.com/414a446042.js" crossorigin="anonymous"></script> -->
-  <!-- <script src="script.js" defer></script> -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#164564',
-            secondary: '#f0fbfe',
-          },
-          fontFamily: {
-            sans: ['Poppins', 'sans-serif'],
-          },
-        },
-      },
-    };
-  </script>
-  <style>
-    body {
-      background-color: #f0fbfe;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .input-field {
-      transition: all 0.3s ease;
-    }
-
-    .input-field:focus {
-      border-color: #164564;
-      box-shadow: 0 0 0 2px rgba(22, 69, 100, 0.2);
-    }
-
-    .btn-primary {
-      background-color: #164564;
-      transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-      background-color: #0d3854;
-    }
-
-    .toggle-button {
-      transition: all 0.3s ease;
-    }
-
-    .toggle-button.active {
-      background-color: #164564;
-      color: white;
-    }
-
-    .disableTeste{
-      pointer-events: none;
-      cursor: default;
-    }
-  </style>
+  <? include 'script-style.php'; ?>
 </head>
 
 <body>

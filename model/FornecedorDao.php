@@ -55,3 +55,21 @@ function alterarDadosFornecedor($cep, $bairro, $rua, $nEnd, $complemento, $id)
 
     return $resultado;
 }
+
+function excluirDadosFornecedor($id)
+{
+    $conexao = conectarBD();
+
+    // Montar SQL
+    $sql = "UPDATE usuario 
+            SET tipo = 'Cliente', cep = NULL, bairro = NULL, rua = NULL, numero = NULL, complemento = NULL
+            WHERE id = ?";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $resultado = $stmt->execute();
+    $stmt->close();
+    $conexao->close();
+
+    return $resultado;
+}

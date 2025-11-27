@@ -26,9 +26,9 @@ switch ($acao) {
     case 'alterar':
         alterarCliente($_POST);
         break;
-    // case 'excluir':
-    //     excluirCliente($_GET['id'] ?? null);
-    //     break;
+     case 'excluir':
+         excluirCliente();
+         break;
 
     default:
         // volta para a pagina anterior (se existir) e entrega a msg de Erro
@@ -185,6 +185,22 @@ function alterarCliente($dadosPOST){
             exit;
         }
         header("Location:../view/cliente/pag-ic.php?msgErro=Não foi possível alterar.");
+        exit;
+    }
+}
+
+function excluirCliente(){
+    $id = $_SESSION['id'];
+
+    if(excluirDadosCliente($id)){
+        // destruir a sessão e redirecionar para a página inicial
+        session_destroy();
+
+
+        header("Location: /louer/view/pag-inicial.php?msg=Sua conta foi excluída com sucesso.");
+        exit;
+    } else {
+        header("Location: /louer/view/pag-inicial.php?msgErro=Não foi possível excluir sua conta.");
         exit;
     }
 }

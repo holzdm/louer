@@ -34,10 +34,16 @@
             <input type="hidden" id="terms" name="terms" class="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" required />
         </div>
 
-        <div>
+        <div >
             <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium">
                 Alterar Dados
             </button>
+            <br><br>
+            <a href="/louer/control/CadFornecedor.php?acao=excluir"
+                class="bg-red-800 block text-center mt-2 w-full py-3 px-4 rounded-lg text-white font-medium transition-all duration-300 ease hover:bg-red-900">
+                Deixar de ser um fornecedor
+            </a>
+
         </div>
     </div>
 </form>

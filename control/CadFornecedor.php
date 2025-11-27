@@ -20,6 +20,10 @@ switch ($acao) {
         acessarFornecedor();
         break;
 
+        case 'excluir':
+            excluirFornecedor();
+            break;
+
     default:
         // volta para a pagina anterior (se existir) e entrega a msg de Erro
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msg=" . urlencode("Ação inválida!"));
@@ -113,4 +117,27 @@ function alterarFornecedor($dadosPOST)
     }
     header("Location:/louer/view/fornecedor/pag-inicial-fornecedor.php?msgErro=$msgErro");
         exit;
+}
+
+function excluirFornecedor(){
+    $id = $_SESSION['id'];
+
+
+
+    if(excluirDadosFornecedor($id)){
+        // destruir a sessão e redirecionar para a página inicial
+        $_SESSION['tipo'] = 'Cliente';
+        unset($_SESSION['cep']);
+        unset($_SESSION['bairro']);
+        unset($_SESSION['rua']);
+        unset($_SESSION['numero']);
+        unset($_SESSION['complemento']);
+
+
+        header("Location: /louer/view/pag-inicial.php?msg=Sua conta de fornecedor foi excluída com sucesso.");
+        exit;
+    } else {
+        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?msgErro=Não foi possível excluir sua conta de fornecedor.");
+        exit;
+    }
 }

@@ -39,6 +39,11 @@
             <button type="submit" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium">
                 Alterar Dados
             </button>
+            <br><br>
+            <a href="/louer/control/ClienteController.php?acao=excluir"
+                class="bg-red-800 block text-center mt-2 w-full py-3 px-4 rounded-lg text-white font-medium transition-all duration-300 ease hover:bg-red-900">
+                Excluir Conta
+            </a>
         </div>
     </div>
 </form>

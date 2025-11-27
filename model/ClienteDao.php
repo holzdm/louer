@@ -109,4 +109,20 @@ function consultarCliente($idUsuario){
     }
     return null;
 }
+
+function excluirDadosCliente(){
+    $conexao = conectarBD();
+
+    // Montar SQL
+    $sql = "DELETE FROM usuario WHERE id = ?";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $_SESSION['id']);
+    $resultado = $stmt->execute();
+    $stmt->close();
+    $conexao->close();
+
+    return $resultado;
+}
 ?>
+
