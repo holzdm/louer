@@ -164,31 +164,38 @@ if ($dadosProduto) {
                                                 <?php endforeach; ?>
                                             </div>
                                         </div>
-                                        <div class="w-1/2">
-                                            <!-- info -->
-                                            <div class="border-b-1 border-[#b2d2df] shadow-[0_2px_3px_-2px_rgba(178,210,223,0.6)] flex justify-center pb-2">
-                                                <h1 class="text-xl text-[#b2d2df] font-bold truncate"><?php echo $nomeProduto ?> </h1>
+                                        <!-- INFORMAÇÕES À DIREITA -->
+                                        <div class="md:w-1/2 w-full p-6">
+
+                                            <!-- Título -->
+                                            <div class="border-b border-[#b2d2df] shadow-[0_3px_5px_-3px_rgba(178,210,223,0.7)] pb-2 text-center">
+                                                <h1 class="text-2xl font-bold text-[#164564] truncate">
+                                                    <?= $nomeProduto ?>
+                                                </h1>
                                             </div>
-                                            <div class="flex flex-col items-center p-5 gap-2">
-                                                <p class="text-xl text-gray-600 font-semibold"> Total: R$ <span id="mostrarTotal"></span>
+
+                                            <!-- Informações principais -->
+                                            <div class="flex flex-col items-center gap-4 mt-2">
+
+                                                <p class="text-xl text-gray-700 font-semibold">
+                                                    Total: R$ <span id="mostrarTotal"></span>
                                                 </p>
-                                                <div class="border border-gray-300 py-2 px-4 rounded-lg">
-                                                    <p>
+
+                                                <div class="border border-gray-300 py-2 px-5 rounded-lg shadow-sm bg-white">
+                                                    <p class="text-gray-700 font-medium">
                                                         <span id="mostrarDataInicial"></span>
-                                                        →
+                                                        &nbsp;→&nbsp;
                                                         <span id="mostrarDataFinal"></span>
                                                     </p>
                                                 </div>
 
-
-
-
-
-                                                <button id="confirmarSolicitacao" type="submit" class="px-4 py-2 bg-[rgba(22,69,100,0.40)] text-white rounded hover:bg-[rgba(22,69,100,0.80)] transition w-full">
+                                                <button id="confirmarSolicitacao" type="submit"
+                                                    class="px-6 py-3 bg-[rgba(22,69,100,0.55)] text-white rounded-lg
+                        hover:bg-[rgba(22,69,100,0.75)] transition-all shadow-md w-full font-semibold">
                                                     Confirmar Solicitação
                                                 </button>
-                                                <p class="mt-1 text-gray-500 text-sm">Você ainda não será cobrado.</p>
 
+                                                <p class="text-gray-500 text-sm -mt-2">Você ainda não será cobrado.</p>
                                             </div>
 
                                         </div>

@@ -82,6 +82,29 @@ $res = listarReservas($_SESSION['id']);
                     <p class="text-xl text-gray-600 font-bold mt-2">Total: ${data.valorReserva}</p>
 
       `;
+                    // 👉 Mostrar botões somente se a reserva estiver "Solicitada"
+                    if (data.status === "Aprovada") {
+                        modalContent.innerHTML += `
+      <div class="flex justify-end gap-3 mt-4">
+
+        <!-- pagar -->
+        <a href="/louer/view/cliente/pag-pagamento.php?idReserva=${data.idReserva}" class="px-4 py-2 bg-green-300 rounded hover:bg-green-400">
+            Realizar Pagamento
+          </a>
+
+        <!-- Cancelar -->
+        <form action="/louer/control/ReservaController.php" method="post">
+          <input type="hidden" name="acao" value="cancelar">
+          <input type="hidden" name="idReserva" value="${data.idReserva}">
+          <button type="submit"
+            class="px-4 py-2 bg-red-300 rounded hover:bg-red-400">
+            Cancelar
+          </button>
+        </form>
+
+      </div>
+    `;
+                    }
                 })
                 .catch(() => {
                     modalContent.innerHTML = `<p class="text-red-500">Erro ao carregar dados da reserva.</p>`;

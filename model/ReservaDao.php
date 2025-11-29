@@ -70,3 +70,21 @@ function listarReservasFornecedor($idFornecedor)
 
     return $res; 
 }
+
+function mudarStatusReserva($status, $idReserva){
+    $conexao = conectarBD();
+
+    $sql = "UPDATE reserva 
+            SET status = ?
+            WHERE id = ?";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("si", $status, $idReserva);
+
+    if (!$stmt->execute()) {
+        return false;
+    }
+
+    // retorna true SE realmente alterou a linha
+    return $stmt->affected_rows > 0;
+}

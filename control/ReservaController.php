@@ -22,9 +22,17 @@ switch ($acao) {
         acessarReservaComoFornecedor($_GET['id'] ?? null);
         break;
 
-    // case 'excluir':
-    //     excluirCliente($_GET['id'] ?? null);
-    //     break;
+    case 'aceitar':
+        aceitarSolicitacao($_POST['idReserva'] ?? null);
+        break;
+
+    case 'recusar':
+        recusarSolicitacao($_POST['idReserva'] ?? null);
+        break;
+
+    case 'cancelar':
+        cancelarReserva($_POST['idReserva'] ?? null);
+        break;
 
     default:
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
@@ -124,6 +132,7 @@ function acessarReserva($idReserva)
 
     // Monta resposta com os campos que você precisa no modal
     $resposta = [
+        'idReserva'   => $dadosReserva['idReserva'],
         'idProduto'   => $dadosProduto['idProduto'],
         'nomeProduto'   => $dadosProduto['nome'],
         'valorDiaria'  => $dadosProduto['valor'],
@@ -178,4 +187,46 @@ function acessarReservaComoFornecedor($idReserva)
 
     echo json_encode($resposta);
     exit;
+}
+
+function aceitarSolicitacao($idReserva)
+{
+    if (empty($idReserva)) {
+        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?pagina=minhas-reservas&msgErro=Não foi possível localizar a reserva.");
+        exit;
+    }
+
+    $status = "Aprovada";
+
+    if (mudarStatusReserva($status, $idReserva)) {
+        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?pagina=minhas-reservas&msg=Solicitação aceita!");
+        exit;
+    }
+}
+
+function recusarSolicitacao($idReserva)
+{
+    if (empty($idReserva)) {
+        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?pagina=minhas-reservas&msgErro=Não foi possível localizar a reserva.");
+        exit;
+    }
+    $status = "Recusada";
+
+    if (mudarStatusReserva($status, $idReserva)) {
+        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?pagina=minhas-reservas&msg=Solicitação Recusada!");
+        exit;
+    }
+}
+
+function cancelarReserva($idReserva){
+    if (empty($idReserva)) {
+        header("Location: /louer/view/cliente/pag-ic.php?pagina=meus-alugueis&msgErro=Não foi possível localizar a reserva.");
+        exit;
+    }
+    $status = "Cancelada";
+
+    if (mudarStatusReserva($status, $idReserva)){
+        header("Location: /louer/view/cliente/pag-ic.php?pagina=meus-alugueis&msg=Reserva Cancelada!");
+        exit;
+    }
 }
