@@ -10,13 +10,16 @@ if ($dadosReserva) {
     $tipo = $dadosReserva['tipo'];
     $descricaoProduto = $dadosReserva['descricao'];
     $nomeFornecedor = $dadosReserva['nomeFornecedor'];
-    $descricao = $dadosReserva['descricao'];
+    $tagsArray = $dadosReserva['tagsArray'];
+    $valorDiaria = $dadosReserva['valor'];
 
 
     $dataInicial = $dadosReserva['dataInicial']; // sem uso 
     $dataFinal = $dadosReserva['dataFinal'];  // sem uso 
     $valorReserva = $dadosReserva['valorReserva'];
     $status = $dadosReserva['status'];
+
+    $quantDias = $valorReserva / $valorDiaria;
 } else {
     // Redirecionar ou mostrar erro se não houver produto
     header("Location: pag-ic.php?msg=Reserva não encontrado.");
@@ -38,140 +41,172 @@ if ($dadosReserva) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <?php include "../script-style.php"; ?>
 
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#164564',
-                        secondary: '#f0fbfe',
-                    },
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                },
-            },
-        };
-    </script>
-    <style>
-        body {
-            background-color: #f0fbfe;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .input-field {
-            transition: all 0.3s ease;
-        }
-
-        .input-field:focus {
-            border-color: #164564;
-            box-shadow: 0 0 0 2px rgba(22, 69, 100, 0.2);
-        }
-
-        .btn-primary {
-            background-color: #164564;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #0d3854;
-        }
-
-        .toggle-button {
-            transition: all 0.3s ease;
-        }
-
-        .toggle-button.active {
-            background-color: #164564;
-            color: white;
-        }
-    </style>
 </head>
 
 <body>
 
     <div class="min-h-screen flex flex-col pt-24">
+
         <!-- Navbar -->
-            <?php $fonte = 'cliente'; include '../navbar.php'; ?>
-
-
+        <?php $fonte = 'produto';
+        include '../navbar.php'; ?>
 
         <!-- notificacao -->
-        <?php if (isset($_GET['msg'])): ?>
-            <div id="notificacao" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 fade-in">
-                <div class="bg-white border border-orange-300 text-orange-600 rounded-lg p-4 shadow-lg flex items-start max-w-md w-full">
-                    <svg class="w-6 h-6 text-orange-600 mt-1 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 14a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm1-8h-2v6h2V8z" />
-                    </svg>
-                    <div>
-                        <!-- <p class="font-medium text-sm">Erro no cadastro</p>  Tirei pra poder receber varias mensagens, n so as de erro de cadastro -->
-                        <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msg']) ?></p>
-                    </div>
-                </div>
-            </div>
-
-            <style>
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translate(-50%, -10px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translate(-50%, 0);
-                    }
-                }
-
-                @keyframes fadeOut {
-                    from {
-                        opacity: 1;
-                        transform: translate(-50%, 0);
-                    }
-
-                    to {
-                        opacity: 0;
-                        transform: translate(-50%, -10px);
-                    }
-                }
-
-                .fade-in {
-                    animation: fadeIn 0.4s ease-out forwards;
-                }
-
-                .fade-out {
-                    animation: fadeOut 0.4s ease-in forwards;
-                }
-            </style>
-
-            <script>
-                setTimeout(() => {
-                    const notif = document.getElementById('notificacao');
-                    if (notif) {
-                        notif.classList.remove('fade-in');
-                        notif.classList.add('fade-out');
-                        setTimeout(() => notif.remove(), 500);
-                    }
-                }, 4000);
-            </script>
-        <?php endif; ?>
-
+        <?php include '../notificacao.php'; ?>
 
         <!-- //////////////////////////////////////////////////////////////////////// -->
-        <!-- Informacoes da Reserva -->
+        <!-- CONTEUDO -->
+        <div class="mx-[3%] my-[2%]">
 
-        <h2> <?php echo $nomeProduto ?> </h2>
-        <br>
-        <h3> <?php echo $descricao ?> </h3>
-        <h3> <?php echo $valorReserva ?> </h3>
-        <h3> Puplicado por: <?php echo $nomeFornecedor ?> </h3>
-        <h3> <?php echo $dataInicial ?> </h3>
-        <h3> <?php echo $dataFinal ?> </h3>
-        <h3> <?php echo $status ?> </h3>
+            <section class="flex items-center w-full max-w-5xl mx-auto">
+                <!-- Botão esquerdo -->
+                <button id="prev"
+                    class="text-gray-700 text-2xl p-2 transition-transform duration-200 hover:scale-125 disabled:text-gray-400 disabled:cursor-not-allowed">
+                    ◀
+                </button>
 
-        
+                <!-- Container do carrossel -->
+                <?php require_once "../../model/ProdutoDao.php";
+                $imagens = buscarImgs($idProduto); ?>
+
+                <div id="carousel" class="overflow-hidden flex-1 mx-2">
+                    <div id="carousel-track" class="flex transition-transform duration-300">
+                        <?php foreach ($imagens as $img): $src = "data:" . $img['tipo'] . ";base64," . $img['dados']; ?>
+                            <div class="flex-shrink-0 mr-4 rounded-lg overflow-hidden">
+                                <img src="<?php echo $src ?>" class="h-40 w-auto object-contain">
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <!-- Botão direito -->
+                <button id="next"
+                    class="text-gray-700 text-2xl p-2 transition-transform duration-200 hover:scale-125 disabled:text-gray-400 disabled:cursor-not-allowed">
+                    ▶
+                </button>
+            </section>
+
+            <hr class="w-[100vw] border-t border-gray-300 -mx-4">
+
+            <div class="flex justify-between  mt-6 px-6">
+                <!-- descricao -->
+                <div class="mr-20 w-2/5">
+
+                    <section class="flex flex-wrap gap-2 mt-3">
+
+                        <?php foreach ($tagsArray as $tag): ?>
+                            <span class="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-700 font-medium">
+                                <?php echo htmlspecialchars($tag); ?>
+                            </span>
+                        <?php endforeach; ?>
+                    </section>
+
+                    <section>
+                        <h2 class="text-2xl text-gray-800 font-bold truncate"><?= htmlspecialchars($nomeProduto) ?></h2>
+                        <p class="mt-2 text-gray-600"><?= nl2br(htmlspecialchars($descricaoProduto)) ?></p>
+                        <p class="mt-1 text-gray-600 underline decoration-gray-600 decoration-1">Publicado por: <?= htmlspecialchars($nomeFornecedor) ?></p>
+                    </section>
+                </div>
+                <!-- compra -->
+                <div class=" rounded-lg shadow p-3 bg-[rgba(22,69,100,0.15)] w-3/5 mr-20 gap-2 mt-3">
+                    
+
+                </div>
+            </div>
+        </div>
+
+        <!-- footer -->
+        <?php $fonte = 'produto';
+        include '../footer.php'; ?>
+
+
+        <script>
+            // Carrosel de fotos ////////////////////////////////////////////////////
+
+            const track = document.getElementById('carousel-track');
+            const prev = document.getElementById('prev');
+            const next = document.getElementById('next');
+            const carousel = document.getElementById('carousel');
+
+            let scrollAmount = 0;
+
+            // Atualiza estado das setas
+            function updateButtons() {
+                const maxScroll = track.scrollWidth - carousel.offsetWidth;
+                prev.disabled = scrollAmount <= 0;
+                next.disabled = scrollAmount >= maxScroll;
+            }
+
+            // Calcula largura de cada item (incluindo margin)
+            function getItemWidth() {
+                const item = track.querySelector('div');
+                return item.offsetWidth + parseInt(getComputedStyle(item).marginRight);
+            }
+
+            // Clique nas setas
+            next.addEventListener('click', () => {
+                const maxScroll = track.scrollWidth - carousel.offsetWidth;
+                scrollAmount += getItemWidth();
+                if (scrollAmount > maxScroll) scrollAmount = maxScroll;
+                track.style.transform = `translateX(-${scrollAmount}px)`;
+                updateButtons();
+            });
+
+            prev.addEventListener('click', () => {
+                scrollAmount -= getItemWidth();
+                if (scrollAmount < 0) scrollAmount = 0;
+                track.style.transform = `translateX(-${scrollAmount}px)`;
+                updateButtons();
+            });
+
+            // Drag com mouse/touch
+            let isDragging = false;
+            let startX;
+            let currentTranslate = 0;
+
+            carousel.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.pageX + scrollAmount;
+            });
+
+            carousel.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                scrollAmount = startX - e.pageX;
+                const maxScroll = track.scrollWidth - carousel.offsetWidth;
+                if (scrollAmount < 0) scrollAmount = 0;
+                if (scrollAmount > maxScroll) scrollAmount = maxScroll;
+                track.style.transform = `translateX(-${scrollAmount}px)`;
+                updateButtons();
+            });
+
+            carousel.addEventListener('mouseup', () => isDragging = false);
+            carousel.addEventListener('mouseleave', () => isDragging = false);
+
+            // Touch events
+            carousel.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                startX = e.touches[0].pageX + scrollAmount;
+            });
+
+            carousel.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                scrollAmount = startX - e.touches[0].pageX;
+                const maxScroll = track.scrollWidth - carousel.offsetWidth;
+                if (scrollAmount < 0) scrollAmount = 0;
+                if (scrollAmount > maxScroll) scrollAmount = maxScroll;
+                track.style.transform = `translateX(-${scrollAmount}px)`;
+                updateButtons();
+            });
+
+            carousel.addEventListener('touchend', () => isDragging = false);
+
+            // Inicial
+            updateButtons();
+
+            // ////////////////////////////////////////////////////////////////////////
+        </script>
 
 
 

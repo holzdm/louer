@@ -82,7 +82,7 @@ function abrirModal(idReserva) {
       }
 
       modalContent.innerHTML = `
-        <p><strong>Cliente:</strong> ${data.nomeUsuario}</p>
+        <p><strong></strong> ${data.nomeUsuario}</p>
         <p><strong>Email:</strong> ${data.emailUsuario}</p>
         <p><strong>Produto:</strong> ${data.nome}</p>
         <p><strong>Data Inicial:</strong> ${data.dataInicial}</p>

@@ -13,6 +13,8 @@ if ($dadosProduto) {
     $nomeFornecedor = $dadosProduto['nomeFornecedor'];
     $tagsArray = $dadosProduto['tagsArray'];
     $imgsArray = $dadosProduto['imgsArray'];
+    $datasDisponiveis = $dadosProduto['datas'];
+    $datasDisponiveis = json_encode($datasDisponiveis);
 } else {
     // Redirecionar ou mostrar erro se não houver produto
     header("Location: ../pag-inicial.php?msg=Produto não encontrado.");
@@ -104,7 +106,7 @@ if ($dadosProduto) {
                         <h2 class="text-2xl text-gray-800 font-bold truncate"><?= htmlspecialchars($nomeProduto) ?></h2>
                         <p class="mt-2 text-gray-600"><?= nl2br(htmlspecialchars($descricaoProduto)) ?></p>
                         <p class="mt-1 font-semibold text-gray-600">R$ <?= htmlspecialchars($valorProduto) ?> / dia</p>
-                        <p class="mt-1 text-gray-600 ">Publicado por: <?= htmlspecialchars($nomeFornecedor) ?></p>
+                        <p class="mt-1 text-gray-600 underline decoration-gray-600 decoration-1">Publicado por: <?= htmlspecialchars($nomeFornecedor) ?></p>
                     </section>
                 </div>
                 <!-- compra -->
@@ -167,15 +169,17 @@ if ($dadosProduto) {
                                             <div class="border-b-1 border-[#b2d2df] shadow-[0_2px_3px_-2px_rgba(178,210,223,0.6)] flex justify-center pb-2">
                                                 <h1 class="text-xl text-[#b2d2df] font-bold truncate"><?php echo $nomeProduto ?> </h1>
                                             </div>
-                                            <div class="flex flex-col items-center p-6 gap-2">
+                                            <div class="flex flex-col items-center p-5 gap-2">
                                                 <p class="text-xl text-gray-600 font-semibold"> Total: R$ <span id="mostrarTotal"></span>
                                                 </p>
+                                                <div class="border border-gray-300 py-2 px-4 rounded-lg">
+                                                    <p>
+                                                        <span id="mostrarDataInicial"></span>
+                                                        →
+                                                        <span id="mostrarDataFinal"></span>
+                                                    </p>
+                                                </div>
 
-                                                <p>
-                                                    <span id="mostrarDataInicial"></span>
-                                                    →
-                                                    <span id="mostrarDataFinal"></span>
-                                                </p>
 
 
 
@@ -191,8 +195,9 @@ if ($dadosProduto) {
                                     </div>
                                     <!-- ///////////////////////////////////////////////////////////////// -->
                                     <!-- parte inferior -->
-                                    <div>
-
+                                    <div class="py-3">
+                                        <p class="mt-1 text-gray-400"><span class="font-bold">Atenção:</span> Ao fazer a solicitação o fornecedor avaliará a sua solicitação e, se necessário, entrara em contato com o número fornecido na sua conta. Caso aceito, será necessário efetuar o pagamento para registrar o aluguel.
+                                            Em quanto isso, você poderá acompanhar o status da solicitação em Meus aluguéis no seu perfil.</p>
                                     </div>
 
                                 </div>
@@ -220,6 +225,7 @@ if ($dadosProduto) {
                     if (el) el.addEventListener(event, handler);
                 };
 
+                const diasDisponiveisISO = <?php echo $datasDisponiveis ?>.map(converterParaISO);
 
                 // Flatpickr
                 if (document.querySelector("#intervalo")) {
@@ -229,14 +235,21 @@ if ($dadosProduto) {
                         minDate: "today",
                         disableMobile: true,
                         clickOpens: true,
-                        allowInput: false
+                        allowInput: false,
+                        enable: diasDisponiveisISO
                     });
                 }
 
-function formatarDataBR(dataISO) {
-    const [ano, mes, dia] = dataISO.split("-");
-    return `${dia}/${mes}/${ano}`;
-}
+                function converterParaISO(dataBR) {
+                    // dataBR vem assim: "10/12/2025"
+                    const [dia, mes, ano] = dataBR.split('/');
+                    return `${ano}-${mes}-${dia}`; // "2025-12-10"
+                }
+
+                function formatarDataBR(dataISO) {
+                    const [ano, mes, dia] = dataISO.split("-");
+                    return `${dia}/${mes}/${ano}`;
+                }
 
                 // Solicitar com login
                 on("#btnSolicitar", "click", () => {
@@ -263,7 +276,8 @@ function formatarDataBR(dataISO) {
                     const diaMs = 1000 * 60 * 60 * 24;
                     let qtdDias = Math.round(
                         (new Date(dataFinal) - new Date(dataInicial)) / diaMs
-                    );
+                    ) + 1;
+
 
                     if (qtdDias === 0) qtdDias = 1; // mesma data = 1 diária
 
@@ -271,7 +285,7 @@ function formatarDataBR(dataISO) {
                     const valorDia = parseFloat(
                         document.querySelector("#valorProduto").value.replace(",", ".")
 
-                    
+
                     );
 
                     const total = qtdDias * valorDia;

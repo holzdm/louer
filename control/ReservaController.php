@@ -30,7 +30,6 @@ switch ($acao) {
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
         // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msgErro=" . urlencode("Ação inválida!"));
         break;
-
 }
 
 function solicitarReserva($dadosPOST)
@@ -57,7 +56,6 @@ function solicitarReserva($dadosPOST)
             $dataInicio = trim($intervalo);
             $dataFinal  = trim($intervalo);
         }
-
     } else {
         // Se estiver vazio, usar a data de hoje
         $dataHoje = date('Y-m-d');
@@ -102,27 +100,43 @@ function solicitarReserva($dadosPOST)
 function acessarReserva($idReserva)
 {
 
+    header('Content-Type: application/json');
+
     if (!$idReserva) {
-        header("Location: ../view/cliente/pag-ic.php?msg=Reserva inválida.");
+        echo json_encode(['erro' => 'Reserva inválida']);
         exit;
     }
+
     require_once "../model/ProdutoDao.php";
 
     $dadosReserva = consultarReserva($idReserva);
-    $IdProduto = $dadosReserva['idProduto'];
-    $dadosProduto = consultarProduto($IdProduto);
 
-
-    $_SESSION['Reserva'] = array_merge($dadosProduto, $dadosReserva);
-
-
-    if (isset($dadosProduto)) {
-        header("Location: ../view/cliente/pag-reserva.php");
-        exit;
-    } else {
-        header("Location: ../view/cliente/pag-ic.php");
+    if (!$dadosReserva) {
+        echo json_encode(['erro' => 'Reserva não encontrada']);
         exit;
     }
+
+    $idProduto = $dadosReserva['idProduto'];
+    $dadosProduto = consultarProduto($idProduto);
+
+    $quantDias = $dadosReserva['valorReserva'] / $dadosProduto['valor'];
+
+
+    // Monta resposta com os campos que você precisa no modal
+    $resposta = [
+        'idProduto'   => $dadosProduto['idProduto'],
+        'nomeProduto'   => $dadosProduto['nome'],
+        'valorDiaria'  => $dadosProduto['valor'],
+        'nomeFornecedor' => $dadosProduto['nomeFornecedor'],
+        'dataInicial'   => $dadosReserva['dataInicial'],
+        'dataFinal'     => $dadosReserva['dataFinal'],
+        'valorReserva'  => $dadosReserva['valorReserva'],
+        'status'        => $dadosReserva['status'],
+        'quantDias'     => $quantDias
+    ];
+
+    echo json_encode($resposta);
+    exit;
 }
 
 function acessarReservaComoFornecedor($idReserva)

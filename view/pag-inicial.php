@@ -25,7 +25,7 @@ if (isset($_SESSION['formData'])) {
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-  <? include 'script-style.php'; ?>
+  <?php include 'script-style.php'; ?>
 </head>
 
 <body>
