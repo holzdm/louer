@@ -4,8 +4,9 @@
 START TRANSACTION;
 USE `louerbd`;
 -- ----------data: formapagamento
-INSERT INTO `louerbd`.`formapagamento` (`id`, `forma`) VALUES (1, 'DINHEIRO');
-INSERT INTO `louerbd`.`formapagamento` (`id`, `forma`) VALUES (2, 'CARTAO');
+INSERT INTO `louerbd`.`formapagamento` (`id`, `forma`) VALUES (1, 'CARTAO DE DEBITO');
+INSERT INTO `louerbd`.`formapagamento` (`id`, `forma`) VALUES (2, 'CARTAO DE CREDITO');
+INSERT INTO `louerbd`.`formapagamento` (`id`, `forma`) VALUES (3, 'PIX');
 
 -- ----------data: tags
 INSERT INTO `louerbd`.`tags` (`nome`) VALUES ('Quadra');

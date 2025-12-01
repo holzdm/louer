@@ -23,17 +23,29 @@
         }
 
         echo "
-      
-        <div class='bg-white rounded-lg overflow-hidden h-60 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300'>
-            <a href='/louer/control/ProdutoController.php?acao=acessarMeuProduto&id=$idProduto'>
-                <img src='$srcImg' class='w-full h-40 object-cover' alt='Imagem do produto'>
-                <div class='p-2'>
-                    <h3 class='text-sm text-gray-800 font-medium truncate'>$nome</h3>
-                    <p class='text-gray-600'>R$$valorDia/dia</p>
-                </div>
-            </a> 
+<div class='bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition transform hover:-translate-y-1 duration-300'>
+    <a href='/louer/control/ProdutoController.php?acao=acessarMeuProduto&id=$idProduto' class='block'>
+
+        <!-- Imagem -->
+        <div class='w-full h-48 overflow-hidden'>
+            <img src='$srcImg' class='w-full h-full object-cover hover:scale-105 transition duration-500'>
         </div>
-    
-        ";
+
+        <!-- Conteúdo do card -->
+        <div class='p-4'>
+
+            <h3 class='text-lg font-semibold text-primary truncate'>
+                $nome
+            </h3>
+
+            <p class='text-gray-700 font-medium text-sm'>
+                R$$valorDia / dia
+            </p>
+
+        </div>
+
+    </a>
+</div>
+";
     } ?>
 </div>

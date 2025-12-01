@@ -171,7 +171,6 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`pagamento` (
   `reserva_id` INT(11) NULL DEFAULT NULL,
   `forma_pagamento_id` INT(11) NULL DEFAULT NULL,
   `nome_pagador` VARCHAR(100) NULL DEFAULT NULL,
-  `sobrenome_pagador` VARCHAR(100) NULL DEFAULT NULL,
   `cpf_pagador` VARCHAR(14) NULL DEFAULT NULL,
   `valor_pago` DECIMAL(10,2) NULL DEFAULT NULL,
   `valor_estornado` DECIMAL(10,2) NULL DEFAULT NULL,
@@ -243,4 +242,3 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`favoritos` (
     REFERENCES `louerbd`.`produto`(`id`)
     ON DELETE CASCADE
 );
-

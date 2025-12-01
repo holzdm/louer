@@ -15,11 +15,11 @@ switch ($acao) {
         break;
 
     case 'acessar':
-        acessarReserva($_GET['id'] ?? null);
+        acessarReserva($_GET['idReserva'] ?? null);
         break;
 
     case 'acessarFornecedor':
-        acessarReservaComoFornecedor($_GET['id'] ?? null);
+        acessarReservaComoFornecedor($_GET['idReserva'] ?? null);
         break;
 
     case 'aceitar':
@@ -32,6 +32,10 @@ switch ($acao) {
 
     case 'cancelar':
         cancelarReserva($_POST['idReserva'] ?? null);
+        break;
+
+    case 'confirmarPagamento':
+        confirmarPagamentoReserva($_POST);
         break;
 
     default:
@@ -175,6 +179,7 @@ function acessarReservaComoFornecedor($idReserva)
 
     // Monta resposta com os campos que você precisa no modal
     $resposta = [
+        'idReserva'     => $dadosReserva['idReserva'],
         'nomeUsuario'   => $dadosCliente['nomeUsuario'],
         'emailUsuario'  => $dadosCliente['email'],
         'nome'          => $dadosProduto['nome'],
@@ -191,6 +196,7 @@ function acessarReservaComoFornecedor($idReserva)
 
 function aceitarSolicitacao($idReserva)
 {
+    
     if (empty($idReserva)) {
         header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?pagina=minhas-reservas&msgErro=Não foi possível localizar a reserva.");
         exit;
@@ -202,6 +208,11 @@ function aceitarSolicitacao($idReserva)
         header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?pagina=minhas-reservas&msg=Solicitação aceita!");
         exit;
     }
+    else{
+        header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?pagina=minhas-reservas&msg=nao deu certo!");
+        exit;
+    }
+    
 }
 
 function recusarSolicitacao($idReserva)
@@ -229,4 +240,45 @@ function cancelarReserva($idReserva){
         header("Location: /louer/view/cliente/pag-ic.php?pagina=meus-alugueis&msg=Reserva Cancelada!");
         exit;
     }
+}
+
+function confirmarPagamentoReserva($dadosPOST){
+    require_once "../model/ClienteDao.php";
+
+    $idReserva = $dadosPOST['idReserva'] ?? null;
+    if (empty($idReserva)) {
+        header("Location: /louer/view/cliente/pag-ic.php?msgErro=Reserva inválida!");
+        exit;
+    }
+
+    $formaPagamento = $dadosPOST['pagamento'] ?? null;
+    if (empty($formaPagamento)) {
+        header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msgErro=Forma de pagamento inválida!");
+        exit;
+    }
+
+    $dataPago = (new DateTime())->format('d/m/Y');
+    $status = 'Confirmada';
+    $idCliente = $_SESSION['id'];
+
+    $cliente = consultarCliente($idCliente);
+    $nomePagador = $cliente['nomeUsuario'] ?? '';
+    $cpfPagador = $cliente['cpf'] ?? '';
+
+    $reserva = consultarReserva($idReserva);
+    $valorPago = $reserva['valorReserva'] ?? 0;
+
+    if(updatePagamentoReserva($idReserva, $formaPagamento, $nomePagador, $cpfPagador, $valorPago, $status, $dataPago)){
+        if(mudarStatusReserva($status, $idReserva)){
+            header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msg=Pago");
+            exit;
+        }else{
+            header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msgErro=Não foi possível atualizar o status");
+        }
+    }else{
+        header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msgErro=Erro ao registrar pagamento");
+    }
+
+
+
 }

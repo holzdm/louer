@@ -82,9 +82,24 @@ function mudarStatusReserva($status, $idReserva){
     $stmt->bind_param("si", $status, $idReserva);
 
     if (!$stmt->execute()) {
+        
         return false;
     }
 
     // retorna true SE realmente alterou a linha
     return $stmt->affected_rows > 0;
+}
+
+function updatePagamentoReserva($idReserva, $formaPagamento, $nomePagador, $cpfPagador, $valorPago, $status, $dataPago){
+    $conexao = conectarBD();
+
+    $sql = "INSERT INTO pagamento (reserva_id, forma_pagamento_id, nome_pagador, cpf_pagador, valor_pago, status_pagamento, data_pagamento) VALUES
+    (?,?,?,?,?,?,?)";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("iissdss", $idReserva, $formaPagamento, $nomePagador, $cpfPagador, $valorPago, $status, $dataPago );
+
+    return $stmt->execute();
+
+
 }

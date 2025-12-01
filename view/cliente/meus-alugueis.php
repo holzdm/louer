@@ -27,32 +27,51 @@ $res = listarReservas($_SESSION['id']);
         }
 
     ?>
-        <div id="openModal" class='bg-white rounded-lg overflow-hidden h-60 flex flex-col shadow hover:shadow-lg hover:scale-105 transition transform duration-300 ' onclick="abrirModal(<?= $idReserva ?>)">
-            <img src='<?= $srcImg ?>'
-                alt='Imagem do produto' class="w-full h-40 object-cover">
+        <div onclick="abrirModal(<?= $idReserva ?>)"
+            class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition transform hover:-translate-y-1 duration-300 cursor-pointer">
+
+            <img src="<?= $srcImg ?>" alt="Imagem do produto"
+                class="w-full h-48 object-cover hover:scale-105 transition duration-500">
+
             <div class="p-4">
-                <h3 class="font-bold text-lg"><?= $nome ?></h3>
-                <p class="text-gray-600">R$<?= $valorReserva ?>/h</p>
-                <p class="text-sm mt-2"><?= $status ?></p>
+
+                <!-- Nome (padrão oficial) -->
+                <h3 class="text-lg font-semibold text-primary truncate">
+                    <?= $nome ?>
+                </h3>
+
+                <!-- Valor (padrão oficial) -->
+                <p class="text-gray-700 font-medium text-sm mt-1">
+                    R$<?= $valorReserva ?>
+                </p>
+
+                <!-- Status com badge -->
+                <span class="inline-block mt-3 px-3 py-1 rounded-full text-xs font-semibold
+            <?php if ($status === 'Solicitada') echo 'bg-yellow-100 text-yellow-700'; ?>
+            <?php if ($status === 'Aprovada') echo 'bg-blue-100 text-blue-700'; ?>
+            <?php if ($status === 'Confirmada') echo 'bg-green-100 text-green-700'; ?>
+            <?php if ($status === 'Cancelada') echo 'bg-red-100 text-red-700'; ?>
+        ">
+                    <?= $status ?>
+                </span>
+
             </div>
         </div>
+
     <?php endwhile; ?>
     <!-- Modal -->
-    <div id="modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg w-11/12 md:w-3/4 lg:w-2/3 p-6 relative">
+    <div id="modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 hidden">
 
-            <!-- Botão fechar no canto -->
-            <button id="closeModal" type="button" class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
+        <div class="bg-white rounded-2xl w-11/12 md:w-3/4 lg:w-2/3 p-8 shadow-2xl relative animate-[fadeIn_0.25s_ease-out]">
 
-            <!-- Conteúdo do modal -->
-            <div id="modalContent" class="mb-4">
-            </div>
+            <!-- Botão fechar -->
+            <button id="closeModal"
+                class="absolute top-4 right-4 text-gray-500 hover:text-primary transition text-3xl font-bold">
+                &times;
+            </button>
 
-            <!-- Botão dentro do modal -->
-            <div class="flex justify-end">
-
-                <button id="confirmarSolicitacao" type="submit" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Confirmar Solicitacao</button>
-            </div>
+            <!-- Conteúdo dinâmico -->
+            <div id="modalContent" class="space-y-4 text-gray-700"></div>
 
         </div>
     </div>
@@ -65,9 +84,9 @@ $res = listarReservas($_SESSION['id']);
 
         function abrirModal(idReserva) {
             modal.classList.remove('hidden');
-            modalContent.innerHTML = `<h2 class="text-xl font-bold mb-4">Carregando...</h2>`;
+            modalContent.innerHTML = `<h2 class="text-xl font-bold text-primary">Carregando...</h2>`;
 
-            fetch(`/louer/control/ReservaController.php?acao=acessar&id=${idReserva}`)
+            fetch(`/louer/control/ReservaController.php?acao=acessar&idReserva=${idReserva}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.erro) {
@@ -76,34 +95,108 @@ $res = listarReservas($_SESSION['id']);
                     }
 
                     modalContent.innerHTML = `
-                    <a href="/louer/control/ProdutoController.php?acao=acessar&id=${data.idProduto}"> <h2 class="text-2xl font-bold mb-4 text-primary">${data.nomeProduto}</h2> </a>
-                    <p class="text-gray-600">Valor Diário: ${data.valorDiaria}</p>
-                    <p class="text-gray-600">Quantidade de dias: ${data.quantDias}</p>
-                    <p class="text-xl text-gray-600 font-bold mt-2">Total: ${data.valorReserva}</p>
+            
+            <!-- Título + link para o produto -->
+            <a href="/louer/control/ProdutoController.php?acao=acessar&id=${data.idProduto}">
+                <h2 class="text-2xl font-semibold text-primary mb-4">
+                    ${data.nomeProduto}
+                </h2>
+            </a>
 
-      `;
-                    // 👉 Mostrar botões somente se a reserva estiver "Solicitada"
+            <!-- Grid de detalhes -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div class="bg-secondary p-4 rounded-xl">
+                    <p class="font-semibold text-gray-800">Valor diário</p>
+                    <p class="text-gray-600">${data.valorDiaria}</p>
+                </div>
+
+                <div class="bg-secondary p-4 rounded-xl">
+                    <p class="font-semibold text-gray-800">Quantidade de dias</p>
+                    <p class="text-gray-600">${data.quantDias}</p>
+                </div>
+
+                <div class="bg-secondary p-4 rounded-xl">
+                    <p class="font-semibold text-gray-800">Data inicial</p>
+                    <p class="text-gray-600">${data.dataInicial}</p>
+                </div>
+
+                <div class="bg-secondary p-4 rounded-xl">
+                    <p class="font-semibold text-gray-800">Data final</p>
+                    <p class="text-gray-600">${data.dataFinal}</p>
+                </div>
+
+            </div>
+
+            <!-- Total -->
+            <p class="text-xl font-bold text-primary mt-4">
+                Total: R$ ${data.valorReserva}
+            </p>
+
+            <!-- Status -->
+            <p class="text-gray-600"><strong>Status:</strong> ${data.status}</p>
+            `;
+
+                    /* Botões para aprovadas */
                     if (data.status === "Aprovada") {
                         modalContent.innerHTML += `
-      <div class="flex justify-end gap-3 mt-4">
+                <div class="flex justify-end gap-4 mt-6">
 
-        <!-- pagar -->
-        <a href="/louer/view/cliente/pag-pagamento.php?idReserva=${data.idReserva}" class="px-4 py-2 bg-green-300 rounded hover:bg-green-400">
-            Realizar Pagamento
-          </a>
+                    <!-- Pagar -->
+                    <a href="/louer/view/cliente/pag-pagamento.php?idReserva=${idReserva}"
+                       class="px-5 py-2.5 rounded-xl bg-green-500 text-white font-semibold shadow-md 
+                              hover:bg-green-600 hover:shadow-lg transition transform hover:-translate-y-0.5">
+                        Realizar Pagamento
+                    </a>
 
-        <!-- Cancelar -->
-        <form action="/louer/control/ReservaController.php" method="post">
-          <input type="hidden" name="acao" value="cancelar">
-          <input type="hidden" name="idReserva" value="${data.idReserva}">
-          <button type="submit"
-            class="px-4 py-2 bg-red-300 rounded hover:bg-red-400">
-            Cancelar
-          </button>
-        </form>
+                    <!-- Cancelar -->
+                    <form action="/louer/control/ReservaController.php" method="post">
+                        <input type="hidden" name="acao" value="cancelar">
+                        <input type="hidden" name="idReserva" value="${idReserva}">
 
-      </div>
-    `;
+                        <button type="submit"
+                            class="px-5 py-2.5 rounded-xl bg-red-500 text-white font-semibold shadow-md 
+                                   hover:bg-red-600 hover:shadow-lg transition transform hover:-translate-y-0.5">
+                            Cancelar
+                        </button>
+                    </form>
+
+                </div>
+                `;
+                    }
+                    if (data.status === "Confirmada") {
+                        modalContent.innerHTML += `
+                            <!-- Ver comprovante -->
+                <div class="flex justify-end mt-6">
+                    <a href="/louer/view/cliente/pag-pagamento.php?idReserva=${idReserva}"
+                       class="px-5 py-2.5 rounded-xl bg-green-500 text-white font-semibold shadow-md 
+                              hover:bg-green-600 hover:shadow-lg transition transform hover:-translate-y-0.5">
+                        Ver Comprovante
+                    </a>
+
+                </div>
+
+`;
+                    }
+
+                    if (data.status === "Solicitada") {
+                        modalContent.innerHTML += `
+                            <!-- Cancelar -->
+                <div class="flex justify-end mt-6">
+                    <form action="/louer/control/ReservaController.php" method="post">
+                        <input type="hidden" name="acao" value="cancelar">
+                        <input type="hidden" name="idReserva" value="${idReserva}">
+
+                        <button type="submit"
+                            class="px-5 py-2.5 rounded-xl bg-red-500 text-white font-semibold shadow-md 
+                                   hover:bg-red-600 hover:shadow-lg transition transform hover:-translate-y-0.5">
+                            Cancelar
+                        </button>
+                    </form>
+
+                </div>
+
+`;
                     }
                 })
                 .catch(() => {
