@@ -2,9 +2,7 @@
 <?php if (!empty($_GET['msg'])): ?>
             <div id="notificacao" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 fade-in">
                 <div class="bg-white border border-green-300 text-green-600 rounded-lg p-4 shadow-lg flex items-start max-w-md w-full">
-                    <svg class="w-6 h-6 text-green-600 mt-1 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 14a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm1-8h-2v6h2V8z" />
-                    </svg>
+                    
                     <div>
                         <!-- <p class="font-medium text-sm">Erro no cadastro</p>  Tirei pra poder receber varias mensagens, n so as de erro de cadastro -->
                         <p class="text-sm text-gray-600"><?= htmlspecialchars($_GET['msg']) ?></p>

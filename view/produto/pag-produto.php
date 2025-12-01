@@ -165,7 +165,7 @@ if ($dadosProduto) {
                                             </div>
                                         </div>
                                         <!-- INFORMAÇÕES À DIREITA -->
-                                        <div class="md:w-1/2 w-full p-6">
+                                        <div class="md:w-1/2 w-full px-6 py-2">
 
                                             <!-- Título -->
                                             <div class="border-b border-[#b2d2df] shadow-[0_3px_5px_-3px_rgba(178,210,223,0.7)] pb-2 text-center">
@@ -175,7 +175,7 @@ if ($dadosProduto) {
                                             </div>
 
                                             <!-- Informações principais -->
-                                            <div class="flex flex-col items-center gap-4 mt-2">
+                                            <div class="flex flex-col items-center gap-4 mt-6">
 
                                                 <p class="text-xl text-gray-700 font-semibold">
                                                     Total: R$ <span id="mostrarTotal"></span>
@@ -204,7 +204,7 @@ if ($dadosProduto) {
                                     <!-- parte inferior -->
                                     <div class="py-3">
                                         <p class="mt-1 text-gray-400"><span class="font-bold">Atenção:</span> Ao fazer a solicitação o fornecedor avaliará a sua solicitação e, se necessário, entrara em contato com o número fornecido na sua conta. Caso aceito, será necessário efetuar o pagamento para registrar o aluguel.
-                                            Em quanto isso, você poderá acompanhar o status da solicitação em Meus aluguéis no seu perfil.</p>
+                                            Em quanto isso, você poderá acompanhar o status da solicitação em <span class="font-bold">Meus aluguéis</span> no seu perfil.</p>
                                     </div>
 
                                 </div>
