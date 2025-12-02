@@ -8,7 +8,7 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
     $diasString = implode(',', $diasDisponiveis);
 
     if ($tipoProduto == 'Equipamento') {
-        $sql = "INSERT INTO Produto (tipo, nome, id_usuario, valor_dia, descricao, dias_disponiveis) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO produto (tipo, nome, id_usuario, valor_dia, descricao, dias_disponiveis) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conexao, $sql);
         mysqli_stmt_bind_param(
             $stmt,
@@ -21,7 +21,7 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
             $diasString
         );
     } else {
-        $sql = "INSERT INTO Produto (tipo, nome, id_usuario, valor_dia, descricao, dias_disponiveis, cep, cidade, bairro, rua, numero, complemento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO produto (tipo, nome, id_usuario, valor_dia, descricao, dias_disponiveis, cep, cidade, bairro, rua, numero, complemento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conexao, $sql);
         mysqli_stmt_bind_param(
             $stmt,
@@ -47,7 +47,7 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
     }
 
 
-    mysqli_stmt_execute($stmt) or die('Erro no INSERT do Produto: ' . mysqli_stmt_error($stmt));
+    mysqli_stmt_execute($stmt) or die('Erro no INSERT do produto: ' . mysqli_stmt_error($stmt));
 
     // Pega o código inserido
     $idProduto = mysqli_insert_id($conexao);
@@ -159,7 +159,7 @@ function consultarProduto($id)
 
     $conexao = conectarBD();
 
-    $sql = "SELECT * FROM Produto WHERE id = ?";
+    $sql = "SELECT * FROM produto WHERE id = ?";
 
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("i", $id);
