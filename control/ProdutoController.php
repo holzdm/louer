@@ -4,7 +4,7 @@ session_start();
 
 
 require_once "../model/ProdutoDao.php";
-require_once "FuncoesUteis.php";
+require_once "./FuncoesUteis.php";
 
 $acao = $_GET['acao'] ?? $_POST['acao'] ?? '';
 
