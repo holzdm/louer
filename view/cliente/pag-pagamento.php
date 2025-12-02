@@ -141,7 +141,7 @@ $srcImg = $img
 
                         <!-- COMPROVANTE DE RESERVA -->
                         <a
-                            href="/louer/control/ReservaController.php?acao=gerarComprovanteReserva&idReserva=<?= $idReserva ?>"
+                            href="/louer/view/cliente/pag-comprovante-reserva.php?idReserva=<?php echo $idReserva ?>"
                             class="flex items-center justify-between p-5 bg-secondary border border-[#c6e9f5] rounded-xl shadow hover:bg-[#c6e9f5] transition">
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
