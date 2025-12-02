@@ -12,18 +12,6 @@ CREATE SCHEMA IF NOT EXISTS `louerbd` DEFAULT CHARACTER SET latin1 ;
 
 USE `louerbd` ;
 
--- -----------------------------------------------------
--- Criar usuário e dar permissões
--- -----------------------------------------------------
-
--- Criação do usuário (substitua a senha pelo que você quiser)
-CREATE USER 'loueruser'@'%' IDENTIFIED BY 'kivicaLOUER';
-
--- Permissões completas para esse banco de dados
-GRANT ALL PRIVILEGES ON louerbd.* TO 'loueruser'@'%';
-
--- Aplicar permissões
-FLUSH PRIVILEGES;
 
 
 -- -----------------------------------------------------
