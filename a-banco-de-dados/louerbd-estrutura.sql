@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`reserva` (
   `status` ENUM('Solicitada', 'Aprovada', 'Recusada', 'Confirmada', 'Finalizada', 'Cancelada') NULL DEFAULT 'Solicitada',
   `cancelado_por` ENUM('Cliente', 'Fornecedor', 'Gerente') NULL DEFAULT NULL,
   `motivo_cancelamento` TEXT NULL DEFAULT NULL,
-  `data_solicitado` DATE NULL DEFAULT CURRENT_TIMESTAMP(),
+  -- `data_solicitado` DATE NULL DEFAULT CURRENT_TIMESTAMP(), 
   `data_aceito_negado` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `id_usuario` (`id_usuario` ASC),
