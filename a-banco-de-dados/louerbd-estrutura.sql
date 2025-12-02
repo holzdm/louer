@@ -17,10 +17,10 @@ USE `louerbd` ;
 -- -----------------------------------------------------
 
 -- Criação do usuário (substitua a senha pelo que você quiser)
-CREATE USER 'loueruser'@'127.0.0.1' IDENTIFIED BY 'kivicaLOUER';
+CREATE USER 'loueruser'@'%' IDENTIFIED BY 'kivicaLOUER';
 
 -- Permissões completas para esse banco de dados
-GRANT ALL PRIVILEGES ON louerbd.* TO 'loueruser'@'127.0.0.1';
+GRANT ALL PRIVILEGES ON louerbd.* TO 'loueruser'@'%';
 
 -- Aplicar permissões
 FLUSH PRIVILEGES;
