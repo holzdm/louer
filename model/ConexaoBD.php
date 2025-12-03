@@ -3,7 +3,7 @@
 static $conexao;
 
 function conectarBD(){
-    $conexao = mysqli_connect('terraform-20251202165148929500000002.cvhfregncvnf.us-east-1.rds.amazonaws.com',
+    $conexao = mysqli_connect('$MYSQL_HOST',
     'loueruser','kivicaLOUER','louerbd');
 
     //Se falhar:
