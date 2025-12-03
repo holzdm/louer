@@ -2,16 +2,10 @@
 
 static $conexao;
 
-$mysql_host = getenv('MYSQL_HOST');
-    echo $mysql_host;
-    exit;
 
 function conectarBD(){
     $mysql_host = getenv('MYSQL_HOST');
-    echo $mysql_host;
-    exit;
-    $conexao = mysqli_connect($mysql_host,
-    'loueruser','kivicaLOUER','louerbd');
+    $conexao = mysqli_connect($mysql_host,'loueruser','kivicaLOUER','louerbd');
 
     //Se falhar:
 	
