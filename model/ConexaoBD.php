@@ -3,7 +3,8 @@
 static $conexao;
 
 function conectarBD(){
-    $conexao = mysqli_connect($_ENV["MYSQL_HOST"],
+    $mysql_host = getenv('MYSQL_HOST');
+    $conexao = mysqli_connect($mysql_host,
     'loueruser','kivicaLOUER','louerbd');
 
     //Se falhar:
