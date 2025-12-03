@@ -86,7 +86,7 @@ if ($dadosProduto) {
                 </button>
             </section>
 
-            <hr class="w-[100vw] border-t border-gray-300 -mx-4">
+            <hr class="w-[100vw] border-t border-gray-200 -mx-4 mt-4">
 
             <div class="flex justify-between w-full mt-6 px-6">
                 <!-- descricao -->

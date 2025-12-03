@@ -143,6 +143,7 @@ function acessarReserva($idReserva)
         'nomeFornecedor' => $dadosProduto['nomeFornecedor'],
         'dataInicial'   => $dadosReserva['dataInicial'],
         'dataFinal'     => $dadosReserva['dataFinal'],
+        'dataSolicitada' => $dadosReserva['dataSolicitada'],
         'valorReserva'  => $dadosReserva['valorReserva'],
         'status'        => $dadosReserva['status'],
         'quantDias'     => $quantDias
@@ -165,6 +166,7 @@ function acessarReservaComoFornecedor($idReserva)
     require_once "../model/ClienteDao.php";
 
     $dadosReserva = consultarReserva($idReserva);
+    $dadosPagamento = consultarPagamentoPorReserva($idReserva);
 
     if (!$dadosReserva) {
         echo json_encode(['erro' => 'Reserva não encontrada']);
@@ -186,6 +188,8 @@ function acessarReservaComoFornecedor($idReserva)
         'descricao'     => $dadosProduto['descricao'] ?? '',
         'dataInicial'   => $dadosReserva['dataInicial'],
         'dataFinal'     => $dadosReserva['dataFinal'],
+        'dataSolicitada' => $dadosReserva['dataSolicitada'],
+        'dataPagamento'  => $dadosPagamento['dataPagamento'] ?? '',
         'valorReserva'  => $dadosReserva['valorReserva'],
         'status'        => $dadosReserva['status']
     ];
@@ -196,7 +200,7 @@ function acessarReservaComoFornecedor($idReserva)
 
 function aceitarSolicitacao($idReserva)
 {
-    
+
     if (empty($idReserva)) {
         header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?pagina=minhas-reservas&msgErro=Não foi possível localizar a reserva.");
         exit;
@@ -207,12 +211,10 @@ function aceitarSolicitacao($idReserva)
     if (mudarStatusReserva($status, $idReserva)) {
         header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?pagina=minhas-reservas&msg=Solicitação aceita!");
         exit;
-    }
-    else{
+    } else {
         header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?pagina=minhas-reservas&msg=nao deu certo!");
         exit;
     }
-    
 }
 
 function recusarSolicitacao($idReserva)
@@ -229,20 +231,22 @@ function recusarSolicitacao($idReserva)
     }
 }
 
-function cancelarReserva($idReserva){
+function cancelarReserva($idReserva)
+{
     if (empty($idReserva)) {
         header("Location: /louer/view/cliente/pag-ic.php?pagina=meus-alugueis&msgErro=Não foi possível localizar a reserva.");
         exit;
     }
     $status = "Cancelada";
 
-    if (mudarStatusReserva($status, $idReserva)){
+    if (mudarStatusReserva($status, $idReserva)) {
         header("Location: /louer/view/cliente/pag-ic.php?pagina=meus-alugueis&msg=Reserva Cancelada!");
         exit;
     }
 }
 
-function confirmarPagamentoReserva($dadosPOST){
+function confirmarPagamentoReserva($dadosPOST)
+{
     require_once "../model/ClienteDao.php";
 
     $idReserva = $dadosPOST['idReserva'] ?? null;
@@ -257,28 +261,30 @@ function confirmarPagamentoReserva($dadosPOST){
         exit;
     }
 
-    $dataPago = (new DateTime())->format('d/m/Y');
+    // $dataPago = (new DateTime())->format('d/m/Y');
     $status = 'Confirmada';
     $idCliente = $_SESSION['id'];
 
     $cliente = consultarCliente($idCliente);
     $nomePagador = $cliente['nomeUsuario'] ?? '';
-    $cpfPagador = $cliente['cpf'] ?? '';
+    if (empty($cliente['cpf'])) {
+        $cpfPagador = $cliente['cnpj'];
+    } else {
+        $cpfPagador = $cliente['cpf'];
+    }
+
 
     $reserva = consultarReserva($idReserva);
     $valorPago = $reserva['valorReserva'] ?? 0;
 
-    if(updatePagamentoReserva($idReserva, $formaPagamento, $nomePagador, $cpfPagador, $valorPago, $status, $dataPago)){
-        if(mudarStatusReserva($status, $idReserva)){
+    if (PagamentoReserva($idReserva, $formaPagamento, $nomePagador, $cpfPagador, $valorPago, $status)) {
+        if (mudarStatusReserva($status, $idReserva)) {
             header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msg=Pago");
             exit;
-        }else{
+        } else {
             header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msgErro=Não foi possível atualizar o status");
         }
-    }else{
+    } else {
         header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msgErro=Erro ao registrar pagamento");
     }
-
-
-
 }

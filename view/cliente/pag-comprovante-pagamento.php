@@ -5,13 +5,13 @@ require_once "../../model/ReservaDao.php";
 require_once "../../model/ClienteDao.php";
 require_once "../../model/ProdutoDao.php";
 
-if (!isset($_GET['id'])) {
-    echo "ID da reserva não informado.";
+if (!isset($_GET['idReserva'])) {
+    header("Location: /louer/view/cliente/pag-pagamento.php?msgErro=Id da Reserva não encontrado.");
     exit;
 }
 
 $idReserva = $_GET['idReserva'];
-$dados =consultarReserva($idReserva);
+$dados = consultarReserva($idReserva);
 $dadosPagamento = consultarPagamentoPorReserva($idReserva);
 
 // Dados do cliente e produto
@@ -77,27 +77,27 @@ $produto = consultarProduto($dados['idProduto']);
         <div class="space-y-3">
             <div class="flex justify-between">
                 <span class="font-medium text-gray-600">Forma de Pagamento:</span>
-                <span class="text-gray-800"><?= $dados['formaPagamento'] ?></span>
+                <span class="text-gray-800"><?= $dadosPagamento['formaPagamento'] ?></span>
             </div>
 
             <div class="flex justify-between">
                 <span class="font-medium text-gray-600">Valor Pago:</span>
-                <span class="text-gray-800">R$ <?= number_format($dados['valorPago'], 2, ',', '.') ?></span>
+                <span class="text-gray-800">R$ <?= number_format($dadosPagamento['valorPago'], 2, ',', '.') ?></span>
             </div>
 
             <div class="flex justify-between">
                 <span class="font-medium text-gray-600">Data do Pagamento:</span>
-                <span class="text-gray-800"><?= $dados['dataPagamento'] ?></span>
+                <span class="text-gray-800"><?= $dadosPagamento['dataPagamento'] ?></span>
             </div>
 
             <div class="flex justify-between">
                 <span class="font-medium text-gray-600">Nome do Pagador:</span>
-                <span class="text-gray-800"><?= $dados['nomePagador'] ?></span>
+                <span class="text-gray-800"><?= $dadosPagamento['nomePagador'] ?></span>
             </div>
 
             <div class="flex justify-between">
                 <span class="font-medium text-gray-600">CPF:</span>
-                <span class="text-gray-800"><?= $dados['cpfPagador'] ?></span>
+                <span class="text-gray-800"><?= $dadosPagamento['cpfPagador'] ?></span>
             </div>
         </div>
 
@@ -116,6 +116,12 @@ $produto = consultarProduto($dados['idProduto']);
                 class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
                 Imprimir / Salvar em PDF
             </button>
+        </div>
+        <div class="text-center mt-2">
+            <a href="/louer/view/cliente/pag-pagamento.php?idReserva=<?= $idReserva  ?>"
+                class="px-6 py-2 text-gray-600 hover:underline transition">
+                Voltar
+            </a>
         </div>
 
     </div>

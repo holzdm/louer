@@ -43,7 +43,8 @@
                 <?= $status === 'Solicitada' ? 'bg-yellow-100 text-yellow-700' : '' ?>
                 <?= $status === 'Aprovada' ? 'bg-blue-100 text-blue-700' : '' ?>
                 <?= $status === 'Confirmada' ? 'bg-green-100 text-green-700' : '' ?>
-                <?= $status === 'Recusada' ? 'bg-red-100 text-red-700' : '' ?>">
+                <?= $status === 'Cancelada' ? 'bg-red-100 text-red-700' : '' ?>
+                <?= $status === 'Recusada' ? 'bg-gray-100 text-gray-700' : '' ?>">
           <?= $status ?>
         </span>
       </div>
@@ -96,6 +97,14 @@
           return;
         }
 
+        const dataFormatadaInicial = new Date(data.dataInicial).toLocaleDateString("pt-BR");
+        const dataFormatadaFinal = new Date(data.dataFinal).toLocaleDateString("pt-BR");
+        const dataFormatadaSolicitada = new Date(data.dataSolicitada.replace(" ", "T")).toLocaleString("pt-BR");
+        let dataFormatadaPagamento = "";
+        if (data.dataPagamento) {
+          dataFormatadaPagamento = new Date(data.dataPagamento.replace(" ", "T")).toLocaleString("pt-BR");
+        }
+
         modalContent.innerHTML = `
 
             <!-- Usuário -->
@@ -116,12 +125,12 @@
 
                 <div class="bg-secondary p-4 rounded-xl">
                     <p class="font-semibold text-primary">Data Inicial</p>
-                    <p class="text-gray-700">${data.dataInicial}</p>
+                    <p class="text-gray-700">${dataFormatadaInicial}</p>
                 </div>
 
                 <div class="bg-secondary p-4 rounded-xl">
                     <p class="font-semibold text-primary">Data Final</p>
-                    <p class="text-gray-700">${data.dataFinal}</p>
+                    <p class="text-gray-700">${dataFormatadaFinal}</p>
                 </div>
 
             </div>
@@ -139,9 +148,19 @@
                     ${data.status === "Solicitada" ? "bg-yellow-100 text-yellow-700" : ""}
                     ${data.status === "Aprovada" ? "bg-blue-100 text-blue-700" : ""}
                     ${data.status === "Confirmada" ? "bg-green-100 text-green-700" : ""}
-                    ${data.status === "Recusada" ? "bg-red-100 text-red-700" : ""}">
+                    ${data.status === "Cancelada" ? "bg-red-100 text-red-700" : ""}
+                    ${data.status === "Recusada" ? "bg-gray-100 text-gray-700" : ""}">
                     ${data.status}
                 </span>
+            </div>
+
+            <div class="mt-5 gap-2">
+                <p class="text-gray-600"><strong>• Data da Solicitação:</strong> ${dataFormatadaSolicitada}</p>
+                
+              ${data.status === "Confirmada" 
+                ?  `<p class='text-gray-600'><strong>• Data do Pagamento:</strong> ${dataFormatadaPagamento}</p>` 
+                : ""
+              }                       
             </div>
             `;
 
@@ -167,6 +186,29 @@
                         <button
                           class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
                             Recusar
+                        </button>
+                    </form>
+
+                </div>`;
+        }
+
+        // Botões apenas se "Confirmada"
+        const hoje = new Date();
+        const dataFinal = new Date(data.dataFinal + "T23:59:59");
+
+        if (data.status === "Confirmada" && hoje > dataFinal) {
+
+          modalContent.innerHTML += `
+          
+                <div class="flex justify-end gap-3 mt-6">
+
+                    <!-- Finalizar -->
+                    <form action="/louer/control/ReservaController.php" method="post">
+                        <input type="hidden" name="acao" value="finalizar">
+                        <input type="hidden" name="idReserva" value="${data.idReserva}">
+                        <button
+                          class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition">
+                            Finalizar
                         </button>
                     </form>
 

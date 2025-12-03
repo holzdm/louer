@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`reserva` (
   `id_produto` INT(11) NULL DEFAULT NULL,
   `data_reserva` DATE NOT NULL,
   `data_final` DATE NOT NULL,
+  `data_solicitado` DATETIME NOT NULL,
   `valor_reserva` DECIMAL(10,2) NULL DEFAULT NULL,
   `status` ENUM('Solicitada', 'Aprovada', 'Recusada', 'Confirmada', 'Finalizada', 'Cancelada') NULL DEFAULT 'Solicitada',
   `cancelado_por` ENUM('Cliente', 'Fornecedor', 'Gerente') NULL DEFAULT NULL,
@@ -103,26 +104,6 @@ CREATE TABLE IF NOT EXISTS `louerbd`.`reserva` (
     FOREIGN KEY (`id_produto`)
     REFERENCES `louerbd`.`produto` (`id`)
     ON DELETE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
--- Table `louerbd`.`avaliacao`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `louerbd`.`avaliacao` (
-  `id_reserva` INT(11) NOT NULL,
-  `tipo` ENUM('Cliente_para_Produto', 'Fornecedor_para_Cliente') NULL DEFAULT NULL,
-  `nota` INT(11) NULL DEFAULT NULL,
-  `comentario` TEXT NULL DEFAULT NULL,
-  `data_avaliacao` DATETIME NULL DEFAULT CURRENT_TIMESTAMP(),
-  PRIMARY KEY (`id_reserva`),
-  INDEX `fk_avaliacao_reserva1_idx` (`id_reserva` ASC),
-  CONSTRAINT `fk_avaliacao_reserva1`
-    FOREIGN KEY (`id_reserva`)
-    REFERENCES `louerbd`.`reserva` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 

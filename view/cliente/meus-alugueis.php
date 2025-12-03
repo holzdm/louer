@@ -50,7 +50,8 @@ $res = listarReservas($_SESSION['id']);
             <?php if ($status === 'Solicitada') echo 'bg-yellow-100 text-yellow-700'; ?>
             <?php if ($status === 'Aprovada') echo 'bg-blue-100 text-blue-700'; ?>
             <?php if ($status === 'Confirmada') echo 'bg-green-100 text-green-700'; ?>
-            <?php if ($status === 'Cancelada') echo 'bg-red-100 text-red-700'; ?>
+            <?php if ($status === 'Recusada') echo 'bg-red-100 text-red-700'; ?>
+            <?php if ($status === 'Cancelada') echo 'bg-gray-100 text-gray-700'; ?>
         ">
                     <?= $status ?>
                 </span>
@@ -82,9 +83,12 @@ $res = listarReservas($_SESSION['id']);
         const modalContent = document.getElementById('modalContent');
         const closeModal = document.getElementById('closeModal');
 
+
         function abrirModal(idReserva) {
             modal.classList.remove('hidden');
             modalContent.innerHTML = `<h2 class="text-xl font-bold text-primary">Carregando...</h2>`;
+
+
 
             fetch(`/louer/control/ReservaController.php?acao=acessar&idReserva=${idReserva}`)
                 .then(res => res.json())
@@ -93,6 +97,10 @@ $res = listarReservas($_SESSION['id']);
                         modalContent.innerHTML = `<p class="text-red-500">${data.erro}</p>`;
                         return;
                     }
+
+                    const dataFormatadaInicial = new Date(data.dataInicial).toLocaleDateString("pt-BR");
+                    const dataFormatadaFinal = new Date(data.dataFinal).toLocaleDateString("pt-BR");
+                    const dataFormatadaSolicitada = new Date(data.dataSolicitada.replace(" ", "T")).toLocaleString("pt-BR");
 
                     modalContent.innerHTML = `
             
@@ -118,12 +126,12 @@ $res = listarReservas($_SESSION['id']);
 
                 <div class="bg-secondary p-4 rounded-xl">
                     <p class="font-semibold text-gray-800">Data inicial</p>
-                    <p class="text-gray-600">${data.dataInicial}</p>
+                    <p class="text-gray-600">${dataFormatadaInicial}</p>
                 </div>
 
                 <div class="bg-secondary p-4 rounded-xl">
                     <p class="font-semibold text-gray-800">Data final</p>
-                    <p class="text-gray-600">${data.dataFinal}</p>
+                    <p class="text-gray-600">${dataFormatadaFinal}</p>
                 </div>
 
             </div>
@@ -134,7 +142,20 @@ $res = listarReservas($_SESSION['id']);
             </p>
 
             <!-- Status -->
-            <p class="text-gray-600"><strong>Status:</strong> ${data.status}</p>
+            <div>
+                <p class="font-semibold text-primary">Status:</p>
+                <span class="inline-block mt-2 px-3 py-1 rounded-full text-sm font-semibold
+                    ${data.status === "Solicitada" ? "bg-yellow-100 text-yellow-700" : ""}
+                    ${data.status === "Aprovada" ? "bg-blue-100 text-blue-700" : ""}
+                    ${data.status === "Confirmada" ? "bg-green-100 text-green-700" : ""}
+                    ${data.status === "Cancelada" ? "bg-gray-100 text-gray-700" : ""}
+                    ${data.status === "Recusada" ? "bg-red-100 text-red-700" : ""}">
+                    ${data.status}
+                </span>
+            </div>
+            
+            <!-- Data Solicitacao -->
+            <p class="text-gray-600"><strong>Data da Solicitação:</strong> ${dataFormatadaSolicitada}</p>
             `;
 
                     /* Botões para aprovadas */

@@ -6,7 +6,7 @@ require_once "../../model/ClienteDao.php";
 require_once "../../model/ProdutoDao.php";
 
 if (!isset($_GET['idReserva'])) {
-    echo "ID da reserva não informado.";
+    header("Location: /louer/view/cliente/pag-pagamento.php?msgErro=Id da Reserva não encontrado.");
     exit;
 }
 
@@ -16,14 +16,15 @@ $dadosReserva = consultarReserva($idReserva);
 // Dados do cliente (opcional — caso não venha no PDF)
 $cliente = consultarCliente($dadosReserva['idUsuario']);
 $produto = consultarProduto($dadosReserva['idProduto']);
-
+date_default_timezone_set('America/Sao_Paulo');
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<title>Comprovante de Reserva</title>
-<script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <title>Comprovante de Reserva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100 p-6">
@@ -58,7 +59,7 @@ $produto = consultarProduto($dadosReserva['idProduto']);
 
             <div class="flex justify-between">
                 <span class="font-medium text-gray-600">Data da Reserva:</span>
-                <span class="text-gray-800"><?= $dados['dataInicial'] ?> até <?= $dados['dataFinal'] ?></span>
+                <span class="text-gray-800"><?= $dadosReserva['dataInicial'] ?> até <?= $dadosReserva['dataFinal'] ?></span>
             </div>
 
 
@@ -78,14 +79,21 @@ $produto = consultarProduto($dadosReserva['idProduto']);
 
         <!-- Botão de imprimir -->
         <div class="text-center mt-6">
-            <button 
+            <button
                 onclick="window.print()"
                 class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
                 Imprimir / Salvar em PDF
             </button>
         </div>
+        <div class="text-center mt-2">
+            <a href="/louer/view/cliente/pag-pagamento.php?idReserva=<?= $idReserva  ?>"
+                class="px-6 py-2 text-gray-600 hover:underline transition">
+                Voltar
+            </a>
+        </div>
 
     </div>
 
 </body>
+
 </html>

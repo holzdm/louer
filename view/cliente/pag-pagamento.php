@@ -107,7 +107,7 @@ $srcImg = $img
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
                         <label class="flex items-center gap-3 p-4 border rounded-lg bg-[#f0fbfe] hover:bg-[#c6e9f5] cursor-pointer">
-                            <input type="radio" name="pagamento" value="1" required>
+                            <input type="radio" name="pagamento" value="3" required>
                             <span>PIX</span>
                         </label>
 
@@ -117,7 +117,7 @@ $srcImg = $img
                         </label>
 
                         <label class="flex items-center gap-3 p-4 border rounded-lg bg-[#f0fbfe] hover:bg-[#c6e9f5] cursor-pointer">
-                            <input type="radio" name="pagamento" value="3">
+                            <input type="radio" name="pagamento" value="1">
                             <span>Cartão de Débito</span>
                         </label>
 
@@ -160,7 +160,7 @@ $srcImg = $img
 
                         <!-- COMPROVANTE DE PAGAMENTO -->
                         <a
-                            href="/louer/control/ReservaController.php?acao=gerarComprovantePagamento&idReserva=<?= $idReserva ?>"
+                            href="/louer/view/cliente/pag-comprovante-pagamento.php?idReserva=<?= $idReserva ?>"
                             class="flex items-center justify-between p-5 bg-secondary border border-[#c6e9f5] rounded-xl shadow hover:bg-[#c6e9f5] transition">
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
