@@ -7,7 +7,7 @@ function inserirCliente($nome, $cpf, $cnpj, $cidade, $telefone, $email, $senha) 
 
 
     // Montar SQL
-    $sql = "INSERT INTO Usuario (nome, tipo, cpf, cnpj, cidade, telefone, email, senha) 
+    $sql = "INSERT INTO usuario (nome, tipo, cpf, cnpj, cidade, telefone, email, senha) 
             VALUES ('$nome' , 'Cliente', '$cpf', '$cnpj', '$cidade', 
                     '$telefone', '$email','$senha')"; 
     
@@ -77,7 +77,7 @@ function alterarDadosCliente($nome, $cidade, $telefone, $email, $senha, $id) {
 function consultarCliente($idUsuario){
     $conexao = conectarBD();
 
-    $sql = "SELECT * FROM Usuario WHERE id = ?";
+    $sql = "SELECT * FROM usuario WHERE id = ?";
 
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("i", $idUsuario);

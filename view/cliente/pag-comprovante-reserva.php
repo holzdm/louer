@@ -58,13 +58,9 @@ $produto = consultarProduto($dadosReserva['idProduto']);
 
             <div class="flex justify-between">
                 <span class="font-medium text-gray-600">Data da Reserva:</span>
-                <span class="text-gray-800"><?= $dadosReserva['dataReserva'] ?></span>
+                <span class="text-gray-800"><?= $dados['dataInicial'] ?> até <?= $dados['dataFinal'] ?></span>
             </div>
 
-            <div class="flex justify-between">
-                <span class="font-medium text-gray-600">Horário:</span>
-                <span class="text-gray-800"><?= $dadosReserva['horario'] ?></span>
-            </div>
 
             <div class="flex justify-between">
                 <span class="font-medium text-gray-600">Status:</span>

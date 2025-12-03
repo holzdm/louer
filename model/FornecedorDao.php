@@ -11,7 +11,7 @@ function inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $se
 
 
     // Montar SQL
-    $sql = "UPDATE Usuario 
+    $sql = "UPDATE usuario 
         SET tipo = ?, cep = ?, rua = ?, bairro = ?, numero = ?, complemento = ?
         WHERE email = ? AND senha = ?";
 

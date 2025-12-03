@@ -30,7 +30,7 @@ function consultarReserva($idReserva)
 {
     $conexao = conectarBD();
 
-    $sql = "SELECT * FROM Reserva WHERE id = ?";
+    $sql = "SELECT * FROM reserva WHERE id = ?";
 
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("i", $idReserva);
@@ -102,4 +102,33 @@ function updatePagamentoReserva($idReserva, $formaPagamento, $nomePagador, $cpfP
     return $stmt->execute();
 
 
+}
+
+function consultarPagamentoPorReserva($idReserva)
+{
+    $conexao = conectarBD();
+
+    $sql = "SELECT * FROM pagamento WHERE id = ?";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $idReserva);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+
+    if ($row = $res->fetch_assoc()) {
+
+        return [
+            "idPagamento" => $row['id_usuario'],
+            "formaPagamento" => $row['forma_pagamento_id'],
+            "nomePagador" => $row['nome_pagador'],
+            "cpfPagador" => $row['cpf_pagador'],
+            "valorPago" => $row['valor_pago'],
+            "valorEstornado" => $row['valor_estornado'],
+            "statusPagamento" => $row['status_pagamento'],
+            "dataPagamento" => $row['data_pagamento'],
+            "daataEstorno" => $row['data_estorno']
+        ];
+    }
+    return null;
 }

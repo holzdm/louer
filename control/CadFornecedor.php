@@ -43,7 +43,7 @@ function cadastrarFornecedor($dadosPost)
 
     // Recebimento dos dados do formulário
     $cep = $dadosPost['cep'] ?? '';
-    $rua = $dadosPostST['rua'] ?? '';
+    $rua = $dadosPost['rua'] ?? '';
     $bairro = $dadosPost['bairro'] ?? '';
     $nEnd = $dadosPost['nEnd'] ?? '';
     $complemento = $dadosPost['complemento'] ?? '';
