@@ -6,10 +6,10 @@ $dadosProduto = $_SESSION['Produto'] ?? null;
 
 if ($dadosProduto) {
     $idProduto = $dadosProduto['idProduto'];
-    $nomeProduto = $dadosProduto['nome'];
+    $nomeProduto = $dadosProduto['nomeProduto'];
     $tipo = $dadosProduto['tipo'];
-    $descricaoProduto = $dadosProduto['descricao'];
-    $valorProduto = $dadosProduto['valor'];
+    $descricaoProduto = $dadosProduto['descricaoProduto'];
+    $valorProduto = $dadosProduto['valorDia'];
     $nomeFornecedor = $dadosProduto['nomeFornecedor'];
     $tagsArray = $dadosProduto['tagsArray'];
     $imgsArray = $dadosProduto['imgsArray'];

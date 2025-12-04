@@ -12,10 +12,10 @@ if ($dadosReserva) {
     $dataFinal = $dadosReserva['dataFinal'];
     $valorReserva = $dadosReserva['valorReserva'];
     $status = $dadosReserva['status'];
-    $nomeProduto = $dadosReserva['nome'];
-    $descricao = $dadosReserva['descricao'];
-    $tipo = $dadosReserva['tipo'];
-    $valorHora = $dadosReserva['valor'];
+    $nomeProduto = $dadosReserva['nomeProduto'];
+    $descricao = $dadosReserva['descricaoProduto'];
+    $tipo = $dadosReserva['tipoProduto'];
+    $valorHora = $dadosReserva['valorDia'];
     $tagsArray = $dadosReserva['tagsArray'];
     $imgsArray = $dadosReserva['imgsArray'];
     $nomeCliente = $dadosReserva['nomeUsuario'];

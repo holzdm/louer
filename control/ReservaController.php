@@ -131,15 +131,15 @@ function acessarReserva($idReserva)
     $idProduto = $dadosReserva['idProduto'];
     $dadosProduto = consultarProduto($idProduto);
 
-    $quantDias = $dadosReserva['valorReserva'] / $dadosProduto['valor'];
+    $quantDias = $dadosReserva['valorReserva'] / $dadosProduto['valorDia'];
 
 
     // Monta resposta com os campos que você precisa no modal
     $resposta = [
         'idReserva'   => $dadosReserva['idReserva'],
         'idProduto'   => $dadosProduto['idProduto'],
-        'nomeProduto'   => $dadosProduto['nome'],
-        'valorDiaria'  => $dadosProduto['valor'],
+        'nomeProduto'   => $dadosProduto['nomeProduto'],
+        'valorDiaria'  => $dadosProduto['valorDia'],
         'nomeFornecedor' => $dadosProduto['nomeFornecedor'],
         'dataInicial'   => $dadosReserva['dataInicial'],
         'dataFinal'     => $dadosReserva['dataFinal'],
@@ -184,8 +184,8 @@ function acessarReservaComoFornecedor($idReserva)
         'idReserva'     => $dadosReserva['idReserva'],
         'nomeUsuario'   => $dadosCliente['nomeUsuario'],
         'emailUsuario'  => $dadosCliente['email'],
-        'nome'          => $dadosProduto['nome'],
-        'descricao'     => $dadosProduto['descricao'] ?? '',
+        'nome'          => $dadosProduto['nomeProduto'],
+        'descricao'     => $dadosProduto['descricaoProduto'] ?? '',
         'dataInicial'   => $dadosReserva['dataInicial'],
         'dataFinal'     => $dadosReserva['dataFinal'],
         'dataSolicitada' => $dadosReserva['dataSolicitada'],

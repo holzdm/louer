@@ -14,11 +14,12 @@ if (!$dadosProduto) {
 
 
 $idProduto = $dadosProduto['idProduto'];
-$nomeProduto = $dadosProduto['nome'];
-$tipo = $dadosProduto['tipo'];
-$descricaoProduto = $dadosProduto['descricao'];
-$valorProduto = $dadosProduto['valor'];
+$nomeProduto = $dadosProduto['nomeProduto'];
+$tipoProduto = $dadosProduto['tipo'];
+$descricaoProduto = $dadosProduto['descricaoProduto'];
+$valorDia = $dadosProduto['valorDia'];
 $nomeFornecedor = $dadosProduto['nomeFornecedor'];
+$imgArray = $dadosProduto['imgsArray'];
 ?>
 
 <!DOCTYPE html>
@@ -37,73 +38,7 @@ $nomeFornecedor = $dadosProduto['nomeFornecedor'];
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#164564',
-                        secondary: '#f0fbfe',
-                    },
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                },
-            },
-        };
-    </script>
-    <style>
-        body {
-            background-color: #f0fbfe;
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .input-field {
-            transition: all 0.3s ease;
-        }
-
-        .input-field:focus {
-            border-color: #164564;
-            box-shadow: 0 0 0 2px rgba(22, 69, 100, 0.2);
-        }
-
-        .btn-primary {
-            background-color: #164564;
-            transition: all 0.3s ease;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-        }
-
-        .btn-primary:hover {
-            background-color: #0d3854;
-        }
-
-        .toggle-button {
-            transition: all 0.3s ease;
-        }
-
-        .toggle-button.active {
-            background-color: #164564;
-            color: white;
-        }
-
-        .data-selecionada {
-            background-color: red !important;
-            color: white !important;
-        }
-
-        .status {
-            margin: 20px 0;
-        }
-
-        #botao-enviar:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-    </style>
+    <?php include "../script-style.php" ?>
 </head>
 
 <body>
@@ -115,125 +50,236 @@ $nomeFornecedor = $dadosProduto['nomeFornecedor'];
             include '../navbar.php'; ?>
         </div>
 
-        <!-- Container centralizado -->
-        <div class="flex-1 w-full max-w-5xl mx-auto p-6">
 
-            <!-- Notificação -->
-            <?php include "../notificacao-erro.php";
-            include "../notificacao.php"; ?>
+        <div class="max-w-5xl mx-auto px-6 pb-20">
 
-            <!-- Informações do Produto -->
-            <form id="infoProduto" name="infoProduto" action="/louer/control/ProdutoController.php" method="post">
-                <input type="hidden" name="acao" value="alterar">
-                <input type="hidden" name="idProduto" value="<?= htmlspecialchars($idProduto) ?>">
+            <?php include "../notificacao.php";
+            include "../notificacao-erro.php"; ?>
 
-                <div class="space-y-5">
-                    <div>
-                        <label for="nome" class="block text-sm font-medium text-gray-700 mb-1">Título </label>
-                        <input type="text" id="nome" name="nome" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($nomeProduto) ?>" required />
-                    </div>
+            <!-- TÍTULO -->
+            <h1 class="text-2xl font-semibold text-primary mb-6">
+                Editar Produto
+            </h1>
 
-                    <div>
-                        <label for="valorHora" class="block text-sm font-medium text-gray-700 mb-1">Valor/Hora </label>
-                        <input type="number" id="valorHora" name="valorHora" placeholder="R$00.00" step="0.01" min="0" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="<?= htmlspecialchars($valorProduto) ?>" required />
-                    </div>
+            <!-- CARD: INFORMAÇÕES PRINCIPAIS -->
+            <div class="bg-white rounded-xl shadow p-6 mb-8">
+                <h2 class="text-lg font-semibold text-primary mb-4">Informações Básicas</h2>
 
-                    <div>
-                        <label for="descricaoProduto" class="block text-sm font-medium text-gray-700 mb-1">Descrição </label>
-                        <textarea id="descricaoProduto" name="descricaoProduto" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none"><?=(htmlspecialchars($descricaoProduto))?></textarea>
-                    </div>
-            </form>
-
-            <!-- Seletor de Datas -->
-            <section class="my-6">
-                <h3 class="text-lg font-semibold mb-2">Seletor de Datas</h3>
-                <form id="form-datas" name="form-datas" action="/louer/control/ProdutoController.php" method="POST">
-
-                    <div class="status">
-                        <h4 class="font-medium">Datas Selecionadas:</h4>
-                        <div id="datas-selecionadas"></div>
-                    </div>
-
-                    <input type="hidden" name="acao" value="alterarDatas">
+                <form id="infoProduto" action="/louer/control/ProdutoController.php" method="POST">
+                    <input type="hidden" name="acao" value="alterar">
                     <input type="hidden" name="idProduto" value="<?= htmlspecialchars($idProduto) ?>">
-                    <input type="hidden" name="datas_selecionadas" id="campo-datas">
-                    <button type="submit" id="botao-enviar" class="btn-primary mt-2" disabled>Enviar Datas</button>
-                </form>
-            </section>
 
-            <div>
-                <button type="submit" form="infoProduto" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-medium">
-                    Alterar Dados
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                        <!-- Nome -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+                            <input type="text" name="nomeProduto" value="<?= htmlspecialchars($nomeProduto) ?>"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" required>
+                        </div>
+
+                        <!-- Valor -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Valor por Dia</label>
+                            <input type="number" name="valorDia" step="0.01" min="0"
+                                value="<?= htmlspecialchars($valorDia) ?>"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" required>
+                        </div>
+
+                        <!-- Tipo -->
+                        <div>
+                            <p class="block text-sm font-medium text-gray-700 mb-1">Tipo do Produto: <?= htmlspecialchars($tipoProduto) ?></p>
+                        </div>
+
+                    </div>
+
+                    <!-- Descrição -->
+                    <div class="mt-5">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                        <textarea name="descricaoProduto"
+                            class="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"><?= htmlspecialchars($descricaoProduto) ?></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <!-- CARD: TAGS -->
+            <div class="bg-white rounded-xl shadow p-6 mb-8">
+                <h2 class="text-lg font-semibold text-primary mb-4">Tags</h2>
+
+                <div class="flex flex-wrap gap-2 mb-4" id="lista-tags">
+                    <?php foreach ($dadosProduto['tagsArray'] as $tag): ?>
+                        <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm flex items-center gap-2">
+                            <?= htmlspecialchars($tag) ?>
+                            <button type="button" class="text-red-600 remove-tag" data-value="<?= htmlspecialchars($tag) ?>">✕</button>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+
+                <div class="flex gap-3">
+                    <input id="novaTag" type="text" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" placeholder="Adicionar tag">
+                    <button id="addTag" class="bg-primary text-white px-5 py-3 rounded-lg hover:bg-primary/90">
+                        Adicionar
+                    </button>
+                </div>
+
+                <input type="hidden" name="tags" form="infoProduto" id="tagsCampo">
+            </div>
+
+            <!-- CARD: IMAGENS -->
+            <div class="bg-white rounded-xl shadow p-6 mb-8">
+
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-gray-700">Imagens</label>
+
+                    <div class="flex items-center gap-3 flex-wrap">
+
+                        <?php foreach ($imgArray as $img):
+                            // montar src a partir do blob (como você já faz)
+                            $src = "data:" . $img['tipo'] . ";base64," . $img['dados'];
+                            // id seguro (escaped)
+                            $imgId = htmlspecialchars($img['id'], ENT_QUOTES, 'UTF-8');
+                        ?>
+                            <div class="relative group inline-block">
+                                <img
+                                    src="<?= $src ?>"
+                                    class="h-28 w-28 rounded-xl object-cover shadow-sm border border-gray-200"
+                                    alt="Imagem do produto <?= $imgId ?>">
+                                <!-- botão de remover: não usar onclick inline -->
+                                <button
+                                    type="button"
+                                    data-img-id="<?= $imgId ?>"
+                                    class="remove-img-btn absolute -top-2 -right-2 bg-red-500 text-white w-7 h-7 rounded-full 
+                   shadow-md opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-sm"
+                                    aria-label="Remover imagem">
+                                    &times;
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
+
+                        <!-- Input para adicionar novas -->
+                        <label
+                            class="w-28 h-28 border-2 border-dashed border-primary/40 flex flex-col items-center justify-center 
+           rounded-xl text-primary/70 cursor-pointer hover:bg-primary/5 transition ml-2">
+                            <span class="text-3xl">＋</span>
+                            <span class="text-xs mt-1">Adicionar</span>
+                            <input type="file" name="imagens[]" class="hidden" multiple form="infoProduto">
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CARD: DATAS -->
+            <div class="bg-white rounded-xl shadow p-6 mb-10">
+                <h2 class="text-lg font-semibold text-primary mb-4">Disponibilidade</h2>
+
+                <div id="calendar"></div>
+
+                <form id="form-datas" action="/louer/control/ProdutoController.php" method="POST" class="mt-4">
+                    <input type="hidden" name="acao" value="alterarDatas">
+                    <input type="hidden" name="idProduto" value="<?= $idProduto ?>">
+                    <input type="hidden" name="datas_selecionadas" id="datasCampo">
+
+                    <button type="submit" id="btnDatas" disabled
+                        class="bg-primary disabled:bg-gray-400 text-white px-6 py-3 rounded-lg">
+                        Atualizar Datas
+                    </button>
+                </form>
+            </div>
+
+            <!-- AÇÕES FINAIS -->
+            <div class="flex flex-col gap-3 mb-20">
+                <button type="submit" form="infoProduto"
+                    class="bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary/90">
+                    Salvar Alterações
                 </button>
-                <a href="/louer/control/ProdutoController.php?id=<?= $idProduto ?>&acao=excluir"
-                    class="bg-red-800 block text-center mt-2 w-full py-3 px-4 rounded-lg text-white font-medium transition-all duration-300 ease hover:bg-red-900">
-                    Apagar Produto
+
+                <a href="/louer/control/ProdutoController.php?acao=excluir&id=<?= $idProduto ?>"
+                    class="bg-red-700 text-white py-3 rounded-lg font-medium text-center hover:bg-red-800">
+                    Excluir Produto
                 </a>
             </div>
 
-
         </div>
 
-    </div>
 
-    <!-- Footer -->
-    <?php $fonte = 'produto';
-    include '../footer.php'; ?>
+        <!-- Footer -->
+        <?php $fonte = 'produto';
+        include '../footer.php'; ?>
 
-    </div>
+
 </body>
 
 
 <!-- Scripts -->
 <script>
-    const datasSelecionadas = new Set();
-    const divDatasSelecionadas = document.querySelector("#datas-selecionadas");
-    const campoDatas = document.querySelector("#campo-datas");
-    const botaoEnviar = document.querySelector("#botao-enviar");
-    const form = document.querySelector("#form-datas");
+    /* ------------------ TAGS ------------------ */
 
-    function atualizarFormulario() {
-        const datasArray = Array.from(datasSelecionadas);
-        campoDatas.value = JSON.stringify(datasArray);
-        botaoEnviar.disabled = datasArray.length === 0;
+    let tags = <?= json_encode($dadosProduto['tagsArray']) ?>;
+    const tagsCampo = document.getElementById("tagsCampo");
+    const listaTags = document.getElementById("lista-tags");
+    const addBtn = document.getElementById("addTag");
+
+    function atualizarTags() {
+        tagsCampo.value = JSON.stringify(tags);
     }
 
-    form.addEventListener("submit", function(e) {
-        if (datasSelecionadas.size === 0) {
-            e.preventDefault();
-            alert("Por favor, selecione pelo menos uma data antes de enviar.");
+    addBtn.onclick = function() {
+        const nova = document.getElementById("novaTag").value.trim();
+        if (!nova || tags.includes(nova)) return;
+
+        tags.push(nova);
+        listaTags.innerHTML += `
+        <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm flex items-center gap-2">
+            ${nova}
+            <button type="button" class="text-red-600 remove-tag" data-value="${nova}">✕</button>
+        </span>
+    `;
+
+        document.getElementById("novaTag").value = "";
+        atualizarTags();
+    };
+
+    listaTags.addEventListener("click", function(e) {
+        if (e.target.classList.contains("remove-tag")) {
+            const valor = e.target.dataset.value;
+            tags = tags.filter(t => t !== valor);
+            e.target.parentElement.remove();
+            atualizarTags();
         }
     });
 
-    flatpickr("#input", {
+    atualizarTags();
+
+
+
+    /* ------------------ DATAS ------------------ */
+
+    const datasSelecionadas = new Set();
+    const datasCampo = document.getElementById("datasCampo");
+    const btnDatas = document.getElementById("btnDatas");
+
+    flatpickr("#calendar", {
         inline: true,
-        dateFormat: "Y-m-d",
         locale: "pt",
-        onDayCreate: function(dataObj, dataStr, flatpicker, diaEl) {
-            diaEl.addEventListener("click", () => {
-                const data = flatpicker.formatDate(diaEl.dateObj, "Y-m-d");
-                if (datasSelecionadas.has(data)) {
-                    datasSelecionadas.delete(data);
-                    diaEl.classList.remove("data-selecionada");
-                    document.querySelector('#data-' + data)?.remove();
-                } else {
-                    datasSelecionadas.add(data);
-                    diaEl.classList.add("data-selecionada");
-                    const p = document.createElement("p");
-                    p.id = 'data-' + data;
-                    p.innerText = data;
-                    divDatasSelecionadas.append(p);
-                }
-                atualizarFormulario();
-            });
+        dateFormat: "Y-m-d",
 
-            const data = flatpicker.formatDate(diaEl.dateObj, "Y-m-d");
-            if (datasSelecionadas.has(data)) diaEl.classList.add("data-selecionada");
+        onChange: function(selectedDates, dateStr) {
+
+            if (!dateStr) return;
+
+            if (datasSelecionadas.has(dateStr)) {
+                datasSelecionadas.delete(dateStr);
+            } else {
+                datasSelecionadas.add(dateStr);
+            }
+
+            datasCampo.value = JSON.stringify([...datasSelecionadas]);
+            btnDatas.disabled = datasSelecionadas.size === 0;
         }
     });
-
-    atualizarFormulario();
 </script>
+
 
 </body>
 

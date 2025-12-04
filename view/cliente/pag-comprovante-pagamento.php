@@ -54,7 +54,7 @@ $produto = consultarProduto($dados['idProduto']);
 
             <div class="flex justify-between">
                 <span class="font-medium text-gray-600">Quadra / Produto:</span>
-                <span class="text-gray-800"><?= $produto['nome'] ?></span>
+                <span class="text-gray-800"><?= $produto['nomeProduto'] ?></span>
             </div>
 
             <div class="flex justify-between">

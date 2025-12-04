@@ -12,7 +12,7 @@
     $idReserva = $registro['id'];
     $idProduto = $registro['id_produto'];
     $dadosProduto = consultarProduto($idProduto);
-    $nomeProduto = $dadosProduto['nome'];
+    $nomeProduto = $dadosProduto['nomeProduto'];
     $valorReserva = $registro['valor_reserva'];
     $status = $registro['status'];
 

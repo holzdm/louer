@@ -66,32 +66,26 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
     return $idProduto;
 }
 
-function inserirImgs($destPath, $type, $idProduto)
+function inserirImgBlob($conteudo, $type, $idProduto)
 {
     $conexao = conectarBD();
 
-    $conteudo = file_get_contents($destPath);
-
-
     $sql = "INSERT INTO imagem (dados, tipo, produto_id) VALUES (?, ?, ?)";
     $stmt = mysqli_prepare($conexao, $sql);
-    if (!$stmt) {
-        die("Erro no prepare: " . mysqli_error($conexao));
-    }
 
-    // o primeiro campo será "b" (BLOB)
+    $null = NULL;
+
     mysqli_stmt_bind_param($stmt, "bsi", $null, $type, $idProduto);
-
-    // envia os dados binários
     mysqli_stmt_send_long_data($stmt, 0, $conteudo);
 
-    // executa
     if (!mysqli_stmt_execute($stmt)) {
         die("Erro ao inserir imagem: " . mysqli_stmt_error($stmt));
     }
 
     mysqli_stmt_close($stmt);
+    mysqli_close($conexao);
 }
+
 
 
 
@@ -183,10 +177,10 @@ function consultarProduto($id)
 
         return [
             "idProduto" => $id,
-            "nome" => $row['nome'],
-            "descricao" => $row['descricao'],
+            "nomeProduto" => $row['nome'],
+            "descricaoProduto" => $row['descricao'],
             "tipo" => $row['tipo'],
-            "valor" => $row['valor_dia'],
+            "valorDia" => $row['valor_dia'],
             "nomeFornecedor" => $nomeFornecedor,
             "datas" => $datasDisponiveis,
             "imgsArray" => $imgs,
@@ -338,7 +332,7 @@ function updateDatasProduto($idProduto, $data)
     }
 }
 
-function updateDadosProduto($nome, $valorHora, $descricaoProduto, $idProduto)
+function updateDadosProduto($nomeProduto, $valorDia, $descricaoProduto, $idProduto)
 {
     $conexao = conectarBD();
 
@@ -347,10 +341,14 @@ function updateDadosProduto($nome, $valorHora, $descricaoProduto, $idProduto)
             WHERE id = ?";
 
     $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("sdsi", $nome, $valorHora, $descricaoProduto, $idProduto);
+    $stmt->bind_param("sdsi", $nomeProduto, $valorDia, $descricaoProduto, $idProduto);
     // s = string, d = double (float), i = integer
-
-    return $stmt->execute();
+    if ($res = $stmt->execute()) {
+        return $res;
+    } else {
+        echo "erro no updateDadosProduto";
+        exit;
+    }
 }
 
 function deleteProduto($idProduto)
@@ -376,7 +374,7 @@ function deleteProduto($idProduto)
 function buscarImgs($idProduto)
 {
     $conexao = conectarBD();
-    $sql = "SELECT dados, tipo FROM imagem WHERE produto_id = ?";
+    $sql = "SELECT id, dados, tipo FROM imagem WHERE produto_id = ?";
     $stmt = mysqli_prepare($conexao, $sql);
     mysqli_stmt_bind_param($stmt, "i", $idProduto);
     mysqli_stmt_execute($stmt);
@@ -386,16 +384,18 @@ function buscarImgs($idProduto)
 
     while ($row = mysqli_fetch_assoc($result)) {
         $imagens[] = [
-            'dados' => base64_encode($row['dados']), // converte o BLOB para base64
-            'tipo' => $row['tipo']
+            'id'    => $row['id'],                    // PEGANDO O ID
+            'dados' => base64_encode($row['dados']),  // BLOB → base64
+            'tipo'  => $row['tipo']
         ];
     }
 
     mysqli_stmt_close($stmt);
     mysqli_close($conexao);
 
-    return $imagens; // retorna um array com todas as imagens
+    return $imagens;
 }
+
 
 function buscarQuatroImgs($idProduto)
 {
@@ -423,10 +423,10 @@ function buscarQuatroImgs($idProduto)
 
 function inserirFavoritosDAO($idUsuario, $idProduto)
 {
-    
+
     $conexao = conectarBD(); // Função para conectar ao banco de dados
     if (!$conexao) {
-        
+
         die("Erro na conexão com o banco de dados: " . mysqli_connect_error());
     }
 
@@ -435,14 +435,12 @@ function inserirFavoritosDAO($idUsuario, $idProduto)
     $stmt = $conexao->prepare($sql);
 
     if (!$stmt) {
-        
+
         die("Erro ao preparar a inserção: " . $conexao->error);
     }
 
     $stmt->bind_param("ii", $idUsuario, $idProduto);
     return $stmt->execute();
-
-
 }
 
 function listarFavoritosDAO($idUsuario)
@@ -486,5 +484,4 @@ function excluirFavoritosDAO($id_usuario, $id_produto)
     $stmt->bind_param("ii", $id_usuario, $id_produto);
 
     return $stmt->execute();
-    
 }

@@ -66,7 +66,7 @@ $srcImg = $img
                 <div class="flex flex-col gap-4">
 
                     <div class="border-b-2 border-[#b2d2df] pb-2">
-                        <h2 class="text-2xl font-bold text-[#164564]"><?= htmlspecialchars($dadosProduto['nome']) ?></h2>
+                        <h2 class="text-2xl font-bold text-[#164564]"><?= htmlspecialchars($dadosProduto['nomeProduto']) ?></h2>
                     </div>
 
                     <p class="text-gray-700">

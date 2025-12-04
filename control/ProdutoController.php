@@ -145,45 +145,50 @@ function cadastrarEnderecoProduto($dadosPOST)
 
 function adicionarImgProduto($files, $idProduto)
 {
-    
+    $MAX_FINAL_SIZE = 900 * 1024; // 900 KB limite para evitar erro no MySQL
+    $ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-    // limites e validações
-    $MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB por arquivo
-    $ALLOWED_MIME = [
-        'image/jpeg',
-        'image/png',
-        'image/gif',
-        'image/webp'
-    ];
+    foreach ($files["tmp_name"] as $i => $tmpName) {
 
+        if ($files['error'][$i] !== UPLOAD_ERR_OK) {
+            header("Location: /louer/view/produto/pag-novo-produto-img.php?msgErro=Erro ao enviar imagem.");
+            exit;
+        }
 
-    foreach ($files["tmp_name"] as $i => $imagens_tmp) {
-    if ($files['error'][$i] !== UPLOAD_ERR_OK) {
-        // ignore ou trate conforme a necessidade
-        continue;
-    }
+        $type = mime_content_type($tmpName);
 
-    $tmpName = $files['tmp_name'][$i];
-    $name = basename($files['name'][$i]);
-    $size = $files['size'][$i];
-    $type = mime_content_type($tmpName);
+        if (!in_array($type, $ALLOWED_MIME)) {
+            header("Location: /louer/view/produto/pag-novo-produto-img.php?msgErro=Tipo de imagem não permitido.");
+            exit;
+        }
 
-    // validações
-    if ($size > $MAX_FILE_SIZE) continue;
-    if (!in_array($type, $ALLOWED_MIME)) continue;
+        // Reduz / converte / comprime
+        $arquivoReducao = redimensionarImagem($tmpName);
 
-    $data = file_get_contents($tmpName);
-    if ($data === false) continue;
+        if (!$arquivoReducao) {
+            header("Location: /louer/view/produto/pag-novo-produto-img.php?msgErro=Falha ao processar imagem.");
+            exit;
+        }
 
-    // opção A: salvar no disco (recomendado)
-    $safeName = uniqid() . '-' . preg_replace('/[^A-Za-z0-9.\-_]/', '_', $name);
-    $destPath = __DIR__ . '/../a-imagem/tmpUploads/' . $safeName;
-    if (!move_uploaded_file($tmpName, $destPath)) continue;
+        // Mede tamanho final
+        $tamanhoFinal = filesize($arquivoReducao);
 
+        if ($tamanhoFinal > $MAX_FINAL_SIZE) {
+            unlink($arquivoReducao);
+            header("Location: /louer/view/produto/pag-novo-produto-img.php?msgErro=Imagem muito grande mesmo após compressão. Use uma imagem menor.");
+            exit;
+        }
 
-        inserirImgs($destPath, $type, $idProduto);
+        // Conteúdo pronto para banco
+        $conteudo = file_get_contents($arquivoReducao);
+        unlink($arquivoReducao);
+
+        // Insere
+        inserirImgBlob($conteudo, $type, $idProduto);
     }
 }
+
+
 
 
 function cadastrarProdutoFinal($files)
@@ -227,26 +232,25 @@ function cadastrarProdutoFinal($files)
 
 function acessarProduto($idProduto)
 {
-    
+
     if (!$idProduto) {
-        
+
         header("Location: /louer/view/pag-inicial.php?msg=Produto inválido. (ProdutoController)");
         exit;
     }
-    
+
     $dadosProduto = consultarProduto($idProduto);
     if (isset($dadosProduto)) {
-        
+
 
         $_SESSION['Produto'] = $dadosProduto;
         header("Location: /louer/view/produto/pag-produto.php");
         exit;
     } else {
-        
+
         header("Location: /louer/view/pag-inicial.php");
         exit;
     }
-    
 }
 
 function cancelarCadastro()
@@ -349,20 +353,20 @@ function alterarDadosProduto($dadosPOST)
 {
     // recebe os dados do formulario de alteracao 
     $idProduto = $dadosPOST['idProduto'];
-    $nome = $dadosPOST['nome'];
-    $valorHora = $dadosPOST['valorHora'];
+    $nomeProduto = $dadosPOST['nomeProduto'];
+    $valorDia = $dadosPOST['valorDia'];
     $descricaoProduto = $dadosPOST['descricaoProduto'];
     $disponibilidadesFake = "aaa";
     //validar sem o cpf e cnpj
-    $msgErro = validarCamposProduto($nome, $valorHora, $disponibilidadesFake);
+    $msgErro = validarCamposProduto($nomeProduto, $valorDia, $disponibilidadesFake);
     //alterando
     if (empty($msgErro)) {
 
-        if (updateDadosProduto($nome, $valorHora, $descricaoProduto, $idProduto)) {
+        if (updateDadosProduto($nomeProduto, $valorDia, $descricaoProduto, $idProduto)) {
             //atualizando as variaveis de sessao
-            $_SESSION['Produto']['nome'] = $nome;
-            $_SESSION['Produto']['valorHora'] = $valorHora;
-            $_SESSION['Produto']['descricao'] = $descricaoProduto;
+            $_SESSION['Produto']['nomeProduto'] = $nomeProduto;
+            $_SESSION['Produto']['valorDia'] = $valorDia;
+            $_SESSION['Produto']['descricaoProduto'] = $descricaoProduto;
 
             header("Location:/louer/view/produto/pag-produto-alterar.php?msg=Dados alterados com sucesso!");
             exit;
@@ -372,11 +376,10 @@ function alterarDadosProduto($dadosPOST)
     }
 }
 
-function excluirProduto($dadosPOST)
+function excluirProduto($idProduto)
 {
-    $id_produto = $dadosPOST['idProduto'];
-    deleteProduto($id_produto);
-    header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php");
+    deleteProduto($idProduto);
+    header("Location: /louer/view/fornecedor/pag-inicial-fornecedor.php?msg=Produto excluído!&pagina=meus-produtos");
 }
 
 function removerImgProduto($nomeImg)
@@ -400,7 +403,7 @@ function inserirFavorito($dadosPOST)
         header("Location: /louer/view/pag-inicial.php?msgErro=Você precisa estar logado para adicionar favoritos!");
         exit;
     }
-    
+
     $id_produto = $dadosPOST['idProduto'];
     $id_usuario = $_SESSION['id'];
     if (inserirFavoritosDAO($id_usuario, $id_produto)) {
@@ -417,9 +420,58 @@ function excluirFavorito($dadosPOST)
     $retorno = $dadosPOST['retorno'];
     $id_usuario = $_SESSION['id'];
 
-    if (excluirFavoritosDAO($id_usuario, $id_produto) ){
-        
+    if (excluirFavoritosDAO($id_usuario, $id_produto)) {
+
         header("Location: ../view/pag-inicial.php?msg=Produto removido dos favoritos!");
         exit;
     }
+}
+
+function redimensionarImagem($imagePath, $maxWidth = 1920, $maxHeight = 1920, $quality = 80)
+{
+    list($origWidth, $origHeight, $tipo) = getimagesize($imagePath);
+
+    // Se já é pequena, retorna o próprio caminho
+    if ($origWidth <= $maxWidth && $origHeight <= $maxHeight) {
+        return $imagePath;
+    }
+
+    // Proporção
+    $ratio = min($maxWidth / $origWidth, $maxHeight / $origHeight);
+
+    $newWidth = intval($origWidth * $ratio);
+    $newHeight = intval($origHeight * $ratio);
+
+    // Criar imagem original
+    switch ($tipo) {
+        case IMAGETYPE_JPEG:
+            $origImg = imagecreatefromjpeg($imagePath);
+            break;
+        case IMAGETYPE_PNG:
+            $origImg = imagecreatefrompng($imagePath);
+            break;
+        case IMAGETYPE_WEBP:
+            $origImg = imagecreatefromwebp($imagePath);
+            break;
+        case IMAGETYPE_GIF:
+            $origImg = imagecreatefromgif($imagePath);
+            break;
+        default:
+            return $imagePath; // tipo não suportado
+    }
+
+    // Criar imagem reduzida
+    $newImg = imagecreatetruecolor($newWidth, $newHeight);
+    imagecopyresampled($newImg, $origImg, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
+
+    // Criar arquivo temporário comprimido
+    $tempFile = tempnam(sys_get_temp_dir(), "img_") . ".jpg";
+
+    // Salvar como JPEG comprimido
+    imagejpeg($newImg, $tempFile, $quality);
+
+    imagedestroy($origImg);
+    imagedestroy($newImg);
+
+    return $tempFile;
 }
