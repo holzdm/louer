@@ -7,6 +7,9 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema louerbd
 -- -----------------------------------------------------
+
+CREATE DATABASE `louerbd`;
+
 DROP SCHEMA IF EXISTS `louerbd`;
 CREATE SCHEMA IF NOT EXISTS `louerbd` DEFAULT CHARACTER SET latin1 ;
 
