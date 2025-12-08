@@ -87,9 +87,7 @@ function cadastrarProduto($dadosPOST)
     $msgErro = validarCamposProduto($nomeProduto, $valorProduto, $diasDisponiveisProduto);
 
     // $dadosPOST['diasDisponiveis'] = $_POST['diasDisponiveis'] ?? [];
-    $tagsIds = $_POST['arrayTags'] ?? [];        // se nada selecionado, array vazio
-    if (!is_array($tagsIds)) $tagsIds = [$tagsIds]; // segurança se vier só 1 valor
-    $tagsIds = array_map('intval', $tagsIds);    // converte strings para inteiros
+    $arrayTags = json_decode($_POST['tags'] ?? '[]', true);
 
     $_SESSION['novoProduto']['tipoProduto'] = $tipoProduto;
     $_SESSION['novoProduto']['nomeProduto'] = $nomeProduto;
@@ -97,7 +95,7 @@ function cadastrarProduto($dadosPOST)
     $_SESSION['novoProduto']['descricaoProduto'] = $descricaoProduto;
 
     $_SESSION['novoProduto']['diasDisponiveisProduto'] = $diasDisponiveisProduto;
-    $_SESSION['novoProduto']['tagsProduto'] = $tagsIds;
+    $_SESSION['novoProduto']['tagsProduto'] = $arrayTags;
 
 
     if (!empty($msgErro)) {
@@ -205,7 +203,7 @@ function cadastrarProdutoFinal($files)
         $nomeProduto = $novoProduto['nomeProduto'];
         $valorProduto = $novoProduto['valorProduto'];
         $descricaoProduto = $novoProduto['descricaoProduto'] ?? '';
-        $tagsIds = $novoProduto['tagsProduto'] ?? [];
+        $arrayTags = $novoProduto['tagsProduto'] ?? [];
         $diasDisponiveis = $novoProduto['diasDisponiveisProduto'] ?? [];
         $cep = $novoProduto['cepProduto'] ?? '';
         $cidade = $novoProduto['cidadeProduto'] ?? '';
@@ -214,7 +212,7 @@ function cadastrarProdutoFinal($files)
         $numero = $novoProduto['numeroProduto'] ?? '';
         $complemento = $novoProduto['complementoProduto'] ?? '';
 
-        $np = inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
+        $np = inserirProduto($tipoProduto, $nomeProduto, $arrayTags, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento);
         if ($np) {
             adicionarImgProduto($files, $np);
 
@@ -357,16 +355,20 @@ function alterarDadosProduto($dadosPOST)
     $valorDia = $dadosPOST['valorDia'];
     $descricaoProduto = $dadosPOST['descricaoProduto'];
     $disponibilidadesFake = "aaa";
+    $tags = $dadosPOST['tags'];
     //validar sem o cpf e cnpj
     $msgErro = validarCamposProduto($nomeProduto, $valorDia, $disponibilidadesFake);
+    $dadosProduto = consultarProduto($idProduto);
+    $tagsArray = $dadosProduto['tagsArray'];
     //alterando
     if (empty($msgErro)) {
 
-        if (updateDadosProduto($nomeProduto, $valorDia, $descricaoProduto, $idProduto)) {
+        if (updateDadosProduto($nomeProduto, $valorDia, $descricaoProduto, $idProduto, $tags)) {
             //atualizando as variaveis de sessao
             $_SESSION['Produto']['nomeProduto'] = $nomeProduto;
             $_SESSION['Produto']['valorDia'] = $valorDia;
             $_SESSION['Produto']['descricaoProduto'] = $descricaoProduto;
+            $_SESSION['Produto']['tagsArray'] = $tagsArray;
 
             header("Location:/louer/view/produto/pag-produto-alterar.php?msg=Dados alterados com sucesso!");
             exit;

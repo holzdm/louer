@@ -12,14 +12,19 @@ if (!$dadosProduto) {
     exit;
 }
 
-
+require_once "../../model/ProdutoDao.php";
 $idProduto = $dadosProduto['idProduto'];
+$produtoArray = consultarProduto($idProduto);
+
+
 $nomeProduto = $dadosProduto['nomeProduto'];
 $tipoProduto = $dadosProduto['tipo'];
 $descricaoProduto = $dadosProduto['descricaoProduto'];
 $valorDia = $dadosProduto['valorDia'];
 $nomeFornecedor = $dadosProduto['nomeFornecedor'];
-$imgArray = $dadosProduto['imgsArray'];
+
+$imgArray = $produtoArray['imgsArray'];
+$tagsArray = $produtoArray['tagsArray'];
 ?>
 
 <!DOCTYPE html>
@@ -107,7 +112,7 @@ $imgArray = $dadosProduto['imgsArray'];
                 <h2 class="text-lg font-semibold text-primary mb-4">Tags</h2>
 
                 <div class="flex flex-wrap gap-2 mb-4" id="lista-tags">
-                    <?php foreach ($dadosProduto['tagsArray'] as $tag): ?>
+                    <?php foreach ($tagsArray as $tag): ?>
                         <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm flex items-center gap-2">
                             <?= htmlspecialchars($tag) ?>
                             <button type="button" class="text-red-600 remove-tag" data-value="<?= htmlspecialchars($tag) ?>">✕</button>
@@ -251,6 +256,50 @@ $imgArray = $dadosProduto['imgsArray'];
 
     atualizarTags();
 
+    /* ------------------ REMOVER TAGS ------------------ */
+
+    function ativarBotoesRemover() {
+        document.querySelectorAll(".remove-tag").forEach(btn => {
+            btn.onclick = function() {
+                const valor = this.getAttribute("data-value");
+
+                // Remove do array
+                tags = tags.filter(t => t !== valor);
+
+                // Remove visualmente
+                this.parentElement.remove();
+
+                // Atualiza hidden
+                atualizarTags();
+            };
+        });
+    }
+
+    // Ativa os botões existentes ao carregar a página
+    ativarBotoesRemover();
+
+    /* Ajuste na função de adicionar tag */
+    addBtn.onclick = function() {
+        const nova = document.getElementById("novaTag").value.trim();
+
+        if (!nova || tags.includes(nova)) return;
+
+        tags.push(nova);
+
+        // Add no HTML
+        listaTags.innerHTML += `
+        <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm flex items-center gap-2">
+            ${nova}
+            <button type="button" class="text-red-600 remove-tag" data-value="${nova}">✕</button>
+        </span>
+    `;
+
+        document.getElementById("novaTag").value = "";
+        atualizarTags();
+
+        // Reativar botões de remover
+        ativarBotoesRemover();
+    };
 
 
     /* ------------------ DATAS ------------------ */

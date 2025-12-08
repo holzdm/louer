@@ -5,9 +5,10 @@ if (empty($_SESSION['id'])) {
   header("Location: /louer/view/pag-inicial.php");
   exit;
 }
-if (isset($_SESSION['novoProduto'])){
+if (isset($_SESSION['novoProduto'])) {
   $novoProduto = $_SESSION['novoProduto'];
 }
+
 
 
 ?>
@@ -22,14 +23,15 @@ if (isset($_SESSION['novoProduto'])){
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
   <!-- script e style padrao -->
-   <?php include '../script-style.php'; ?>
+  <?php include '../script-style.php'; ?>
 </head>
 
 <body>
 
   <div class="min-h-screen flex flex-col pt-24">
     <!-- Navbar e Notificacao-->
-    <?php $fonte = 'produto'; include '../navbar.php';
+    <?php $fonte = 'produto';
+    include '../navbar.php';
     include '../notificacao-erro.php'; ?>
 
 
@@ -39,7 +41,7 @@ if (isset($_SESSION['novoProduto'])){
       <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-4xl">
         <h1 class="text-2xl md:text-3xl font-bold text-primary mb-6">O que deseja anunciar?</h1>
 
-        <form action="/louer/control/ProdutoController.php" method="post" class="space-y-6">
+        <form action="/louer/control/ProdutoController.php" method="post" class="space-y-6" id="form">
           <input type="hidden" name="acao" value="cadastrar">
 
           <div>
@@ -67,22 +69,31 @@ if (isset($_SESSION['novoProduto'])){
             <textarea id="descricaoProduto" name="descricaoProduto" placeholder="Um produto incrível.." rows="5" cols="30"
               class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"><?= htmlspecialchars($novoProduto['descricaoProduto'] ?? '') ?></textarea>
           </div>
-          <!-- combombox -->
-          <div>
-            <label for="arrayTags[]" class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
-            <select name="arrayTags[]" id="arrayTags" multiple size="6"
-              class="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary">
-              <option value="" disabled selected>Selecione uma categoria</option>
-              <?php
-              require_once "../../model/TagsDao.php";
-              $arrayTags = listarTags($conexao); // chama a função do model
-              foreach ($arrayTags as $idTag => $nomeTag) {
-                echo "<option value='$idTag'>$nomeTag</option>";
-              }
-              ?>
-            </select>
-            <!-- DIAS DISPONIVEIS -->
+
+          <!-- CARD: TAGS -->
+          <div class="bg-white rounded-xl shadow p-6 mb-8">
+            <h2 class="text-lg font-semibold text-primary mb-4">Tags</h2>
+
+            <div class="flex flex-wrap gap-2 mb-4" id="lista-tags">
+              <?php foreach (($novoProduto['tagsProduto'] ?? []) as $tag): ?>
+                <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm flex items-center gap-2">
+                  <?= htmlspecialchars($tag) ?>
+                  <button type="button" class="text-red-600 remove-tag" data-value="<?= htmlspecialchars($tag) ?>">✕</button>
+                </span>
+              <?php endforeach; ?>
+            </div>
+
+            <div class="flex gap-3">
+              <input id="novaTag" type="text" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" placeholder="Adicionar tag">
+              <button type="button" id="addTag" class="bg-primary text-white px-5 py-3 rounded-lg hover:bg-primary/90">
+                Adicionar
+              </button>
+            </div>
+
+            <input type="hidden" name="tags" form="form" id="tagsCampo">
           </div>
+          <!-- DIAS DISPONIVEIS -->
+
           <label class="block mb-2 font-medium text-gray-700">Selecione os dias disponíveis:</label>
           <div class="flex gap-2 flex-wrap">
 
@@ -146,6 +157,55 @@ if (isset($_SESSION['novoProduto'])){
 
 </body>
 <script>
+  /* ------------------ TAGS ------------------ */
+
+  let tags = <?= json_encode($novoProduto['tagsProduto'] ?? []) ?>;
+
+  const tagsCampo = document.getElementById("tagsCampo");
+  const listaTags = document.getElementById("lista-tags");
+  const addBtn = document.getElementById("addTag");
+  const novaTagInput = document.getElementById("novaTag");
+
+  // Atualiza o hidden
+  function atualizarTags() {
+    tagsCampo.value = JSON.stringify(tags);
+  }
+
+  // Adiciona tag
+  addBtn.addEventListener("click", function() {
+    const nova = novaTagInput.value.trim();
+    if (!nova || tags.includes(nova)) return;
+
+    tags.push(nova);
+
+    listaTags.innerHTML += `
+        <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm flex items-center gap-2">
+            ${nova}
+            <button type="button" class="text-red-600 remove-tag" data-value="${nova}">✕</button>
+        </span>
+    `;
+
+    novaTagInput.value = "";
+    atualizarTags();
+  });
+
+  // Remover tag com delegação de evento
+  listaTags.addEventListener("click", function(e) {
+    if (!e.target.classList.contains("remove-tag")) return;
+
+    const valor = e.target.dataset.value;
+
+    tags = tags.filter(t => t !== valor);
+    e.target.parentElement.remove();
+
+    atualizarTags();
+  });
+
+  // Inicializa hidden já na primeira carga
+  atualizarTags();
+
+
+  // /////////////////////
   document.querySelectorAll('.toggle-button').forEach(label => {
     const checkbox = label.querySelector('input[type="checkbox"]');
 
@@ -178,8 +238,6 @@ if (isset($_SESSION['novoProduto'])){
   document.getElementById('btnCancelar').addEventListener('click', () => {
     window.location.href = "/louer/control/ProdutoController.php?acao=cancelarCadastro";
   });
-
-  
 </script>
 
 </html>

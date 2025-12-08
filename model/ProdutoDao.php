@@ -1,7 +1,7 @@
 <?php
 require_once "ConexaoBD.php";
 
-function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento)
+function inserirProduto($tipoProduto, $nomeProduto, $arrayTags, $idUsuario, $valorProduto, $descricaoProduto, $diasDisponiveis, $cep, $cidade, $bairro, $rua, $numero, $complemento)
 {
     $conexao = conectarBD();
 
@@ -54,7 +54,7 @@ function inserirProduto($tipoProduto, $nomeProduto, $tagsIds, $idUsuario, $valor
 
 
     // Insere as tags relacionadas
-    if (!inserirTagsHasProduto($tagsIds, $idProduto)) {
+    if (!inserirTagsHasProduto($arrayTags, $idProduto)) {
         die('Erro ao inserir na tabela relacional: ' . mysqli_error($conexao));
     }
 
@@ -90,22 +90,49 @@ function inserirImgBlob($conteudo, $type, $idProduto)
 
 
 // Função para inserir as tags relacionadas ao produto
-function inserirTagsHasProduto($tagsIds, $idProduto)
+function inserirTagsHasProduto($arrayTags, $idProduto)
 {
     $conexao = conectarBD();
+    $tagsIds = [];
 
-    $sql = "INSERT INTO tags_has_produto (tags_id, produto_id) VALUES (?, ?)";
-    $stmt = mysqli_prepare($conexao, $sql);
+    $stmtBusca = $conexao->prepare("SELECT id FROM tags WHERE nome = ?");
+    $stmtInsertTag = $conexao->prepare("INSERT INTO tags (nome) VALUES (?)");
+    $stmtRel = $conexao->prepare("INSERT INTO tags_has_produto (tags_id, produto_id) VALUES (?, ?)");
 
-    foreach ($tagsIds as $idTag) {
-        mysqli_stmt_bind_param($stmt, "ii", $idTag, $idProduto);
-        if (!mysqli_stmt_execute($stmt)) {
-            return false;
+    foreach ($arrayTags as $tagName) {
+
+        $tagName = trim($tagName);
+        if ($tagName === "") continue;
+
+        // 1. Verificar se já existe
+        $stmtBusca->bind_param("s", $tagName);
+        $stmtBusca->execute();
+        $res = $stmtBusca->get_result();
+
+        if ($row = $res->fetch_assoc()) {
+            $idTag = $row['id'];
+        } else {
+            // 2. Criar a tag
+            $stmtInsertTag->bind_param("s", $tagName);
+            if (!$stmtInsertTag->execute()) {
+                continue;
+            }
+            $idTag = $conexao->insert_id;
         }
+
+        $tagsIds[] = $idTag;
+    }
+
+    // 3. Relacionar as tags ao produto
+    foreach ($tagsIds as $idTag) {
+        $stmtRel->bind_param("ii", $idTag, $idProduto);
+        $stmtRel->execute();
     }
 
     return true;
 }
+
+
 
 function inserirDisponibilidades($diasSelecionados, $idProduto)
 {
@@ -332,7 +359,7 @@ function updateDatasProduto($idProduto, $data)
     }
 }
 
-function updateDadosProduto($nomeProduto, $valorDia, $descricaoProduto, $idProduto)
+function updateDadosProduto($nomeProduto, $valorDia, $descricaoProduto, $idProduto, $tags)
 {
     $conexao = conectarBD();
 
@@ -344,12 +371,76 @@ function updateDadosProduto($nomeProduto, $valorDia, $descricaoProduto, $idProdu
     $stmt->bind_param("sdsi", $nomeProduto, $valorDia, $descricaoProduto, $idProduto);
     // s = string, d = double (float), i = integer
     if ($res = $stmt->execute()) {
-        return $res;
+        $tagsArray = json_decode($tags, true);
+        if (updateTagsProduto($tagsArray, $idProduto)) {
+            return $res;
+        } else {
+            return false;
+        }
     } else {
-        echo "erro no updateDadosProduto";
-        exit;
+        return false;
     }
 }
+
+function updateTagsProduto($tagsArray, $idProduto)
+{
+    $conexao = conectarBD();
+    $tagsIds = [];
+
+    // 1. Preparar statements
+    $stmtBusca = $conexao->prepare("SELECT id FROM tags WHERE nome = ?");
+    $stmtInsert = $conexao->prepare("INSERT INTO tags (nome) VALUES (?)");
+
+    foreach ($tagsArray as $tagName) {
+
+        // --- BUSCA A TAG ---
+        $stmtBusca->bind_param("s", $tagName);
+        $stmtBusca->execute();
+        $resultado = $stmtBusca->get_result();
+
+        if ($resultado->num_rows > 0) {
+            // Já existe → pegar ID
+            $idTag = $resultado->fetch_assoc()['id'];
+        } else {
+            // Não existe → inserir
+            $stmtInsert->bind_param("s", $tagName);
+
+            if (!$stmtInsert->execute()) {
+                continue; // evita travar se der erro em 1 tag
+            }
+
+            $idTag = $conexao->insert_id;
+        }
+
+        $tagsIds[] = $idTag;
+    }
+
+    // 2. Atualizar relação na tabela relacional
+    if (!empty($tagsIds)) {
+        // Primeiro limpar as antigas relações
+        $sql = "DELETE FROM tags_has_produto WHERE produto_id = ?";
+        $stmt = $conexao->prepare($sql);
+        $stmt->bind_param("i", $idProduto);
+        if (!$stmt->execute()) {
+            return false;
+        }
+        $stmt->close();
+
+
+        // Inserir novamente todas as relações válidas
+        $stmtRel = $conexao->prepare(
+            "INSERT INTO tags_has_produto (tags_id, produto_id) VALUES (?, ?)"
+        );
+
+        foreach ($tagsIds as $idTag) {
+            $stmtRel->bind_param("ii", $idTag, $idProduto);
+            $stmtRel->execute();
+        }
+    }
+
+    return true;
+}
+
 
 function deleteProduto($idProduto)
 {
