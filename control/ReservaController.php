@@ -276,11 +276,20 @@ function confirmarPagamentoReserva($dadosPOST)
 
     $reserva = consultarReserva($idReserva);
     $valorPago = $reserva['valorReserva'] ?? 0;
+    $dataInicial = $reserva['dataInicial'];
+    $dataFinal = $reserva['dataFinal'];
+    $idProduto = $reserva['idProduto'];
+
+    $datas = pegarIntervaloDatas($dataInicial, $dataFinal);
 
     if (PagamentoReserva($idReserva, $formaPagamento, $nomePagador, $cpfPagador, $valorPago, $status)) {
         if (mudarStatusReserva($status, $idReserva)) {
-            header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msg=Pago");
-            exit;
+            if (removerDisponibilidades($idProduto, $datas)) {
+                header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msg=Pago");
+                exit;
+            } else {
+                header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msgErro=Não foi possível reservar");
+            }
         } else {
             header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msgErro=Não foi possível atualizar o status");
         }

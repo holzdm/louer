@@ -160,3 +160,28 @@ function vealidarImagem($dadosImagem)
 	}
 	return $msgErro;
 }
+
+function pegarIntervaloDatas($dataInicial, $dataFinal)
+{
+    // Normalizar as datas recebidas (string) para DateTime
+    $inicio = DateTime::createFromFormat('Y-m-d', $dataInicial);
+    $fim = DateTime::createFromFormat('Y-m-d', $dataFinal);
+
+    if (!$inicio || !$fim) {
+        return []; // evita erro se datas vierem inválidas
+    }
+
+    // Garante que a data final será incluída
+    $fim = clone $fim;
+    $fim->modify('+1 day');
+
+    $intervalo = new DateInterval('P1D'); // 1 dia
+    $periodo = new DatePeriod($inicio, $intervalo, $fim);
+
+    $datas = [];
+    foreach ($periodo as $data) {
+        $datas[] = $data->format('Y-m-d');
+    }
+
+    return $datas;
+}

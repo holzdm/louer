@@ -150,3 +150,19 @@ function formaPagamentoPorID($idFormaPagamento){
         return null; 
     }
 }
+
+function removerDisponibilidades($idProduto, $datas)
+{
+    $con = conectarBD();
+
+    $sql = "DELETE FROM disponibilidades WHERE id_produto = ? AND data_disponivel = ?";
+    $stmt = $con->prepare($sql);
+
+    foreach ($datas as $data) {
+        $stmt->bind_param("is", $idProduto, $data);
+        $stmt->execute();
+    }
+
+    return true;
+}
+
