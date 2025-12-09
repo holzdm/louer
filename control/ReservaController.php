@@ -38,6 +38,22 @@ switch ($acao) {
         confirmarPagamentoReserva($_POST);
         break;
 
+    case 'filtrarStatusCliente':
+        ClientelistarPorfiltroStatus($_POST['status']);
+        break;
+    
+    case 'listarCliente':
+        ClientelistarReservas($_SESSION['id']);
+        break;
+
+case 'filtrarStatusFornecedor':
+        FornecedorlistarPorfiltroStatus($_POST['status']);
+        break;
+    
+    case 'listarFornecedor':
+        FornecedorlistarReservas($_SESSION['id']);
+        break;
+
     default:
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
         // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msgErro=" . urlencode("Ação inválida!"));
@@ -296,4 +312,40 @@ function confirmarPagamentoReserva($dadosPOST)
     } else {
         header("Location: /louer/view/cliente/pag-pagamento.php?idReserva={$idReserva}&msgErro=Erro ao registrar pagamento");
     }
+}
+
+function ClientelistarPorfiltroStatus($status)
+{
+    
+    $idCliente = $_SESSION['id'];
+    $reservas = listarPorfiltroStatusClienteDao($status, $idCliente);
+
+    echo json_encode($reservas);
+    exit;
+}
+
+function ClientelistarReservas($idCliente){
+
+    $reservas = listarReservasClienteDao($idCliente);
+
+    echo json_encode($reservas);
+    exit;
+}
+
+function FornecedorlistarPorfiltroStatus($status)
+{
+    
+    $idFornecedor = $_SESSION['id'];
+    $reservas = listarPorfiltroStatusFornecedorDao($status, $idFornecedor);
+
+    echo json_encode($reservas);
+    exit;
+}
+
+function FornecedorlistarReservas($idFornecedor){
+
+    $reservas = listarReservasFornecedorDao($idFornecedor);
+
+    echo json_encode($reservas);
+    exit;
 }

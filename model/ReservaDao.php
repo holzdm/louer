@@ -54,25 +54,58 @@ function consultarReserva($idReserva)
     return null;
 }
 
-function listarReservasFornecedor($idFornecedor)
+function listarReservasFornecedorDao($idFornecedor)
 {
     $conexao = conectarBD();
 
-    $sql = "SELECT r.* 
+    $sql = "SELECT r.*
             FROM reserva r
             INNER JOIN produto p ON r.id_produto = p.id
             WHERE p.id_usuario = ?";
 
+    // PREPARE
     $stmt = $conexao->prepare($sql);
     $stmt->bind_param("i", $idFornecedor);
     $stmt->execute();
-    $res = $stmt->get_result();
 
+    $resultado = $stmt->get_result();
 
-    return $res; 
+    $lista = [];
+
+    while ($registro = $resultado->fetch_assoc()) {
+
+        $idReserva = $registro['id'];
+        $idProduto = $registro['id_produto'];
+
+        // Consultar produto
+        include_once "ProdutoDao.php";
+        $dadosProduto = consultarProduto($idProduto);
+        $nome = $dadosProduto['nomeProduto'];
+
+        // Imagem
+        $img = listarUmaImg($idProduto);
+        $srcImg = $img
+            ? "data:" . $img['tipo'] . ";base64," . $img['dados']
+            : "/louer/a-uploads/New-piskel.png";
+
+        // Monta o item final
+        $lista[] = [
+            "id" => $idReserva,
+            "id_produto" => $idProduto,
+            "nome" => $nome,
+            "valor_reserva" => $registro['valor_reserva'],
+            "status" => $registro['status'],
+            "img" => $srcImg
+        ];
+    }
+
+    return $lista;
 }
 
-function mudarStatusReserva($status, $idReserva){
+
+
+function mudarStatusReserva($status, $idReserva)
+{
     $conexao = conectarBD();
 
     $sql = "UPDATE reserva 
@@ -83,7 +116,7 @@ function mudarStatusReserva($status, $idReserva){
     $stmt->bind_param("si", $status, $idReserva);
 
     if (!$stmt->execute()) {
-        
+
         return false;
     }
 
@@ -91,7 +124,8 @@ function mudarStatusReserva($status, $idReserva){
     return $stmt->affected_rows > 0;
 }
 
-function PagamentoReserva($idReserva, $formaPagamento, $nomePagador, $cpfPagador, $valorPago, $status){
+function PagamentoReserva($idReserva, $formaPagamento, $nomePagador, $cpfPagador, $valorPago, $status)
+{
     $conexao = conectarBD();
 
     $sql = "INSERT INTO pagamento (reserva_id, forma_pagamento_id, nome_pagador, cpf_pagador, valor_pago, status_pagamento, data_pagamento) VALUES
@@ -101,7 +135,6 @@ function PagamentoReserva($idReserva, $formaPagamento, $nomePagador, $cpfPagador
     $stmt->bind_param("iissds", $idReserva, $formaPagamento, $nomePagador, $cpfPagador, $valorPago, $status);
 
     return $stmt->execute();
-
 }
 
 function consultarPagamentoPorReserva($idReserva)
@@ -134,7 +167,8 @@ function consultarPagamentoPorReserva($idReserva)
     return null;
 }
 
-function formaPagamentoPorID($idFormaPagamento){
+function formaPagamentoPorID($idFormaPagamento)
+{
     $conexao = conectarBD();
     $sql = "SELECT forma FROM formapagamento WHERE id = ?";
 
@@ -144,10 +178,10 @@ function formaPagamentoPorID($idFormaPagamento){
     $res = $stmt->get_result();
     if ($row = $res->fetch_assoc()) {
         // Retorna apenas a string contida na coluna 'forma'
-        return $row['forma']; 
+        return $row['forma'];
     } else {
         // Retorna null ou uma string vazia se nenhum resultado for encontrado
-        return null; 
+        return null;
     }
 }
 
@@ -166,3 +200,147 @@ function removerDisponibilidades($idProduto, $datas)
     return true;
 }
 
+function listarPorfiltroStatusFornecedorDao($status, $idFornecedor)
+{
+    $conexao = conectarBD();
+
+    $sql = "SELECT r.* 
+            FROM reserva r
+            INNER JOIN produto p ON r.id_produto = p.id
+            WHERE p.id_usuario = ? AND r.status = ?";
+
+    // PREPARE
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("is", $idFornecedor, $status);
+    $stmt->execute();
+
+    $resultado = $stmt->get_result();
+
+    $lista = [];
+
+    while ($registro = $resultado->fetch_assoc()) {
+
+        $idReserva = $registro['id'];
+        $idProduto = $registro['id_produto'];
+
+        // Consultar produto
+        include_once "ProdutoDao.php";
+
+        $dadosProduto = consultarProduto($idProduto);
+        $nome = $dadosProduto['nomeProduto'];
+
+        // Imagem
+        $img = listarUmaImg($idProduto);
+        $srcImg = $img
+            ? "data:" . $img['tipo'] . ";base64," . $img['dados']
+            : "/louer/a-uploads/New-piskel.png";
+
+        // Monta o item final igual ao seu HTML
+        $lista[] = [
+            "id" => $idReserva,
+            "id_produto" => $idProduto,
+            "nome" => $nome,
+            "valor_reserva" => $registro['valor_reserva'],
+            "status" => $registro['status'],
+            "img" => $srcImg
+        ];
+    }
+
+    return $lista;
+}
+
+function listarPorfiltroStatusClienteDao($status, $idCliente)
+{
+    $conexao = conectarBD();
+
+    $sql = "SELECT r.* 
+            FROM reserva r
+            WHERE r.id_usuario = ? AND r.status = ?";
+
+    // PREPARE CORRETO
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("is", $idCliente, $status);
+    $stmt->execute();
+
+    $resultado = $stmt->get_result();
+
+    $lista = [];
+
+    while ($registro = $resultado->fetch_assoc()) {
+
+        $idReserva = $registro['id'];
+        $idProduto = $registro['id_produto'];
+
+        // Consultar produto
+        include_once "ProdutoDao.php";
+
+        $dadosProduto = consultarProduto($idProduto);
+        $nome = $dadosProduto['nomeProduto'];
+
+        // Imagem
+        $img = listarUmaImg($idProduto);
+        $srcImg = $img
+            ? "data:" . $img['tipo'] . ";base64," . $img['dados']
+            : "/louer/a-uploads/New-piskel.png";
+
+        // Monta o item final
+        $lista[] = [
+            "id" => $idReserva,
+            "id_produto" => $idProduto,
+            "nome" => $nome,
+            "valor_reserva" => $registro['valor_reserva'],
+            "status" => $registro['status'],
+            "img" => $srcImg
+        ];
+    }
+
+    return $lista;
+}
+
+function listarReservasClienteDao($idCliente)
+{
+    $conexao = conectarBD();
+
+    $sql = "SELECT r.*
+            FROM reserva r
+            WHERE r.id_usuario = ?";
+
+    // Prepare corretamente
+    $stmt = $conexao->prepare($sql);
+    $stmt->bind_param("i", $idCliente);
+    $stmt->execute();
+
+    $resultado = $stmt->get_result();
+
+    $lista = [];
+
+    while ($registro = $resultado->fetch_assoc()) {
+
+        $idReserva = $registro['id'];
+        $idProduto = $registro['id_produto'];
+
+        // Consultar produto (pega nome e tudo mais)
+        include_once "ProdutoDao.php";
+
+        $dadosProduto = consultarProduto($idProduto);
+        $nome = $dadosProduto['nomeProduto'];
+
+        // Consultar imagem
+        $img = listarUmaImg($idProduto);
+        $srcImg = $img
+            ? "data:" . $img['tipo'] . ";base64," . $img['dados']
+            : "/louer/a-uploads/New-piskel.png";
+
+        // Monta o item final igual ao seu HTML
+        $lista[] = [
+            "id"             => $idReserva,
+            "id_produto"     => $idProduto,
+            "nome"           => $nome,
+            "valor_reserva"  => $registro['valor_reserva'],
+            "status"         => $registro['status'],
+            "img"            => $srcImg
+        ];
+    }
+
+    return $lista;
+}

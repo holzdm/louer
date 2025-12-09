@@ -68,6 +68,7 @@ switch ($acao) {
         listarUmaImg($idProduto);
         break;
 
+
     default:
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php'));
         // header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '../view/pag-incial.php') . "?msgErro=" . urlencode("Ação inválida!"));
@@ -477,3 +478,4 @@ function redimensionarImagem($imagePath, $maxWidth = 1920, $maxHeight = 1920, $q
 
     return $tempFile;
 }
+
