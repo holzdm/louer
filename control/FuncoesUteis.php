@@ -65,19 +65,19 @@ function validarCamposFornecedor($cep, $rua, $bairro, $nEnd)
 {
 	$msgErro = "";
 	if (empty($cep)) {
-		$msgErro = $msgErro . "Cep inválido!. <br>";
+		$msgErro = $msgErro . "Cep inválido!.";
 	}
 
 	if (empty($rua)) {
-		$msgErro = $msgErro . "Digite a rua. <br>";
+		$msgErro = $msgErro . "Digite a rua.";
 	}
 
 	if (empty($bairro)) {
-		$msgErro = $msgErro . "Digite o bairro. <br>";
+		$msgErro = $msgErro . "Digite o bairro.";
 	}
 
 	if (empty($nEnd)) {
-		$msgErro = $msgErro . "Digite o número. <br>";
+		$msgErro = $msgErro . "Digite o número.";
 	}
 
 	return $msgErro;
@@ -88,13 +88,13 @@ function validarCamposProduto($nomeProduto, $valorProduto, $diasDisponiveis)
 	$msgErro = "";
 
 	if (empty($nomeProduto)) {
-		$msgErro .= "Preencha o nome do seu produto.<br>";
+		$msgErro .= "Preencha o nome do seu produto.";
 	}
 	if (empty($valorProduto)) {
-		$msgErro .= "Preencha o valor do seu produto.<br>";
+		$msgErro .= "Preencha o valor do seu produto.";
 	}
 	if (empty($diasDisponiveis)) {
-		$msgErro .= "Escolha pelo menos um dia de disponibilidade.<br>";
+		$msgErro .= "Escolha pelo menos um dia de disponibilidade.";
 	}
 	return $msgErro;
 }
