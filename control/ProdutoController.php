@@ -234,15 +234,24 @@ function acessarProduto($idProduto)
 
     if (!$idProduto) {
 
-        header("Location: /louer/view/pag-inicial.php?msg=Produto inválido. (ProdutoController)");
+        header("Location: /louer/view/pag-inicial.php?msg=Produto inválido.");
         exit;
     }
 
     $dadosProduto = consultarProduto($idProduto);
     if (isset($dadosProduto)) {
-
+        require_once "../model/ClienteDao.php";
+        $dadosCliente = consultarCliente($dadosProduto['idFornecedor']);
+        $nomeFornecedor = $dadosCliente['nomeUsuario'];
+        $emailFornecedor = $dadosCliente['email'];
+        $telFornecedor = $dadosCliente['telefone'];
 
         $_SESSION['Produto'] = $dadosProduto;
+        $_SESSION['Produto']['nomeFornecedor'] = $nomeFornecedor;
+        $_SESSION['Produto']['emailFornecedor'] = $emailFornecedor;
+        $_SESSION['Produto']['telFornecedor'] = $telFornecedor;
+
+
         header("Location: /louer/view/produto/pag-produto.php");
         exit;
     } else {

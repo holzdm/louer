@@ -11,6 +11,8 @@ if ($dadosProduto) {
     $descricaoProduto = $dadosProduto['descricaoProduto'];
     $valorProduto = $dadosProduto['valorDia'];
     $nomeFornecedor = $dadosProduto['nomeFornecedor'];
+    $emailFornecedor = $dadosProduto['emailFornecedor'];
+    $telFornecedor = $dadosProduto['telFornecedor'];
     $tagsArray = $dadosProduto['tagsArray'];
     $imgsArray = $dadosProduto['imgsArray'];
     $datasDisponiveis = $dadosProduto['datas'];
@@ -38,7 +40,7 @@ if ($dadosProduto) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    
+
     <?php include "../script-style.php"; ?>
 
 </head>
@@ -105,7 +107,11 @@ if ($dadosProduto) {
                         <h2 class="text-2xl text-gray-800 font-bold truncate"><?= htmlspecialchars($nomeProduto) ?></h2>
                         <p class="mt-2 text-gray-600"><?= nl2br(htmlspecialchars($descricaoProduto)) ?></p>
                         <p class="mt-1 font-semibold text-gray-600">R$ <?= htmlspecialchars($valorProduto) ?> / dia</p>
+                        <br>
                         <p class="mt-1 text-gray-600 underline decoration-gray-600 decoration-1">Publicado por: <?= htmlspecialchars($nomeFornecedor) ?></p>
+                        <p class="mt-1 text-gray-600  decoration-gray-600 decoration-1"><strong>Email:</strong> <?= htmlspecialchars($emailFornecedor) ?></p>
+                        <p class="mt-1 text-gray-600  decoration-gray-600 decoration-1"><strong>Contato:</strong> <?= htmlspecialchars($telFornecedor) ?></p>
+
                     </section>
                 </div>
                 <!-- compra -->
