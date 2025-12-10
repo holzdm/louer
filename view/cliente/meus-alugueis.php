@@ -101,9 +101,9 @@ $res = listarReservas($_SESSION['id']);
 
             <!-- Fornecedor -->
                 <div class="bg-secondary p-4 rounded-xl">
-                    <h3 class="text-lg font-semibold text-primary mb-1">Cliente</h3>
+                    <h3 class="text-lg font-semibold text-primary mb-1">Fornecedor</h3>
                     <p><strong>Nome:</strong> ${data.nomeFornecedor}</p>
-                    <p><strong>Email:</strong> ${data.emailCliente}</p>
+                    <p><strong>Email:</strong> ${data.emailFornecedor}</p>
                 </div>
 
             <!-- Grid de detalhes -->
