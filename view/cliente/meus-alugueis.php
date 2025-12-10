@@ -225,6 +225,7 @@ $res = listarReservas($_SESSION['id']);
         if (e.target === modal) modal.classList.add('hidden');
     });
 
+
     // FILTRO ////////////////////////////////////
     function filtrarReservas(status) {
         const lista = document.getElementById("listaReservas");
@@ -320,4 +321,77 @@ $res = listarReservas($_SESSION['id']);
 
 
     // /////////////////////////////////////
+
+    // PARA APARECER OS PRODUTOS DIRETO
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // A função assíncrona é necessária para usar 'await'
+        async function carregarDados() {
+            const lista = document.getElementById("listaReservas");
+            lista.innerHTML = `<p class="text-gray-500">Carregando...</p>`;
+
+
+            await fetch("/louer/control/ReservaController.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: "acao=listarCliente"
+                })
+                .then(res =>  res.json())
+                .then(data => {
+                    console.log("Dados recebidos:", data);
+
+                    if (!data.length) {
+                        lista.innerHTML = `<p class="text-gray-500">Nenhuma reserva encontrada.</p>`;
+                        return;
+                    }
+
+                    lista.innerHTML = data.map(registro => {
+
+                        const badge =
+                            registro.status === 'Solicitada' ? 'bg-yellow-100 text-yellow-700' :
+                            registro.status === 'Aprovada' ? 'bg-blue-100 text-blue-700' :
+                            registro.status === 'Confirmada' ? 'bg-green-100 text-green-700' :
+                            registro.status === 'Cancelada' ? 'bg-gray-100 text-gray-700' :
+                            registro.status === 'Finalizada' ? 'text-gray-700' :
+                            registro.status === 'Recusada' ? 'bg-red-100 text-red-700' :
+                            'bg-gray-100 text-gray-700';
+
+                        return `
+            <div onclick="abrirModal(${registro.id})"
+                class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl 
+                       transition transform hover:-translate-y-1 duration-300 cursor-pointer">
+
+                <img src="${registro.img}" 
+                    alt="Imagem do produto"
+                    class="w-full h-48 object-cover hover:scale-105 transition duration-500">
+
+                <div class="p-4">
+
+                    <h3 class="text-lg font-semibold text-primary truncate">
+                        ${registro.nome}
+                    </h3>
+
+                    <p class="text-gray-700 font-medium text-sm mt-1">
+                        R$${registro.valor_reserva}
+                    </p>
+
+                    <span class="inline-block mt-3 px-3 py-1 rounded-full text-xs font-semibold ${badge}">
+                        ${registro.status}
+                    </span>
+
+                </div>
+            </div>`;
+                    }).join("");
+                })
+                .catch(err => {
+                    console.error(err);
+                    lista.innerHTML = `<p class="text-red-500">Erro ao carregar dados.</p>`;
+                });
+        }
+
+        // Chama a função imediatamente após o DOM ser carregado
+        carregarDados();
+    });
 </script>
