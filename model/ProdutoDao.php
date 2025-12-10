@@ -190,10 +190,8 @@ function consultarProduto($id)
 
     if ($row = $res->fetch_assoc()) {
 
-        require_once "FornecedorDao.php";
 
         $idFornecedor = $row['id_usuario'];
-        $nomeFornecedor = pesquisarFornecedor($idFornecedor);
 
         // pegar datas disponiveis
         $datasDisponiveis = buscarDatasDisponiveis($id);
@@ -208,7 +206,7 @@ function consultarProduto($id)
             "descricaoProduto" => $row['descricao'],
             "tipo" => $row['tipo'],
             "valorDia" => $row['valor_dia'],
-            "nomeFornecedor" => $nomeFornecedor,
+            "idFornecedor" => $idFornecedor,
             "datas" => $datasDisponiveis,
             "imgsArray" => $imgs,
             "tagsArray" => $tags

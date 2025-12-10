@@ -34,6 +34,7 @@ function pesquisarFornecedor($idFornecedor)
 
     if ($row = $res->fetch_assoc()) {
         return $row['nome'];
+        
     }
     return null;
 }

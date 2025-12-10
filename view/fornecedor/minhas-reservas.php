@@ -76,8 +76,8 @@ function abrirModal(idReserva) {
                 <!-- Cliente -->
                 <div class="bg-secondary p-4 rounded-xl">
                     <h3 class="text-lg font-semibold text-primary mb-1">Cliente</h3>
-                    <p><strong>Nome:</strong> ${data.nomeUsuario}</p>
-                    <p><strong>Email:</strong> ${data.emailUsuario}</p>
+                    <p><strong>Nome:</strong> ${data.nomeCliente}</p>
+                    <p><strong>Email:</strong> ${data.emailCliente}</p>
                 </div>
 
                 <!-- Produto -->
@@ -152,7 +152,7 @@ function filtrarReservas(status) {
     const lista = document.getElementById('listaReservas');
     lista.innerHTML = `<p class="text-gray-500">Carregando...</p>`;
 
-    const bodyRequest = status === "todas" ? "acao=listarCliente" : `acao=filtrarStatusCliente&status=${encodeURIComponent(status)}`;
+    const bodyRequest = status === "todas" ? "acao=listarFornecedor" : `acao=filtrarStatusFornecedor&status=${encodeURIComponent(status)}`;
 
     fetch("/louer/control/ReservaController.php", {
         method: "POST",

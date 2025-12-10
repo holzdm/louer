@@ -99,6 +99,13 @@ $res = listarReservas($_SESSION['id']);
                 </h2>
             </a>
 
+            <!-- Fornecedor -->
+                <div class="bg-secondary p-4 rounded-xl">
+                    <h3 class="text-lg font-semibold text-primary mb-1">Cliente</h3>
+                    <p><strong>Nome:</strong> ${data.nomeFornecedor}</p>
+                    <p><strong>Email:</strong> ${data.emailCliente}</p>
+                </div>
+
             <!-- Grid de detalhes -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 

@@ -136,6 +136,8 @@ function acessarReserva($idReserva)
     }
 
     require_once "../model/ProdutoDao.php";
+    require_once "../model/ClienteDao.php";
+
 
     $dadosReserva = consultarReserva($idReserva);
 
@@ -146,8 +148,13 @@ function acessarReserva($idReserva)
 
     $idProduto = $dadosReserva['idProduto'];
     $dadosProduto = consultarProduto($idProduto);
+    $idFornecedor = $dadosProduto['idFornecedor'];
 
     $quantDias = $dadosReserva['valorReserva'] / $dadosProduto['valorDia'];
+
+    $idCliente = $dadosReserva['idUsuario'];
+    $dadosCliente = consultarCliente($idCliente);
+    $dadosFornecedor = consultarCliente($idFornecedor);
 
 
     // Monta resposta com os campos que você precisa no modal
@@ -156,12 +163,15 @@ function acessarReserva($idReserva)
         'idProduto'   => $dadosProduto['idProduto'],
         'nomeProduto'   => $dadosProduto['nomeProduto'],
         'valorDiaria'  => $dadosProduto['valorDia'],
-        'nomeFornecedor' => $dadosProduto['nomeFornecedor'],
+        'nomeFornecedor' => $dadosFornecedor['nomeUsuario'],
+        'emailFornecedor' => $dadosFornecedor['email'],
         'dataInicial'   => $dadosReserva['dataInicial'],
         'dataFinal'     => $dadosReserva['dataFinal'],
         'dataSolicitada' => $dadosReserva['dataSolicitada'],
         'valorReserva'  => $dadosReserva['valorReserva'],
         'status'        => $dadosReserva['status'],
+        'nomeCliente'   => $dadosCliente['nomeUsuario'],
+        'emailCliente'  => $dadosCliente['email'],
         'quantDias'     => $quantDias
     ];
 
