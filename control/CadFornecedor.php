@@ -57,6 +57,7 @@ function cadastrarFornecedor($dadosPost)
         inserirFornecedor($cep, $rua, $bairro, $nEnd, $complemento, $email, $senha);
         $_SESSION['tipo'] = 'Fornecedor';
         $msg = urlencode("Comece adicionando um produto ★");
+        acessarFornecedor();
         header("Location:/louer/view/fornecedor/pag-inicial-fornecedor.php?msg=$msg");
     } else {
         header("Location:/louer/view/fornecedor/pag-cad-fornecedor.php?msg=" . urlencode($msgErro)); //urlencore é para evitar problemas com caracteres especiais na mensagem
