@@ -229,7 +229,7 @@ O banco utilizado é **MySQL**, com o schema `louerbd`. Abaixo estão todas as t
 | `tags_has_produto` | `tags_id`, `produto_id` | Relação N:N entre tags e produtos |
 | `favoritos` | `id_usuario`, `id_produto` | Produtos favoritados por usuários |
 
-Os scripts completos de criação e população estão em [`banco-de-dados/`](./banco-de-dados/).
+Os scripts completos de criação e população estão em [`a-banco-de-dados/`](./a-banco-de-dados/).
 
 ---
 
