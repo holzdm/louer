@@ -281,7 +281,7 @@ Desenvolvido com 💙 pela equipe **TECgirls** — Turma do Técnico em Informá
 
 | Nome | GitHub |
 |---|---|
-| Carolina Faria Cassaro | — |
+| Carolina Faria Cassaro | [@carolinacassaro](https://github.com/carolinacassaro) |
 | Kiara Piontkovsky Scardini | [@kikiscar](https://github.com/kikiscar) |
 | Vítor Holz De Martin | [@holzdm](https://github.com/holzdm) |
 
